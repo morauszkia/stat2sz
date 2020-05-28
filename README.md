@@ -1,4 +1,4 @@
-# stat2sz
+# Statisztika 2. szeminárium 2020/21 őszi félév
 Statisztika 2. szeminárium anyagai
   
 Legyártott anyagok:  
