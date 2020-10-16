@@ -18,6 +18,7 @@ library(HistData)
 library(ggplot2)
 library(forcats)
 ```
+<br><br>  
 
 A korrelációszámítás ugyanarra a kérdésre keresi a választ, mint a kereszttáblához kapcsolódó függetlenségvizsgálat: van-e összefüggés valamely vizsgált populációban két változó között? Míg azonban a kereszttábla két nominális vagy ordinális változó összefüggésénél használható, a korreláció alapvetően két intervallum- vagy arányskála mérési szintű változó összefüggését vizsgálja. Ezen túl rangkorrelációt két ordinális változó között is tudunk már számolni. 
 
@@ -144,7 +145,8 @@ A korrelációból **nem következik**, hogy a két változó között **oksági
 <br>  
 
 ### Kiszámítása
-
+  
+<br>
 Az alábbi ábrán a női válaszadókat láthatják. A szaggatott vonalak a szülői magasságok átlagát (függőleges) és a válaszadók átlagmagasságát (vízszintes) jelölik. Az egyes válaszadók lehetnek magasabbak vagy alacsonyabbak is az átlagnál, és szüleik is lehetnek magasabbak és alacsonyabbak, mint az átlagos szülők. Vannak olyanok, akiknek szüleik is, és ők is magasabbak a megfelelő átlagnál (piros szín), vannak olyanok akik maguk magasabbak, de szüleik alacsonyabbak (lila), vannak, akik alacsonyabbak és szüleik is azok (kék), végül olyanok is, akik magasabb szülők gyermekei, de ők maguk az átlagnál alacsonyabbak (zöld). A korreláció ezeket az eltéréseket használja fel. 
 ```{r quarters}
 GaltonGirls <- GaltonFamilies %>% filter(gender == "nő") %>%

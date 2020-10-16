@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>Kereszttáblaelemzés II.</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -412,15 +412,15 @@ div.tocify {
 
 
 
+<h1 class="title toc-ignore">Kereszttáblaelemzés II.</h1>
 
 </div>
 
 
-<div id="kereszttáblaelemzés-ii." class="section level1">
-<h1>Kereszttáblaelemzés II.</h1>
+<p><br><br></p>
 <div id="folytatás-újabb-példával" class="section level2">
 <h2>Folytatás, újabb példával</h2>
-<p>Tegyük fel, hogy megkérdeztünk 200 személyt, milyen szinten beszélnek angolul és franciául. A két változó együttes eloszlását mutatja az alábbi táblázat:</p>
+<p><br> Tegyük fel, hogy megkérdeztünk 200 személyt, milyen szinten beszélnek angolul és franciául. A két változó együttes eloszlását mutatja az alábbi táblázat:</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.2">
 <caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
@@ -497,10 +497,11 @@ stb.</p>
 </ol>
 <p>Nézzük a másik lambdát: 1. A legtöbben alapfokon beszélnek angolul: 80 jól és 50+70=120 rosszul besorolt személy 2. A franciául nem beszélők legtöbbje (40-en) jól beszélnek angolul: 30+30 hiba A franciál alapfokon beszélőket az &quot;angol alap&quot;-ba soroljuk: 10+10 hiba A franciául jól beszélőket az &quot;angol alap&quot;-ba soroljuk: 10+20 hiba Összesen: 60+20+30 = 110 hiba 3. A hibák száma kb. 8,3%-kal csökkent: <span class="math display">\[\lambda_{angol|francia}=\frac{120-110}{120}=0,083=8,3\%\]</span></p>
 <p>A két lambda is gyenge kapcsolatot mutat. Az egyik lambda ráadásul 0 volt. Ennek oka, hogy minden csoportban azok aránya volt a legmagasabb (egy esetben holtversenyben), akik nem beszélnek franciául. Ezzel sajnos a lambda nem tud mit kezdeni.</p>
+<p><br></p>
 </div>
 <div id="gamma-kiszámítása" class="section level2">
 <h2>Gamma kiszámítása</h2>
-<p>Ebben az esetben, mivel két ordinális változóról van szó, a gamma mutató is kiszámítható. Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent, hogy két személy (általánosabban két megfigyelési egység) konkordáns vagy diszkordáns párt alkot. Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét vizsgált szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy franciául, nem érdekelnek minket. A többi esetben konkordánsnak tekintünk egy párt, ha mindkét szempontból ugyanolyan a viszony: pl. aki jobban tud angolul, az tud jobban franciául is. Diszkordánsnak tekintjük azokat a párokat, ahol az angolul jobban tudó kevésbé tud franciául.</p>
+<p><br> Ebben az esetben, mivel két ordinális változóról van szó, a gamma mutató is kiszámítható. Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent, hogy két személy (általánosabban két megfigyelési egység) konkordáns vagy diszkordáns párt alkot. Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét vizsgált szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy franciául, nem érdekelnek minket. A többi esetben konkordánsnak tekintünk egy párt, ha mindkét szempontból ugyanolyan a viszony: pl. aki jobban tud angolul, az tud jobban franciául is. Diszkordánsnak tekintjük azokat a párokat, ahol az angolul jobban tudó kevésbé tud franciául.</p>
 <p>Most nézzük meg, hogy a mintában kik kikkel alkotnak konkordáns párokat: Kezdjük a bal felső sarokkal: 30 főt találunk ott. Ők konkordáns párokat alkotnak azokkal, akik náluk jobban beszélnek angolul (2. és 3. sor), és egyúttal jobban beszélnek franciául is (2. és 3. oszlop)</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:concordant.1">
 <col><col><col><col><col><tr>
@@ -613,10 +614,11 @@ Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot konkordáns 
 
 <p>A diszkordáns párok száma: <span class="math inline">\(10\times (30+20+40+10)=1000\)</span> <br> <span class="math inline">\(10\times (30+40)=700\)</span> <br> <span class="math inline">\(30\times (40+10)=1500\)</span> <br> <span class="math inline">\(20\times 40 = 800\)</span> <br> Összesen: <span class="math inline">\(1000+700+1500+800=4000\)</span> <br></p>
 <p>A Gamma képlete a következő: <span class="math display">\[\gamma = \frac{konkordáns párok száma - diszkordáns párok száma}{konkordáns párok száma + diszkordáns párok száma}\]</span> <span class="math display">\[\gamma = \frac{4200-4000}{4200+4000}=\frac{200}{8200}=0,024\]</span> Eszerint tehát a gamma is megerősíti, amit a többi mutató is jelzett: az asszociáció meglehetősen gyengécske. A gamma viszont azt is megmutatja, hogy alapvetően pozitív a kapcsolat a két változó között: a gamma 0-nál nagyobb és kisebb értéket is felvehet. Pozitív értéket akkor vesz fel, ha a konkordáns párokból van több, negatív értéket pedig akkor, ha a diszkordáns párokból. Ez elég világosan látszik a képletből. Vagyis, ha a gamma értéke pozitív, akkor jellemzőbb, hogy aki az egyik változón magasabb értéket ér el, az a másikon is. Ha pedig negatív az értéke, akkor az jellemzőbb, hogy aki egyik változón magasabb értéket ér el, az a másikon alacsonyabb. A gamma értelmezéséhez tehát tudni kell, mit jelentenek az alacsonyabb/magasabb értékek a két változó esetében. Ebben az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél angolul, azok várhatóan franciául is jobban beszélnek. De ez az összefüggés gyenge.</p>
+<p><br></p>
 </div>
 <div id="reziduálisok" class="section level2">
 <h2>Reziduálisok</h2>
-<p>Végül nézzük meg, mely cellák esetében szignifikáns a különbség a megfigyelt és a várható érték között. A nyers reziduálisok a következők: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:resid.raw">
+<p><br> Végül nézzük meg, mely cellák esetében szignifikáns a különbség a megfigyelt és a várható érték között. A nyers reziduálisok a következők: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:resid.raw">
 <col><col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><p>Raw residuals</p>
 </th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th></tr>
@@ -645,13 +647,18 @@ stb.</p>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.48</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.48</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.32</td></tr>
 </table>
 </p>
+<p><br></p>
 </div>
 <div id="összefoglalás" class="section level2">
-<h2>Összefoglalás:</h2>
-<p>Kereszttábla-elemzés esetén a következő kérdések vetődnek fel:<br />
-1. Van-e szignifikáns összefüggés a két változó között? - Ehhez χ² próbát számolunk<br />
-2. Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs mérőszámok (φ Cramer-féle V, λ és γ) 3. Hogyan függ össze a két változó? - Ezt a sor/oszlopszázalékok alapján tudjuk kielemezni 4. Mely cellák esetében tér el szignifikánsan a megfigyelt és a függetlenség esetén várható esetszám? - Ezt pedig a korrigált standardizált reziduálisok adják meg</p>
-</div>
+<h2>Összefoglalás</h2>
+<p><br> Kereszttábla-elemzés esetén a következő kérdések vetődnek fel:</p>
+<ol style="list-style-type: decimal">
+<li>Van-e szignifikáns összefüggés a két változó között? - Ehhez χ² próbát számolunk<br />
+</li>
+<li>Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs mérőszámok (φ Cramer-féle V, λ és γ)</li>
+<li>Hogyan függ össze a két változó? - Ezt a sor/oszlopszázalékok alapján tudjuk kielemezni</li>
+<li>Mely cellák esetében tér el szignifikánsan a megfigyelt és a függetlenség esetén várható esetszám? - Ezt pedig a korrigált standardizált reziduálisok adják meg</li>
+</ol>
 </div>
 
 

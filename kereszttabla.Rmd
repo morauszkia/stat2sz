@@ -1,4 +1,5 @@
 ---
+title: "Kereszttáblaelemzés"
 output: 
   html_document:
     toc: true
@@ -16,9 +17,7 @@ library(huxtable)
 library(questionr)
 ```
   
-  
-  
-# Kereszttáblaelemzés  
+<br><br>
 
 Az első nagyobb téma ebben a félévben a &chi;&sup2; (Khí-négyzet) tesztek lesznek. Ezek közül az első a kereszttáblaelemzés.
 
@@ -56,8 +55,11 @@ Az előző félévben a nominális/ordinális független változó, illetve a sk
 
 A kereszttábla esetében olyan változópárok közötti összefüggést vizsgálunk, amelyek **mindkét tagja nominális vagy ordinális szintű**. Ilyen például a fenti példa a nemmel és azzal, tetszett-e nekik egy film.
 
-## Tapasztalati kereszttábla  
+<br>  
 
+## Tapasztalati kereszttábla  
+  
+<br>
 Tegyük fel, hogy a fenti kérdést vizsgáljuk, és van egy 100 fős mintánk, amely a következőképpen oszlik meg:
 
 ```{r example.1} 
@@ -109,13 +111,18 @@ Olyan kérdéseket már nem válaszolhatunk meg közvetlenül, mint
 
 Ezeket a kérdéseket az így vagy úgy százalékolt kereszttáblákból tudjuk megválaszolni.
 
+<br>  
+
 ## Százalékolt táblák:
+  
+<br>  
 
 1. **Sorszázalékoknak** nevezzük majd, ha az egyes sorokon belül számítjuk az arányokat
 A fenti esetben és elrendezésnél ez lesz a leghasznosabb.
 
 Kiszámítás módja: az adott cella elemszámát elosztjuk a sorösszeggel.
 A képletgyűjteményben m~i,j~ jelöli az i. sor, j. oszlop cellájában szereplő értéket és m~i\*~ jelöli az i. sor összegét. A \*-ra azért van szükség, hogy világos legyen, hogy a sorszám a sort vagy az oszlopot jelöli:  
+
 - m~1\*~ az első sor
 - m~\*1~ pedig az első oszlop
 
@@ -181,7 +188,10 @@ A fenti esetben a független változó, a nem a sorokban van, ezért a sorszáza
 
 A fenti sorszázalékolt táblából az látszik, hogy a férfiak körében magasabb volt azoknak az aránya, akik szerették a filmet: kb. 73% a 49%-kal szemben.
 
+<br>  
+
 ## Elméleti kereszttábla
+<br>  
 
 Azt látjuk, hogy a mintában a férfiak körében magasabb volt azoknak az aránya, akiknem tetszett a film, mint a nők között. Ezt lefordítva a múlt félévből ismerős feltételes valószínűségek nyelvére, azt mondhatjuk, hogy a mintában, ha a válaszadó férfi, akkor nagyobb valószínűséggel tetszett neki a film.
 Ha a két változó független egymástól, akkor arra számítunk, hogy a férfiak és a nők körében azonos annak a valószínűsége, hogy tetszett nekik a film. A mintában természetesen eltérhet az arány a két csoportban, de várhatóan nem nagyon.
@@ -190,9 +200,12 @@ Ahhoz, hogy megállapítsuk, a mintában megfigyelt eltérés tulajdonítható-e
 
 Tudjuk, hogy független események esetében az együttes bekövetkezés valószínűsége egyenlő a két esemény valószínűségének a szorzatával ($P(A*B)=P(A)\times P(B)$). Az elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak a belső cellákat számoljuk újra, feltételezve a függetlenséget.
 
-Annak a valószínűségét, hogy a válaszadó férfi vegyük $P(F) = \frac{45}{100}=45\%$-nak, annak a valószínűségét, hogy tetszett nekik a film pedig $P(T)=\frac{60}{100}=60\%$-nak. 
-Tudjuk, hogy függetlenség esetén $P(F*T) = P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%$
-Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni a minta nagyságával.
+Annak a valószínűségét, hogy a válaszadó férfi vegyük $P(F) = \frac{45}{100}=45\%$-nak, annak a valószínűségét, hogy tetszett nekik a film pedig $P(T)=\frac{60}{100}=60\%$-nak.  
+
+Tudjuk, hogy függetlenség esetén $P(F*T) = P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%$  
+
+Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni a minta nagyságával.  
+
 Ezeket az értékeket fogjuk e~i,j~-vel jelölni (e mint *expected* vagy *elméleti*). 
 A férfiak esetében tehát így kaptuk az eredményt (az eredeti valószínűségeket is visszavezetve, szétírva):
 
@@ -200,13 +213,13 @@ $P(F*T)\times 100 = P(F)\times P(T) \times 100 =\frac{45}{100} \times \frac{60}{
 
 Vagyis, ha megnézik, a megfelelő érték megkapható úgy, hogy a sormarginálist (45) szorozzuk az oszlopmarginálissal (60) és osztjuk a mintanagysággal (100)
 
-$$e_{i,j}=\frac{m_{i*}\times m_{*j}}{N}$$
+$$e_{ij}=\frac{m_{i*}\times m_{*j}}{N}$$
 
 A vizsgált kereszttábla négy cellájára ez:  
-$e_{1,1}=\frac{45\times 40}{100}=18$  
-$e_{1,2}=\frac{45\times 60}{100}=27$  
-$e_{2,1}=\frac{55\times 40}{100}=22$  
-$e_{2,2}=\frac{55\times 60}{100}=33$  
+$e_{11}=\frac{45\times 40}{100}=18$  
+$e_{12}=\frac{45\times 60}{100}=27$  
+$e_{21}=\frac{55\times 40}{100}=22$  
+$e_{22}=\frac{55\times 60}{100}=33$  
 
 ```{r, expected}
 test <- data %>%
@@ -221,13 +234,15 @@ test$expected %>%
   set_right_border(everywhere, c(1, 3)) %>%
   set_markdown_contents(1, 1, "")
 ```
+<br>  
 
 ## Függetlenségvizsgálat  
-
+  
+<br>
 A megfigyelt és az elméleti kereszttábla közötti különbséget számítja ki a &chi;&sup2; próba.  
 
 Képlete:
-$$\chi^{2}=\sum_{i = 1}^{s}\sum_{j = 1}^{o}{\frac{(m_{i,j}-e_{i,j})^2}{e_{i,j}}}$$
+$$\chi^{2}=\sum_{i = 1}^{s}\sum_{j = 1}^{o}{\frac{(m_{ij}-e_{ij})^2}{e_{ij}}}$$
 A képletben i és j az adott sor és oszlop sorszáma, *m* jelöli a megfigyelt és *e* az elméleti értékeket, *s* a sorok száma (ebben az esetben 2) és *o* az oszlopok száma (szintén 2).
 
 Lefordítva a képletet magyarra: a két szumma annyit jelent, hogy végigmegyünk az összes sor (i = 1-től s-ig) és összes oszlop (j = 1-től o-ig) összes celláján (ebben az esetben 4 celláról van szó), és kiszámítjuk a megfigyelt és az elméleti érték különbségét. Ennek négyzetét elosztjuk az elméleti értékkel, és ezeket összeadjuk.
@@ -260,14 +275,19 @@ A 6,06-os tesztérték látható, hogy még 2,5%-os szint mellett is szignifiká
 
 Ezt úgy értelmezhetnénk, hogy igaz nullhipotézis (teljes függetlenség) esetén annak a valószínűsége, hogy 6,06-os vagy annál nagyobb tesztértéket kapjunk `r test$pvalue*100`%.
 
-Mivel a szignifikanciaszint alacsony / vagy másképp, a tesztérték nagyobb, mint az 5%-os (vagy amilyet választunk) szinthez tartozó határérték, elvetjük a nullhipotézist. A két változó nagy valószínűséggel a populációban is összefügg.
+Mivel a szignifikanciaszint alacsony / vagy másképp, a tesztérték nagyobb, mint az 5%-os (vagy amilyet választunk) szinthez tartozó határérték, elvetjük a nullhipotézist. A két változó nagy valószínűséggel a populációban is összefügg.  
+
+<br>  
 
 ## Asszociációs mérőszámok
-
+  
+<br>
 A &chi;&sup2; próba csak arra vonatkozik, hogy állítható-e a minta alapján, hogy a populációban is van bármilyen összefüggés a két változ2ó között, vagy elképzelhető, hogy a populációban a két változó egyáltalán nem függ össze.  
 Azt viszont, hogy ez az összefüggés erős-e, nem mondja meg a &chi;&sup2; próba, vannak viszont olyan mutatók, amelyek számszerűsítik az összefüggés erejét.  
 
-Ezek közül a legfontosabbak, amelyek kiszámítását is megnézzük, a &phi;, a Cramer-féle V, a PRE (másképpen Lambda) és a Gamma mutató.
+Ezek közül a legfontosabbak, amelyek kiszámítását is megnézzük, a &phi;, a Cramer-féle V, a PRE (másképpen Lambda) és a Gamma mutató.  
+
+<br>  
 
 ### Phi (&phi;)
 Olyan kereszttáblák esetén használható, amelyek egyik dimenziója (a sorok vagy oszlopok száma) 2. (A másik dimenzió akármennyi lehet, tehát pl. 2x10-es kereszttáblánál is jó a &phi; és 7x2-esnél is, mivel egyik kiterjedésük 2)  
@@ -280,7 +300,9 @@ Kiszámításakor arra kell figyelni, hogy a &chi;&sup2; teszt eredményét már
 
 A fenti esetben a &phi; értéke:
 $$\phi = \sqrt{\frac{6,06}{100}}=0,246$$
-Ez alapján a kapcsolat inkább gyenge, hiszen közelebb van a 0 végponthoz. 
+Ez alapján a kapcsolat inkább gyenge, hiszen közelebb van a 0 végponthoz.  
+
+<br>  
 
 ### Cramer-féle V
 Ezt a mutatót a &phi;-ből számoljuk, ha a kereszttábla mindkét dimenziója legalább 3, vagyis sorból és oszlopból is 2-nél több van.
@@ -289,7 +311,9 @@ $$Cramer V = \sqrt{\frac{\chi^{2}}{N*(min(s;o)-1)}}$$
 Vagy, ha már a &phi; értéke ismert:
 $$Cramer V = \frac{\phi}{\sqrt{min(s;o)-1}}$$
 Ha sorból vagy oszlopból csak kettő van, akkor min(s;o)-1 = 2-1 = 1, vagyis nem változik az eredmény.
-Ezt a mutatót majd egy másik példán tudjuk kiszámítani.
+Ezt a mutatót majd egy másik példán tudjuk kiszámítani.  
+
+<br>  
 
 ### PRE (Lambda)
 Ellentétben az előző két mutatóval, ez nem szimmetrikus, ezért két külön lambdát kell kiszámítanunk.
@@ -340,13 +364,18 @@ Ezúttal aszerint kell mindenkit besorolni, hogy férfi vagy nő.
 3. Kiszámítjuk a lambdát:
 $$\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{40}=\frac{6}{40}=0,15=15\%$$
 Ezek a mutatók is 0 és 1 (=100%) közötti értékeket vehetnek fel. 0 a leggyengébb, 1 pedig a legerősebb összefüggés. Előnye, hogy olyankor is használható, ha nem teljesülnek a &chi;&sup2; próba feltételei, és ezért a &phi; és a Cramer-féle V értékek nem megbízhatók.
-Néha viszont nem működnek jól: pl. ha nagyon egyenlőtlen méretűek a kategóriák. Erre majd megpróbálok mutatni néhány példát. De a fenti példában is, ha eggyel több nőnek tetszett volna a film a mintában, már az egyik lambda 0 lett volna.
+Néha viszont nem működnek jól: pl. ha nagyon egyenlőtlen méretűek a kategóriák. Erre majd megpróbálok mutatni néhány példát. De a fenti példában is, ha eggyel több nőnek tetszett volna a film a mintában, már az egyik lambda 0 lett volna.  
+
+<br>  
 
 ### Gamma
-Ordinális változók közötti kapcsolat számszerűsítésére szolgál, ezért a fenti példában nem használható. A későbbiekben megnézzük, hogyan működik. Ehhez nyissák meg a következő leckét!
+Ordinális változók közötti kapcsolat számszerűsítésére szolgál, ezért a fenti példában nem használható. A későbbiekben megnézzük, hogyan működik. Ehhez nyissák meg a következő leckét!  
 
-## Reziduálisok:
+<br>  
 
+## Reziduálisok
+  
+<br>
 A megfigyelt értékek különböztek attól, mit várnánk teljes függetlenség esetén.
 
 Ezek voltak a megfigyelt értékek:

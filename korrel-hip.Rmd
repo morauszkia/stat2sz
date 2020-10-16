@@ -24,7 +24,7 @@ Az előző fejezet arról szólt, hogyan tudjuk a mintából becsülni a korrel�
   
 <br>  
 
-## t-próba:  
+## t-próba  
   
 <br>
 Ezt a kérdést a legegyszerűbben egy t-próbával válaszolhatjuk meg. Ennek képlete:  

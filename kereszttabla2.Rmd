@@ -1,4 +1,5 @@
 ---
+title: "Kereszttáblaelemzés II."
 output: 
   html_document:
     toc: true
@@ -13,11 +14,13 @@ library(knitr)
 library(kableExtra)
 library(janitor)
 library(huxtable)
+library(questionr)
 ```
+<br><br>  
 
-# Kereszttáblaelemzés II.
 ## Folytatás, újabb példával
-
+  
+<br>
 Tegyük fel, hogy  megkérdeztünk 200 személyt, milyen szinten beszélnek angolul és franciául. A két változó együttes eloszlását mutatja az alábbi táblázat:
 
 ```{r example.2} 
@@ -139,10 +142,13 @@ A franciául jól beszélőket az "angol alap"-ba soroljuk: 10+20 hiba
 3. A hibák száma kb. 8,3%-kal csökkent:
 $$\lambda_{angol|francia}=\frac{120-110}{120}=0,083=8,3\%$$
 
-A két lambda is gyenge kapcsolatot mutat. Az egyik lambda ráadásul 0 volt. Ennek oka, hogy minden csoportban azok aránya volt a legmagasabb (egy esetben holtversenyben), akik nem beszélnek franciául. Ezzel sajnos a lambda nem tud mit kezdeni.
+A két lambda is gyenge kapcsolatot mutat. Az egyik lambda ráadásul 0 volt. Ennek oka, hogy minden csoportban azok aránya volt a legmagasabb (egy esetben holtversenyben), akik nem beszélnek franciául. Ezzel sajnos a lambda nem tud mit kezdeni.  
+
+<br>  
 
 ## Gamma kiszámítása
-
+  
+<br>
 Ebben az esetben, mivel két ordinális változóról van szó, a gamma mutató is kiszámítható.
 Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent, hogy két személy (általánosabban két megfigyelési egység) konkordáns vagy diszkordáns párt alkot.
 Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét vizsgált szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy franciául, nem érdekelnek minket.
@@ -277,9 +283,13 @@ A Gamma képlete a következő:
 $$\gamma = \frac{konkordáns párok száma - diszkordáns párok száma}{konkordáns párok száma + diszkordáns párok száma}$$
 $$\gamma = \frac{4200-4000}{4200+4000}=\frac{200}{8200}=0,024$$
 Eszerint tehát a gamma is megerősíti, amit a többi mutató is jelzett: az asszociáció meglehetősen gyengécske. A gamma viszont azt is megmutatja, hogy alapvetően pozitív a kapcsolat a két változó között: a gamma 0-nál nagyobb és kisebb értéket is felvehet. Pozitív értéket akkor vesz fel, ha a konkordáns párokból van több, negatív értéket pedig akkor, ha a diszkordáns párokból. Ez elég világosan látszik a képletből. Vagyis, ha a gamma értéke pozitív, akkor jellemzőbb, hogy aki az egyik változón magasabb értéket ér el, az a másikon is. Ha pedig negatív az értéke, akkor az jellemzőbb, hogy aki egyik változón magasabb értéket ér el, az a másikon alacsonyabb. A gamma értelmezéséhez tehát tudni kell, mit jelentenek az alacsonyabb/magasabb értékek a két változó esetében.
-Ebben az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél angolul, azok várhatóan franciául is jobban beszélnek. De ez az összefüggés gyenge.
+Ebben az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél angolul, azok várhatóan franciául is jobban beszélnek. De ez az összefüggés gyenge.  
+
+<br>  
 
 ## Reziduálisok
+  
+<br>
 Végül nézzük meg, mely cellák esetében szignifikáns a különbség a megfigyelt és a várható érték között. A nyers reziduálisok a következők:
 ```{r, resid.raw}
 table(data$angol, data$francia) %>%
@@ -310,9 +320,14 @@ table(data$angol, data$francia) %>%
   set_right_border(everywhere, c(1, 4)) %>%
   set_markdown_contents(1, 1, "Adjusted std. residuals")
 ```
+  
+<br>  
 
-## Összefoglalás:
+## Összefoglalás
+  
+<br>
 Kereszttábla-elemzés esetén a következő kérdések vetődnek fel:  
+
 1. Van-e szignifikáns összefüggés a két változó között? - Ehhez &chi;&sup2; próbát számolunk  
 2. Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs mérőszámok (&phi; Cramer-féle V, &lambda; és &gamma;)
 3. Hogyan függ össze a két változó? - Ezt a sor/oszlopszázalékok alapján tudjuk kielemezni
