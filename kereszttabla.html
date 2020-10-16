@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Statisztika 2. szeminárium</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Főoldal</a>
+</li>
+<li>
+  <a href="ismetles.html">Ismétlés</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Khi-négyzet próbák
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="kereszttabla.html">Függetlenségvizsgálat 1.</a>
+    </li>
+    <li>
+      <a href="kereszttabla2.html">Függetlenségvizsgálat 2.</a>
+    </li>
+    <li>
+      <a href="illeszkedes.html">Illeszkedésvizsgálat</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Korreláció
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="korrelacio.html">Korreláció becslése</a>
+    </li>
+    <li>
+      <a href="korrel-hip.html">Hipotézisvizsgálatok</a>
+    </li>
+    <li>
+      <a href="parcialis.html">Parciális korreláció</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
+    <span class="fa fa-folder"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:morauszki.andras@gmail.com">
+    <span class="fa fa-envelope"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<div id="kereszttáblaelemzés" class="section level1">
+<h1>Kereszttáblaelemzés</h1>
+<p>Az első nagyobb téma ebben a félévben a χ² (Khí-négyzet) tesztek lesznek. Ezek közül az első a kereszttáblaelemzés.</p>
+<p>Először elhelyezzük a módszert a többi között. Ugyan erre a kereszttábla esetében nem lesz szükség, de a két változó közül, amelyek között vizsgáljuk az összefüggést, tegyünk különbséget: az egyik a <strong>független</strong>, a másik pedig a <strong>függő</strong> változó. Arra számítunk, hogy a független változó értéke hatással van a függő változó értékére. Pl. az, hogy valaki milyen nemű (független változó) hatással van arra, tetszik-e neki egy film (függő változó)</p>
+<p>Attól függően, milyen mérési szintűek a változóink, más-más próbával vizsgálható az összefüggésük.</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:methods">
+<col><col><col><col><tr>
+<td rowspan="2" colspan="2" style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;"></td><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Függő változó</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;"><p>Nominális, ordinális</p>
+</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;"><p>Intervallum-, arányskála</p>
+</td></tr>
+<tr>
+<td rowspan="2" style="vertical-align: middle; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Független változó</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Nominális, ordinális</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; background-color: rgb(255, 99, 71); font-weight: normal;">Kereszttábla</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;">t-próba és tsai., ANOVA</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Intervallum-, arányskála</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;"></td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;">Korreláció</td></tr>
+</table>
+
+<p>Az előző félévben a nominális/ordinális független változó, illetve a skála mérési szintű függő változó összefüggésének vizsgálatára néztünk próbákat: pl. független változó volt a nem, függő változó pedig a jövedelem. Azt vizsgáltuk, eltér-e a jövedelem várható értéke a független változó szerinti két kategóriában. Ezeket neveztük független mintás vagy kétmintás t-próbának, Welch-próbának.</p>
+<p>A kereszttábla esetében olyan változópárok közötti összefüggést vizsgálunk, amelyek <strong>mindkét tagja nominális vagy ordinális szintű</strong>. Ilyen például a fenti példa a nemmel és azzal, tetszett-e nekik egy film.</p>
+<div id="tapasztalati-kereszttábla" class="section level2">
+<h2>Tapasztalati kereszttábla</h2>
+<p>Tegyük fel, hogy a fenti kérdést vizsgáljuk, és van egy 100 fős mintánk, amely a következőképpen oszlik meg:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.1">
+<caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">45</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">55</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
+</table>
+
+<p>Ebből a kereszttáblából &quot;darabszámok&quot; olvashatók ki. Az, hogy mi kerül a sorokba és az oszlopokba alapvetően szabadon eldönthető. Így nézne ki a kereszttábla, ha megcserélnénk a sorokat és oszlopokat: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.1b">
+<caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">45</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">55</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
+</table>
+</p>
+<p>Néhány szempont ehhez: - Ha az egyik változó sok kategóriából áll, míg a másik kevesebből, érdemes előbbit tenni a sorokba, mert úgy kevésbé széles, de hosszú táblázatot kapunk. - Egyesek javasolják, hogy a független változó kerüljön az oszlopokba. Ha ehhez tartják magukat, akkor lehet, hogy megkönnyítik, de lehet, hogy megnehezítik a saját életüket. A fenti példában, az első változatban épp a sorok mutatják a független változó különböző értékeit (férfi vagy nő) és az oszlopok a függő változóét (tetszett-e a film). - Az elemzés szempontjából nincs jelentősége, mi kerül a sorokba és mi az oszlopokba.</p>
+<p>Visszatérve a fenti kereszttáblához: ez olyan kérdésekre ad választ, mint - Hány férfi van a mintában? Válasz: 45 - Hány olyan válaszadó van, akinek tetszett a film? Válasz: 60 - Hány olyan női válaszadó van, akinek nem tetszett? Válasz: 28 - Hány olyan férfi, akinek tetszett? Válasz: 33</p>
+<p>Olyan kérdéseket már nem válaszolhatunk meg közvetlenül, mint - A nők hány százalékának tetszett a film? - A férfiak hány százalékának nem tetszett a film? - A filmet szeretők hány százaléka nő? - A férfiak vagy a nők körében magasabb azok aránya, akiknek tetszett a film?</p>
+<p>Ezeket a kérdéseket az így vagy úgy százalékolt kereszttáblákból tudjuk megválaszolni.</p>
+</div>
+<div id="százalékolt-táblák" class="section level2">
+<h2>Százalékolt táblák:</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Sorszázalékoknak</strong> nevezzük majd, ha az egyes sorokon belül számítjuk az arányokat A fenti esetben és elrendezésnél ez lesz a leghasznosabb.</li>
+</ol>
+<p>Kiszámítás módja: az adott cella elemszámát elosztjuk a sorösszeggel. A képletgyűjteményben m<sub>i,j</sub> jelöli az i. sor, j. oszlop cellájában szereplő értéket és m<sub>i*</sub> jelöli az i. sor összegét. A *-ra azért van szükség, hogy világos legyen, hogy a sorszám a sort vagy az oszlopot jelöli:<br />
+- m<sub>1*</sub> az első sor - m<sub>*1</sub> pedig az első oszlop</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:row.pcent">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">26.7%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">73.3%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50.9%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">49.1%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td></tr>
+</table>
+
+<p>Ebből a táblázatból közvetlenül kiolvasható és összevethető, hogy a férfiak és a nők körében külön-külön milyen arányban voltak, akiknek tetszett/nem tetszett az adott film. Azt eltérés nagysága persze továbbra is csak a mintára vonatkozik, és ebből még nem egyértelmű, hogy a populációban is van különbség.</p>
+<p>Ellenőrző kérdések: - A férfiak hány százalékának nem tetszett a film? - A nők között milyen arányban voltak, akiknek tetszett? - Melyik csoportban magasabb azoknak az aránya, akik szerették a filmet? - Hogyan viszonyulnak az egyes csoportok a minta egészéhez?</p>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>Oszlopszázalék</strong> Lehetőség van oszloponként is százalékolni. Ebben az esetben a cellaelemszámokat az oszlopösszegekkel osztjuk. Ebben az esetben ez talán kevésbé hat természetesen, de olyan kérdésekre kapunk választ, hogy a filmet szeretőknek hány százaléka volt nő a mintában? (Válasz: 45%) Azoknak, akik nem szerették a filmet, hány százalékuk volt férfi? (30%)</li>
+</ol>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:col.pcent">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">55.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">45.0%</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">45.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">55.0%</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td></tr>
+</table>
+
+<ol start="3" style="list-style-type: decimal">
+<li><strong>Cellaszázalék</strong>: A cellaelemszámokat a mintaelemszámmal elosztva megkapjuk, hogy az egyes cellákban a minta hány százaléka van. Ezt a kapcsolat elemzésében kevésbé használjuk.</li>
+</ol>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:tot.pcent">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">45.0%</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">55.0%</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100.0%</td></tr>
+</table>
+
+<p>A sor/oszlopszázalékok segítségével tudjuk megvizsgálni, a mintában hogyan függ össze a két vizsgált változó. A százalékolást érdemes a független változó szerint végrehajtani. A fenti esetben a független változó, a nem a sorokban van, ezért a sorszázalékok &quot;természetesebben&quot; hatnak: a mindennapokban is valószínűleg azt néznénk meg, hogy a férfiak és a nők hány százalékának tetszett a film, és hogy ez az arány különbözik-e. Ha a nem az oszlopokban lett volna, akkor oszlopszázalékokat lett volna célszerű nézni.</p>
+<p>A fenti sorszázalékolt táblából az látszik, hogy a férfiak körében magasabb volt azoknak az aránya, akik szerették a filmet: kb. 73% a 49%-kal szemben.</p>
+</div>
+<div id="elméleti-kereszttábla" class="section level2">
+<h2>Elméleti kereszttábla</h2>
+<p>Azt látjuk, hogy a mintában a férfiak körében magasabb volt azoknak az aránya, akiknem tetszett a film, mint a nők között. Ezt lefordítva a múlt félévből ismerős feltételes valószínűségek nyelvére, azt mondhatjuk, hogy a mintában, ha a válaszadó férfi, akkor nagyobb valószínűséggel tetszett neki a film. Ha a két változó független egymástól, akkor arra számítunk, hogy a férfiak és a nők körében azonos annak a valószínűsége, hogy tetszett nekik a film. A mintában természetesen eltérhet az arány a két csoportban, de várhatóan nem nagyon.</p>
+<p>Ahhoz, hogy megállapítsuk, a mintában megfigyelt eltérés tulajdonítható-e a mintavételnek, vagy ilyen jelentős eltérésnek kicsi a valószínűsége függetlenség esetén, szükségünk van valamire, amihez viszonyíthatunk. Ez az <strong>elméleti kereszttábla</strong>. SPSS-ben ezek az <em>expected count</em> értékek (várt gyakoriság).</p>
+<p>Tudjuk, hogy független események esetében az együttes bekövetkezés valószínűsége egyenlő a két esemény valószínűségének a szorzatával (<span class="math inline">\(P(A*B)=P(A)\times P(B)\)</span>). Az elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak a belső cellákat számoljuk újra, feltételezve a függetlenséget.</p>
+<p>Annak a valószínűségét, hogy a válaszadó férfi vegyük <span class="math inline">\(P(F) = \frac{45}{100}=45\%\)</span>-nak, annak a valószínűségét, hogy tetszett nekik a film pedig <span class="math inline">\(P(T)=\frac{60}{100}=60\%\)</span>-nak. Tudjuk, hogy függetlenség esetén <span class="math inline">\(P(F*T) = P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%\)</span> Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni a minta nagyságával. Ezeket az értékeket fogjuk e<sub>i,j</sub>-vel jelölni (e mint <em>expected</em> vagy <em>elméleti</em>). A férfiak esetében tehát így kaptuk az eredményt (az eredeti valószínűségeket is visszavezetve, szétírva):</p>
+<p><span class="math inline">\(P(F*T)\times 100 = P(F)\times P(T) \times 100 =\frac{45}{100} \times \frac{60}{100} \times 100 = \frac{45\times60}{100}\)</span></p>
+<p>Vagyis, ha megnézik, a megfelelő érték megkapható úgy, hogy a sormarginálist (45) szorozzuk az oszlopmarginálissal (60) és osztjuk a mintanagysággal (100)</p>
+<p><span class="math display">\[e_{i,j}=\frac{m_{i*}\times m_{*j}}{N}\]</span></p>
+<p>A vizsgált kereszttábla négy cellájára ez:<br />
+<span class="math inline">\(e_{1,1}=\frac{45\times 40}{100}=18\)</span><br />
+<span class="math inline">\(e_{1,2}=\frac{45\times 60}{100}=27\)</span><br />
+<span class="math inline">\(e_{2,1}=\frac{55\times 40}{100}=22\)</span><br />
+<span class="math inline">\(e_{2,2}=\frac{55\times 60}{100}=33\)</span></p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">45</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">55</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100</td></tr>
+</table>
+
+</div>
+<div id="függetlenségvizsgálat" class="section level2">
+<h2>Függetlenségvizsgálat</h2>
+<p>A megfigyelt és az elméleti kereszttábla közötti különbséget számítja ki a χ² próba.</p>
+<p>Képlete: <span class="math display">\[\chi^{2}=\sum_{i = 1}^{s}\sum_{j = 1}^{o}{\frac{(m_{i,j}-e_{i,j})^2}{e_{i,j}}}\]</span> A képletben i és j az adott sor és oszlop sorszáma, <em>m</em> jelöli a megfigyelt és <em>e</em> az elméleti értékeket, <em>s</em> a sorok száma (ebben az esetben 2) és <em>o</em> az oszlopok száma (szintén 2).</p>
+<p>Lefordítva a képletet magyarra: a két szumma annyit jelent, hogy végigmegyünk az összes sor (i = 1-től s-ig) és összes oszlop (j = 1-től o-ig) összes celláján (ebben az esetben 4 celláról van szó), és kiszámítjuk a megfigyelt és az elméleti érték különbségét. Ennek négyzetét elosztjuk az elméleti értékkel, és ezeket összeadjuk.</p>
+<p><strong>A próba használhatóságának feltételei</strong>: - Az elméleti kereszttábla egyik cellájában sincs kisebb érték 1-nél - Legfeljebb az elméleti kereszttábla celláinak ötödében van 5-nél kisebb érték</p>
+<p>A nullhipotézis az, hogy a két változó független. Az ellenhipotézis, hogy a két változó <strong>nem</strong> független.</p>
+<p>Végezzük el a próbát: <span class="math display">\[\chi^{2}=\frac{(12-18)^2}{18}+\frac{(33-27)^2}{27}+\frac{(28-22)^2}{22}+\frac{(27-33)^2}{33}=6,06\]</span></p>
+<p>Ha a nullhipotézis igaz, a fenti próba χ² eloszlást követ, amelynek szabadságfoka <span class="math inline">\(df = (s-1)\times(o-1) = (2-1)\times(2-1)= 1\)</span></p>
+<!-- IDE CHI2 ELOSZLÁS ÁBRA -->
+<p>A χ²-eloszlás táblázatában az 1-es szabadságfoknak megfelelő 1. sort nézzük. Ez a próba <strong>mindig egyoldali</strong>, tehág csak egy felső határértéket kell kikeresni. Mivel egyoldali, mindig az 1 - α oszlopot nézzük (α a szignifikanciaszint), vagyis:</p>
+<ul>
+<li>10%-os szignifikanciaszintnek (0,90-es oszlop) 2,71</li>
+<li>5%-os szignifikanciaszintnek (0,95-ös oszlop) 3,84</li>
+<li>2,5%-os szignifikanciaszintnek (0,975) 5,02</li>
+<li>1%-os szignifikanciaszintnek (0,990) 6,63</li>
+<li>0,5%-os szignifikanciaszintnek (0,995) 7,88 felel meg.</li>
+</ul>
+<p>Ha igaz, a nullhipotézis, akkor 95%-os valószínűséggel 0 és 3,84 közötti teszteredményt kapunk, és csak 100 mintából 5 esetben lesz a tesztérték 3,84 vagy nagyobb.</p>
+<p>A 6,06-os tesztérték látható, hogy még 2,5%-os szint mellett is szignifikáns lenne, 1%-os szint mellett viszont már nem. Az SPSS ehhez a próbához is kiszámítaná a pontos szignifikanciaszintet, amely ebben az esetben .</p>
+<p>Ezt úgy értelmezhetnénk, hogy igaz nullhipotézis (teljes függetlenség) esetén annak a valószínűsége, hogy 6,06-os vagy annál nagyobb tesztértéket kapjunk %.</p>
+<p>Mivel a szignifikanciaszint alacsony / vagy másképp, a tesztérték nagyobb, mint az 5%-os (vagy amilyet választunk) szinthez tartozó határérték, elvetjük a nullhipotézist. A két változó nagy valószínűséggel a populációban is összefügg.</p>
+</div>
+<div id="asszociációs-mérőszámok" class="section level2">
+<h2>Asszociációs mérőszámok</h2>
+<p>A χ² próba csak arra vonatkozik, hogy állítható-e a minta alapján, hogy a populációban is van bármilyen összefüggés a két változ2ó között, vagy elképzelhető, hogy a populációban a két változó egyáltalán nem függ össze.<br />
+Azt viszont, hogy ez az összefüggés erős-e, nem mondja meg a χ² próba, vannak viszont olyan mutatók, amelyek számszerűsítik az összefüggés erejét.</p>
+<p>Ezek közül a legfontosabbak, amelyek kiszámítását is megnézzük, a φ, a Cramer-féle V, a PRE (másképpen Lambda) és a Gamma mutató.</p>
+<div id="phi-φ" class="section level3">
+<h3>Phi (φ)</h3>
+<p>Olyan kereszttáblák esetén használható, amelyek egyik dimenziója (a sorok vagy oszlopok száma) 2. (A másik dimenzió akármennyi lehet, tehát pl. 2x10-es kereszttáblánál is jó a φ és 7x2-esnél is, mivel egyik kiterjedésük 2)</p>
+<p>Képlete: <span class="math display">\[\phi = \sqrt{\frac{\chi^{2}}{N}}\]</span> Értéke 0 és 1 közé eshet. 0 a függetlenséget jelenti, és 1 jelenti a legerősebb összefüggést. Kiszámításakor arra kell figyelni, hogy a χ² teszt eredményét már <strong>NE</strong> emeljék ismételten négyzetre, és persze nem szabad elfelejteni az osztás után négyzetgyököt vonni.</p>
+<p>A fenti esetben a φ értéke: <span class="math display">\[\phi = \sqrt{\frac{6,06}{100}}=0,246\]</span> Ez alapján a kapcsolat inkább gyenge, hiszen közelebb van a 0 végponthoz.</p>
+</div>
+<div id="cramer-féle-v" class="section level3">
+<h3>Cramer-féle V</h3>
+<p>Ezt a mutatót a φ-ből számoljuk, ha a kereszttábla mindkét dimenziója legalább 3, vagyis sorból és oszlopból is 2-nél több van. Képlete: <span class="math display">\[Cramer V = \sqrt{\frac{\chi^{2}}{N*(min(s;o)-1)}}\]</span> Vagy, ha már a φ értéke ismert: <span class="math display">\[Cramer V = \frac{\phi}{\sqrt{min(s;o)-1}}\]</span> Ha sorból vagy oszlopból csak kettő van, akkor min(s;o)-1 = 2-1 = 1, vagyis nem változik az eredmény. Ezt a mutatót majd egy másik példán tudjuk kiszámítani.</p>
+</div>
+<div id="pre-lambda" class="section level3">
+<h3>PRE (Lambda)</h3>
+<p>Ellentétben az előző két mutatóval, ez nem szimmetrikus, ezért két külön lambdát kell kiszámítanunk. A neve a Proportional Reduction of Error-ból ered, ami kifejezi a mutató logikáját is. Az elgondolás a következő: ha két változó összefügg, akkor az egyik értékének ismeretében jobban meg tudjuk becsülni a másik változó értékét: pl. ha tudjuk valakinek a nemét, jobban meg tudjuk tippelni, tetszett-e neki a film. Ha viszont a két változó független egymástól, akkor a nem ismerete semmit sem segít.</p>
+<p>Nézzük a fenti példán: Két lambdát fogunk kiszámítani, az egyik arra vonatkozik, mennyire tudjuk a nem ismeretében jobban megtippelni, tetszett-e a válaszadónak a film; a másik arra vonatkozik, mennyire tudjuk annak ismeretében, hogy tetszett-e neki a film, megtippelni a nemét.</p>
+<p>Hogy ne kelljen annyit visszalapozni, álljon itt ismét a megfigyelt kereszttábla: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:observed">
+<caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">45</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">55</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
+</table>
+</p>
+<p>Nézzük előbb az elsőt: Cél minél több személyt jól besorolni aszerint, tetszett-e nekik a film. A cél, hogy minden válaszadót (ebben az esetben mind a 100-at) betegyük az egyik csoportba: tetszett / nem tetszett.</p>
+<ol style="list-style-type: decimal">
+<li><p>kérdés: Soroljunk be egy válaszadót! Nem tudjuk, ő férfi vagy nő, és meg kell tippelnünk, tetszett-e neki a film. Mit tippelünk? A 100 válaszadóból 60-nak tetszett, és csak 40-nek nem tetszett, vagyis érdemes úgy tippelni, hogy a véletlenszerűen kiválasztott válaszadónak tetszett a film, így 60%-os valószínűséggel jól tippeltünk.</p></li>
+<li><p>kérdés: Minden válaszadót be szeretnénk kategorizálni. Mit tegyünk? Melyik kategóriába hány embert soroljunk be? Az a célunk, hogy minél többen jó helyre kerüljenek.</p></li>
+<li><p>lépés: Ezt úgy tudjuk biztosítani, hogy <strong>mindenkit</strong> abba a kategóriába sorolunk, amely a legnagyobb: a &quot;tetszett&quot;-be. Így 60 személyt jól, 40 személyt pedig rosszul soroltunk be. Ezt a 40-et jelöljük úgy, hogy Hiba<sub>0</sub> = 40.</p></li>
+<li><p>lépés: Ezután megnézzük, mennyit segít a nem ismerete, hogy kevesebb embert tegyünk rossz kategóriába. Nézzük soronként:<br />
+Ha a válaszadó férfi, érdemes arra tippelni, hogy tetszett neki a film, így 33 férfit jól, 12-t rosszul soroltunk be. Ha a válaszadó nő, érdemes arra tippelni, hogy nem tetszett neki a film, így 28 nőt jól, 27-et rosszul soroltunk be. Összesen 12 férfit és 27 nőt, vagyis 39 személyt soroltunk be rosszul. Ez lesz a Hiba<sub>1</sub> = 39.</p></li>
+<li>Kiszámítjunk, hogyan csökkent a hibásan besorolt esetek száma, és ezt az eredetileg hibásan besorolt esetek arányában fejezzük ki. <span class="math display">\[\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{40-39}{40}=\frac{1}{40}=0,025=2,5\%\]</span> És most nézzük a második lambdát: Ezúttal aszerint kell mindenkit besorolni, hogy férfi vagy nő.</li>
+<li><p>lépés: Mindenkit nőnek tippelünk, mert ők vannak többen: 45 férfit sorolunk be rosszul.</p></li>
+<li><p>lépés: Azokat, akiknek nem tetszett, nőknek tippeljük (12 hiba), azokat, akiknek tetszett pedig férfiaknak (27 hiba), ezzel összesen 39 hibás besorolás lesz.</p></li>
+<li><p>Kiszámítjuk a lambdát: <span class="math display">\[\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{40}=\frac{6}{40}=0,15=15\%\]</span> Ezek a mutatók is 0 és 1 (=100%) közötti értékeket vehetnek fel. 0 a leggyengébb, 1 pedig a legerősebb összefüggés. Előnye, hogy olyankor is használható, ha nem teljesülnek a χ² próba feltételei, és ezért a φ és a Cramer-féle V értékek nem megbízhatók. Néha viszont nem működnek jól: pl. ha nagyon egyenlőtlen méretűek a kategóriák. Erre majd megpróbálok mutatni néhány példát. De a fenti példában is, ha eggyel több nőnek tetszett volna a film a mintában, már az egyik lambda 0 lett volna.</p></li>
+</ol>
+</div>
+<div id="gamma" class="section level3">
+<h3>Gamma</h3>
+<p>Ordinális változók közötti kapcsolat számszerűsítésére szolgál, ezért a fenti példában nem használható. A későbbiekben megnézzük, hogyan működik. Ehhez nyissák meg a következő leckét!</p>
+</div>
+</div>
+<div id="reziduálisok" class="section level2">
+<h2>Reziduálisok:</h2>
+<p>A megfigyelt értékek különböztek attól, mit várnánk teljes függetlenség esetén.</p>
+<p>Ezek voltak a megfigyelt értékek: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:observed.2">
+<caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">45</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">55</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
+</table>
+</p>
+<p>És ezek voltak a várható (elméleti) értékek: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected.2">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">45</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">55</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100</td></tr>
+</table>
+</p>
+<p>A kettő közötti különbséget nevezzük reziduálisnak. Jelöljük mondjuk <span class="math inline">\(r_{ij}\)</span>-vel.<br />
+<span class="math display">\[r_{ij}=m{ij}-e{ij}\]</span> Ha a megfigyelt esetszám kisebb, mint várható lenne függetlenség esetén, akkor negatív értéket, ha pedig több, akkor pozitív értéket kapunk. Pl.<br />
+<span class="math inline">\(r_{11}=12-18=-6\)</span><br />
+<span class="math inline">\(r_{12}=33-27=6\)</span><br />
+stb.</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:resid.raw">
+<col><col><col><tr>
+<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><p>Raw residuals</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-6</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-6</td></tr>
+</table>
+
+<p>Ezek önmagában nem mondják meg, hogy az eltérés jelentős-e. Pl. ha az eltérés a várhatótól 20, akkor ez jelentős lehet egy 100 fős minta esetében, de jelentéktelen egy 1000 fős mintánál. A korrigált standardizált reziduálisok (<em>adjusted standardized residual</em>) alkalmasak arra, hogy megállapítsuk, az eltérés az adott cella esetében szignifikáns-e. Jelöljük <span class="math inline">\(r_{ij}^{(a)}\)</span>-val ezt a reziduálist.<br />
+<span class="math display">\[r_{ij}^{(a)}=\frac{m_{ij}-e{ij}}{\sqrt{e_{ij}\times \left(1-\frac{m_{i*}}{N}\right)\times\left(1-\frac{m_{*j}}{N}\right)}}\]</span><br />
+Pl.<br />
+<span class="math inline">\(r_{11}^{(a)}=\frac{12-18}{\sqrt{18\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{40}{100}\right)}}=-2,46\)</span><br />
+<span class="math inline">\(r_{12}^{(a)}=\frac{33-27}{\sqrt{27\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{60}{100}\right)}}=2,46\)</span><br />
+stb.</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:resid.adj">
+<col><col><col><tr>
+<th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><p>Adjusted std. residuals</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2.46</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.46</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.46</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2.46</td></tr>
+</table>
+
+<p>Ha a kereszttáblának csak 2 sora / 2 oszlopa van, akkor az ugyanabban az oszlopban / sorban lévő értékek csak előjelükben különböznek. Mivel a fenti kereszttábla 2x2-es, ezért ugyanaz az érték szerepel minden cellában, csak épp váltakozó előjellel. Ha viszont már három érték szerepel egy sorban / oszlopban, azok összege nem feltétlenül 1.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

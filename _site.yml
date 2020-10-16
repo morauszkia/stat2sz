@@ -1,0 +1,35 @@
+name: "statistics_2"
+output_dir: "."
+output:
+  html_document:
+    theme: readable
+    highlight: kate
+navbar:
+  title: "Statisztika 2. szeminárium"
+  type: "inverse"
+  left:
+    - text: "Főoldal"
+      href: index.html
+    - text: "Ismétlés"
+      href: ismetles.html
+    - text: "Khi-négyzet próbák"
+      menu:
+        - text: "Függetlenségvizsgálat 1."
+          href: kereszttabla.html
+        - text: "Függetlenségvizsgálat 2."
+          href: kereszttabla2.html
+        - text: "Illeszkedésvizsgálat"
+          href: illeszkedes.html
+    - text: "Korreláció"
+      menu:
+        - text: "Korreláció becslése"
+          href: korrelacio.html
+        - text: "Hipotézisvizsgálatok"
+          href: korrel-hip.html
+        - text: "Parciális korreláció"
+          href: parcialis.html
+  right: 
+    - icon: fa-folder
+      href: https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0
+    - icon: fa-envelope
+      href: mailto:morauszki.andras@gmail.com
