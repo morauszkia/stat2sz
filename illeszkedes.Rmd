@@ -1,0 +1,65 @@
+---
+title: "Illeszkedésvizsgálat"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(huxtable)
+library(dplyr)
+```
+
+<br><br>
+
+Időnként azt kell megvizsgálnunk, hogy egy minta származhat-e egy bizonyos elméleti valószínűségeloszlásból. Ha ez utóbbinak a paraméterei is adottak, akkor **tiszta illeszkedésvizsgálatról** van szó. Ha a kérdés arra vonatkozik, hogy a minta feltételezhetően valamilyen *típusú* eloszlásból származik-e, amelynek paramétereit is a mintából becsüljük, akkor pedig **becsléses illeszkedésvizsgálatról** van szó. Ez utóbbi jellemzőbb, leggyakoribb formája pedig a *normalitásvizsálat*, vagyis, hogy a minta illeszkedik-e a normális eloszláshoz.
+
+Illeszkedésvizsgálat diszkrét és folytonos változók esetében is végezhető, de mi csak a diszkrét esetet nézzük meg.  
+<br><br>
+  
+## Példa  
+
+Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla, hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük kell a szabályos dobókockával való dobás valószínűségeloszlásához.  
+Dobunk a dobókockával 60-szor. Tegyük fel, hogy az alábbi dobások jöttek ki:  
+
+```{r dice}
+table <- hux(
+  which = 1:6,
+  no = c(13, 8, 10, 7, 15, 7)
+)
+table %>%
+  set_markdown_contents(1, 1, "Dobott szám") %>%
+  set_markdown_contents(1, 2, "db (m~i~)") %>%
+  set_all_borders()
+```
+
+Ezek a megfigyelések, jelöljük ezeket $m_i$-vel! Most még szükségünk van az elméleti értékekre: hány 1-es, 2-es, stb. lett volna a 60 dobás között, ha *teljes mértékben* a valószínűségeloszlásnak megfelelően alakulnak a dobások. Ebben az esetben minden érték valószínűsége $P(\xi = x_i) = \frac{1}{6}$. Vagyis minden dobásból 10-nek kellett volna lennie. Általánosan:
+$$e_i = N*p_i$$
+Ebben $p_i$ egyszerűsítve jelöli az egyes értékek valószínűségét.
+
+```{r dice.complete}
+e <- c(NA, rep(10, 6))
+table <-  cbind(table, 
+               e)
+table %>%
+  set_markdown_contents(1, 1, "Dobott szám") %>%
+  set_markdown_contents(1, 2, "db (m~i~)") %>%
+  set_markdown_contents(1, 3, "e~i~") %>%
+  set_all_borders()
+```
+
+A próba értékét az alábbi képlettel kapjuk meg:  
+$$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}$$  
+
+Ez a képlet (a megfigyelt és elméleti érték különbségének négyzete, osztva az elméleti értékkel és összeadva) ugyanaz, mint a kereszttábla esetén végzett függetlenségvizsgálaté, a különbség csak annyi, hogy illeszkedésvizsgálatnál csak egy index-szel kell dolgoznunk. A fenti táblázatra a próba értéke:  
+$$\chi^{2}= \frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6$$
+
+A próba igaz nullhipotézis (illeszkedés) esetén $df=k-1$ szabadságfokú &chi;&sup2; eloszlást követ, ahol k a változó lehetésges értékeinek a száma, vagyis a fenti esetben $df = 6 - 1 = 5$. Ehhez 5% szignifikanciaszint esetén a 11,1 határérték tartozik, vagyis 5%-os szignifikanciaszint mellett megtartjuk a nullhipotézist, nem állíthatjuk, hogy a dobások megoszlása nem illeszkedne a várt eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az ellenkezőjét - szabályosnak tekintjük.
+  
+<br>
+
+Ugyanígy bármilyen diszkrét valószíűségi eloszlást követő változó illeszkedése vizsgálható. Folytonos változók esetén egy lehetőség, hogy a változó értékeit intervallumokra bontjuk, és az egyes intervallumokhoz rendeljük a megfelelő valószínűségeket. Pl. Normális eloszlás esetén az átlag &plusmn; egy szórásnyi intervallumba esik az értékek harmada, stb. (Előző félévben néztük, hogyan tudunk a normális eloszláson adott valószínűségű intervallumokat lehatárolni.) 
+Folytonos változók esetén rendelkezésre állnak más próbák, mint például a *Kolmogorov-Smirnov* és az *Anderson-Darling* próba, amellyel vizsgálható a változó illeszkedése bármilyen, adott paraméterekkel rendelkező valószínűségi eloszláshoz (beleértve a kiemelt jelentőségű normális eloszlást), illetve további tesztek, mint a *Lilliefors*, *Shapiro-Wilk*, amellyel vizsgálható hogy a változó normális eloszlást követ-e.

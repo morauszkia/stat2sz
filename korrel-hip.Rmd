@@ -1,0 +1,136 @@
+---
+title: 'Hipotézisvizsgálatok'
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(janitor)
+library(huxtable)
+library(HistData)
+library(ggplot2)
+library(forcats)
+```
+
+<br><br>
+Az előző fejezet arról szólt, hogyan tudjuk a mintából becsülni a korrelációt. Miután azonban megkaptuk a mintára jellemző korrelációs együtthatót, arra a kérdésre kell válaszolni, állítható-e ez alapján, hogy a két változó nemcsak a mintában, hanem a populációban is összefügg.  
+  
+<br>  
+
+## t-próba:  
+  
+<br>
+Ezt a kérdést a legegyszerűbben egy t-próbával válaszolhatjuk meg. Ennek képlete:  
+$$t = r\times\sqrt{\frac{N-2}{1-r^2}}$$  
+A fenti képletben *r* a becsült korrelációs együttható, *N* pedig a minta elemszáma.  
+  
+A próba azt a nullhipotézist vizsgálja, hogy a két változó között a populációban $\rho = 0$ a korreláció erőssége. &rho;-val (ejtsd: ró) jelöljük a korrelációt a populációban, amelyet az *r*-rel próbálunk becsülni.  
+Az ellenhipotézis szerint $\rho \ne 0$. (Ellenhipotézis lehet az is, hogy &rho; < vagy > 0-nál, ebben az esetben egyoldali próbát hajtunk végre)  
+  
+Igaz nullhipotézis esetén a fenti t-próba Student-féle t-eloszlást követ $df = N-2$ szabadságfokkal.
+
+Nézzük először a korábban 20 fős mintából kiszámított r = 0,742-es korrelációt!
+
+A képletbe behelyettesítve:  
+$$t = 0,742\times\sqrt{\frac{20-2}{1-0,742^2}}=4,70$$  
+$$df = 20-2 = 18$$  
+$$t_{18; 0,975}=2,10$$  
+Arra figyeljenek, hogy kétoldali t-próba esetén az 5%-os szignifikanciaszintnek megfelelő értéket a 0,975-ös oszlopból tudjuk kiolvasni. Ennek oka, hogy a táblázatban az oszlopok tetején szereplő valószínűségek az "alsó" kritikus tartományt is tartalmazzák (tehát pl. 5%-os szignifikanciaszint esetén 2,5% hozzáadódik a fennmaradó 95%-hoz, így kapjuk a 97,5%-ot)  
+Mivel a tesztérték (4,7) nagyobb a határértéknél (2,1), ezért 5%-os szignifikanciaszint mellett szignifikáns a próba.  
+A táblázatból 1% a legkisebb szignifikanciaszint, amelyhez kiolvasható a határérték (0,995-ös oszlop): 2,88. Vagyis a 20 elemű mintából becsült 0,742-es korreláció 1%-os szignifikanciaszint mellett is szignifikáns.  
+A pontos szignifikanciaszint egyébként `r dt(x = 4.7, df = 18)`.  
+  
+Ugyanígy bármilyen becsült korrelációra kiszámítható a t-próba, amely alapján eldönthető, adott szignifikanciaszint mellett szignifikáns-e a korreláció, vagyis állíthatjuk-e ez alapján, hogy a populációban sem független a két változó.  
+  
+<br>  
+
+## Egyéb hipotézisvizsgálatok  
+  
+<br>
+Az egyéb hipotézisvizsgálatok kulcsa a Fisher-féle Z-transzformáció. Erre azért van szükség, mert a korrelációs együtthatók, mint valószínűségi változók nem normális eloszlásúak. Különösen igaz ez a viszonylag kis mintákból vett erős korrelációkra.  
+  
+A Fisher-féle transzformáció képlete:
+$$Z(r) = \frac{1}{2}\times\ln\frac{1+r}{1-r}$$  
+
+Például vegyük a következő értékeket: 0,4; 0,6; -0,6; 0; 0,9
+$$Z(0,4) = \frac{1}{2}\times\ln\frac{1,4}{0,6}=0,424$$  
+$$Z(0,6) = \frac{1}{2}\times\ln\frac{1,6}{0,4}=0,693$$  
+$$Z(-0,6) = \frac{1}{2}\times\ln\frac{0,4}{1,6}=-0,693$$  
+Figyeljék meg, hogy ez csak előjelében különbözik a 0,6 transzformált értékétől! Ez mindig igaz: ha a becsült korrelációk csak előjelükben különböznek, de abszolút értékük egyenlő, akkor a transzformált értékeik is csak előjelükben fognak különbözni. Ezért pl. a $Z(-0,4)=-0,424$ lenne.  
+Azt is figyeljék meg, hogy minél távolabb van a korreláció értéke 0-tól, annál jobban fog különbözni az *r* és a *Z(r)* érték.  
+
+$$Z(0) = \frac{1}{2}\times\ln\frac{1}{1}=0$$  
+Ezt érdemes megjegyezni: 0 transzformált értéke is 0.
+$$Z(0,9) = \frac{1}{2}\times\ln\frac{1,9}{0,1}=1,472$$  
+Ez pedig azért fontos, hogy lássák míg a korreláció csak [-1;1] intervallumon belül vehet fel értéket, addig a transzformált érték lehet 1-nél nagyobb (és -1-nél kisebb)  
+  
+A transzformált érték egyedül a becsült értéktől függ, ezért pl. 0,4 transzformáltja attól függetlenül 0,424 lesz, hogy mekkora mintából származik a 0,4-es becslés, vagy akkor is, ha akár nem is becsült értékről, hanem viszonyítási értékről van szó. Erre még visszatérek a hipotézisvizsgálatoknál.
+<br>
+  
+### Szignifikancia-vizsgálat (0-tól való eltérés)  
+  
+Ez a próba a fenti t-próba alternatívája, ezért azt várjuk tőle, hogy ugyanazt az eredményt adja.  
+Képlete:  
+$$z^*=\frac{Z(r)}{\frac{1}{\sqrt{N-3}}}$$  
+  
+Tegyük fel, hogy a fenti 0,4-es becsült értéket egy 20 fős mintából kaptuk. Nézzük, állítható-e, hogy a két vizsgált változó a populációban is összefügg. Másképpen: szignifikáns-e a 0,4-es korreláció?  
+$$z^*=\frac{0,424}{\frac{1}{\sqrt{20-3}}}=1,748$$  
+Ezeknek a próbáknak a nulleloszlása kivétel nélkül a standard normális eloszlás lesz, ezért, ha 5%-os szignifikanciaszint mellett szeretnénk döntést hozni, akkor a $\pm1,96$ határértékekhez viszonyíthatunk. Eszerint tehát 5%-os szignifikanciaszint mellett nem szignifikáns a becsült korreláció.
+
+*Ugyanez t-próbával:* 
+$$t = 0,4\times\sqrt{\frac{20-2}{1-0,4^2}}=1,852$$  
+*A próba nulleloszlása $df = N-2 = 18$ szabadságfokú t-eloszlás. Az 5%-os szig. szinthez tartozó határérték $t_{18;0,975}=2,1$, vagyis ugyanarra a következtetésre jutunk: a korreláció nem szignifikáns.*  
+<br>
+  
+### Szignifikancia-vizsgálat nem 0 viszonyítási értékkel
+  
+Van viszont lehetőség bármilyen tetszőleges értékhez is viszonyítani, és nézni, szignifikáns-e az eltérés, vagyis állítható-e, hogy a korreláció a populációban is eltér (pl. erősebb) egy bizonyos értéktől (jelöljük $\rho_0$-val!).  
+Ennek képlete:  
+$$z^*=\frac{Z(r)-Z(\rho_0)}{\frac{1}{\sqrt{N-3}}}$$  
+Vegyük alapul a fenti értékeket, és nézzük meg, szignifikánsan különbözik-e a korreláció 0,9-től! Ennek már néztük a transzformáltját: $Z(0,9)=1,472$  
+$$z^*=\frac{0,424-1,472}{\frac{1}{\sqrt{20-3}}}=-4,32$$  
+Ez az eltérés szignifikáns, hiszen a próba értéke a [-1,96;+1,96] intervallumon kívül esik.  
+<br>
+  
+### Szignifikanciavizsgálat két becsült korreláció között
+  
+Nemcsak egy korreláció és egy tetszőleges viszonyítási érték, hanem két becsült korreláció is összehasonlítható. Például megvizsgálható, különbözik-e két változó közötti kapcsolat két országban; változott-e egy kapcsolat erőssége bizonyos idő elteltével; vagy épp az, hogy két változó egyforma vagy nem egyforma erősen függ össze egy harmadikkal.  
+Képlete:  
+$$z^*=\frac{Z(r_1)-Z(r_2)}{\sqrt{\frac{1}{N_1-3}+\frac{1}{N_2-3}}}$$  
+Nézzük, a fenti $r_1=0,4$-es korreláció ($N_1 = 20$ fős mintából) különbözik-e szignifikánsan egy $r_2 = 0,9$ erősségű korrelációtól, amelyet egy $N_2 = 25$ fős mintából becsültünk? (A 0,9-es korreláció Z-transzformált értéke ebben az esetben is 1,472 lesz, ez nem változik, akár becslésről van szó, akár nem.)  
+$$z^*=\frac{0,424-1,472}{\sqrt{\frac{1}{20-3}+\frac{1}{25-3}}}=-3,25$$  
+Vegyék észre, hogy az előzőhöz képest a nevező változott csak, mivel ebben az esetben a második érték is mintából becsült. A teszt abszolút értéke is kisebb lett, közelebb került a $\pm1,96$-os határértékekhez, de még mindig szignifikáns 5%-os szignifikanciaszint mellett.  
+(*Előfordulhat, hogy egy korreláció szignifikánsan különbözik egy adott viszonyítási értéktől, de nem különbözik szignifikánsan egy ugyanakkora becsült értéktől. Ennek oka, hogy a becslés esetében ez utóbbi is egy változó egy lehetséges értéke, ezért számolnunk kell azzal, hogy ez az érték eltérhet a populációbeli értéktől.*)
+  
+<br>
+  
+## Intervallumbecslés
+  
+Az intervallumbecslés logikája ugyanaz, mint volt az átlag, illetve az arány becslésénél (ld. előző félév): a pontbecsléshez hozzáadjuk, illetve abból kivonjuk a becslés standard hibáját megszorozva a megfelelő eloszlás 95%-os konfidenciaszintnek megfelelő határértékeivel.  
+Korreláció esetében a pontbecslés a Z(r) érték lesz, a standard hiba értéke $\frac{1}{\sqrt{N-3}}$, a megfelelő eloszlás pedig a standard normális, amelynek a 95%-os konfidenciaszintnek megfelelő értéke 1,96.  
+A képlet:  
+$$Z(r)\pm z_{1-\frac{\alpha}{2}}\times\frac{1}{\sqrt{N-3}}$$  
+Mivel azonban ez a becslés a Z(r) értéket veszi alapul, a kapott határérékek is a korrelációs együtthatók Z-transzformált értékei lesznek. Ezeket még vissza kell transzformálni, aminek képlete:  
+$$r = \frac{e^{2\times Z(r)}-1}{e^{2\times Z(r)}+1}$$  
+Adjunk 95%-os intervallumbecslést a fenti r = 0,4-es korrelációra!  
+A transzformált értéket már korábban kiszámítottuk: $Z(0,4)=0,424$  
+Ezt, és a 20-as mintanagyságot behelyettesítjük a képletbe:  
+$$0,424\pm1,96\times\frac{1}{\sqrt{20-3}}=0,424\pm0,475$$  
+Az alsó határérték: $0,424-0,475 = -0,051$  
+A felső határérték: $0,424+0,475 = 0,899$  
+  
+Visszatranszformálás:  
+Alsó határérték:  
+$$r_{alsó} = \frac{e^{2\times (-0,051)}-1}{e^{2\times (-0,051)}+1}=-0,051$$  
+*(Elenyésző a különbség a sima és a transzformált érték között - a kerekítés miatt el is tűnik - mivel nagyon közel van az érték 0-hoz)*  
+Felső határérték:  
+$$r_{felső} = \frac{e^{2\times 0,899}-1}{e^{2\times 0,899}+1}=0,716$$  
+<br>  
+*Ugyanezek a módszerek működnek nemcsak "sima", hanem parciális korrelációkkal (ld. következő rész) is, annyi változtatással, hogy az N-ből kivont szám eggyel nagyobb a parciális korrelációk esetében: N-2 helyett N-3 és N-3 helyett N-4-gyel kell számolni.*

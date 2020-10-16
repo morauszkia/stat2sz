@@ -1,0 +1,418 @@
+---
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(janitor)
+library(huxtable)
+library(questionr)
+```
+  
+  
+  
+# Kereszttáblaelemzés  
+
+Az első nagyobb téma ebben a félévben a &chi;&sup2; (Khí-négyzet) tesztek lesznek. Ezek közül az első a kereszttáblaelemzés.
+
+Először elhelyezzük a módszert a többi között. Ugyan erre a kereszttábla esetében nem lesz szükség, de a két változó közül, amelyek között vizsgáljuk az összefüggést, tegyünk különbséget: az egyik a **független**, a másik pedig a **függő** változó. Arra számítunk, hogy a független változó értéke hatással van a függő változó értékére.
+Pl. az, hogy valaki milyen nemű (független változó) hatással van arra, tetszik-e neki egy film (függő változó)
+
+Attól függően, milyen mérési szintűek a változóink, más-más próbával vizsgálható az összefüggésük.
+
+```{r methods}
+tab <- hux(indep = c("Nominális, ordinális", "Intervallum-, arányskála"),
+           nomord = c("Kereszttábla", ""),
+           scale = c("t-próba és tsai., ANOVA", "Korreláció"))
+tab <- cbind(c("", "Független változó", ""), tab)
+tab <- tab %>%
+  set_markdown_contents(1, 2, "") %>%
+  set_markdown_contents(1, 3, "Nominális, ordinális") %>%
+  set_markdown_contents(1, 4, "Intervallum-, arányskála")
+tab <- rbind(c("", "", "Függő változó", ""), tab)
+tab %>%
+  set_rowspan(3, 1, 2) %>%
+  set_colspan(1, 3, 2) %>%
+  set_all_borders(value = 1) %>%
+  set_align(everywhere, 3:4, "centre") %>%
+  set_align(everywhere, 1:2, "right") %>%
+  set_valign(3, 1, "middle") %>%
+  set_colspan(1, 1, 2) %>%
+  set_rowspan(1, 1, 2) %>%
+  set_all_padding(everywhere, everywhere, 4) %>%
+  set_background_color(3, 3, "tomato1") %>%
+  set_bold(1:2, 3:4) %>%
+  set_bold(3:4, 1:2)
+```
+  
+Az előző félévben a nominális/ordinális független változó, illetve a skála mérési szintű függő változó összefüggésének vizsgálatára néztünk próbákat: pl. független változó volt a nem, függő változó pedig a jövedelem. Azt vizsgáltuk, eltér-e a jövedelem várható értéke a független változó szerinti két kategóriában. Ezeket neveztük független mintás vagy kétmintás t-próbának, Welch-próbának.
+
+A kereszttábla esetében olyan változópárok közötti összefüggést vizsgálunk, amelyek **mindkét tagja nominális vagy ordinális szintű**. Ilyen például a fenti példa a nemmel és azzal, tetszett-e nekik egy film.
+
+## Tapasztalati kereszttábla  
+
+Tegyük fel, hogy a fenti kérdést vizsgáljuk, és van egy 100 fős mintánk, amely a következőképpen oszlik meg:
+
+```{r example.1} 
+sex <- c(rep("nő", 55), rep("férfi", 45))
+like <- c(rep("tetszett", 27), rep("nem tetszett", 28), rep("tetszett", 33), rep("nem tetszett", 12))
+data <- data.frame(nem = sex, tetszett = like)
+data %>%
+  tabyl(nem, tetszett) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux %>%
+  set_bold(c(1, 4), everywhere) %>%
+  set_bold(everywhere, c(1, 4)) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_caption("Tapasztalati kereszttábla (megfigyelt esetszámok)")
+```
+
+Ebből a kereszttáblából "darabszámok" olvashatók ki. Az, hogy mi kerül a sorokba és az oszlopokba alapvetően szabadon eldönthető. Így nézne ki a kereszttábla, ha megcserélnénk a sorokat és oszlopokat:
+```{r example.1b} 
+data %>%
+  tabyl(tetszett, nem) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux %>%
+  set_bold(c(1, 4), everywhere) %>%
+  set_bold(everywhere, c(1, 4)) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_caption("Tapasztalati kereszttábla (megfigyelt esetszámok)")
+```
+
+Néhány szempont ehhez:
+- Ha az egyik változó sok kategóriából áll, míg a másik kevesebből, érdemes előbbit tenni a sorokba, mert úgy kevésbé széles, de hosszú táblázatot kapunk.
+- Egyesek javasolják, hogy a független változó kerüljön az oszlopokba. Ha ehhez tartják magukat, akkor lehet, hogy megkönnyítik, de lehet, hogy megnehezítik a saját életüket. A fenti példában, az első változatban épp a sorok mutatják a független változó különböző értékeit (férfi vagy nő) és az oszlopok a függő változóét (tetszett-e a film).
+- Az elemzés szempontjából nincs jelentősége, mi kerül a sorokba és mi az oszlopokba.
+
+Visszatérve a fenti kereszttáblához: ez olyan kérdésekre ad választ, mint
+- Hány férfi van a mintában?  Válasz: 45
+- Hány olyan válaszadó van, akinek tetszett a film?   Válasz: 60
+- Hány olyan női válaszadó van, akinek nem tetszett?  Válasz: 28
+- Hány olyan férfi, akinek tetszett?    Válasz: 33
+
+Olyan kérdéseket már nem válaszolhatunk meg közvetlenül, mint
+- A nők hány százalékának tetszett a film?
+- A férfiak hány százalékának nem tetszett a film?
+- A filmet szeretők hány százaléka nő?
+- A férfiak vagy a nők körében magasabb azok aránya, akiknek tetszett a film?
+
+Ezeket a kérdéseket az így vagy úgy százalékolt kereszttáblákból tudjuk megválaszolni.
+
+## Százalékolt táblák:
+
+1. **Sorszázalékoknak** nevezzük majd, ha az egyes sorokon belül számítjuk az arányokat
+A fenti esetben és elrendezésnél ez lesz a leghasznosabb.
+
+Kiszámítás módja: az adott cella elemszámát elosztjuk a sorösszeggel.
+A képletgyűjteményben m~i,j~ jelöli az i. sor, j. oszlop cellájában szereplő értéket és m~i\*~ jelöli az i. sor összegét. A \*-ra azért van szükség, hogy világos legyen, hogy a sorszám a sort vagy az oszlopot jelöli:  
+- m~1\*~ az első sor
+- m~\*1~ pedig az első oszlop
+
+```{r row.pcent}
+data %>%
+  tabyl(nem, tetszett) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  adorn_percentages("row") %>%
+  adorn_pct_formatting() %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+Ebből a táblázatból közvetlenül kiolvasható és összevethető, hogy a férfiak és a nők körében külön-külön milyen arányban voltak, akiknek tetszett/nem tetszett az adott film. Azt eltérés nagysága persze továbbra is csak a mintára vonatkozik, és ebből még nem egyértelmű, hogy a populációban is van különbség.
+
+Ellenőrző kérdések:
+- A férfiak hány százalékának nem tetszett a film?
+- A nők között milyen arányban voltak, akiknek tetszett?
+- Melyik csoportban magasabb azoknak az aránya, akik szerették a filmet?
+- Hogyan viszonyulnak az egyes csoportok a minta egészéhez?
+
+2. **Oszlopszázalék**
+Lehetőség van oszloponként is százalékolni. Ebben az esetben a cellaelemszámokat az oszlopösszegekkel osztjuk. Ebben az esetben ez talán kevésbé hat természetesen, de olyan kérdésekre kapunk választ, hogy a filmet szeretőknek hány százaléka volt nő a mintában? (Válasz: 45%) Azoknak, akik nem szerették a filmet, hány százalékuk volt férfi? (30%)
+
+```{r col.pcent}
+data %>%
+  tabyl(nem, tetszett) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting() %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+
+3. **Cellaszázalék**:
+A cellaelemszámokat a mintaelemszámmal elosztva megkapjuk, hogy az egyes cellákban a minta hány százaléka van. Ezt a kapcsolat elemzésében kevésbé használjuk.
+
+```{r tot.pcent}
+data %>%
+  tabyl(nem, tetszett) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  adorn_percentages("all") %>%
+  adorn_pct_formatting() %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+A sor/oszlopszázalékok segítségével tudjuk megvizsgálni, a mintában hogyan függ össze a két vizsgált változó. A százalékolást érdemes a független változó szerint végrehajtani.
+A fenti esetben a független változó, a nem a sorokban van, ezért a sorszázalékok "természetesebben" hatnak: a mindennapokban is valószínűleg azt néznénk meg, hogy a férfiak és a nők hány százalékának tetszett a film, és hogy ez az arány különbözik-e. Ha a nem az oszlopokban lett volna, akkor oszlopszázalékokat lett volna célszerű nézni.
+
+A fenti sorszázalékolt táblából az látszik, hogy a férfiak körében magasabb volt azoknak az aránya, akik szerették a filmet: kb. 73% a 49%-kal szemben.
+
+## Elméleti kereszttábla
+
+Azt látjuk, hogy a mintában a férfiak körében magasabb volt azoknak az aránya, akiknem tetszett a film, mint a nők között. Ezt lefordítva a múlt félévből ismerős feltételes valószínűségek nyelvére, azt mondhatjuk, hogy a mintában, ha a válaszadó férfi, akkor nagyobb valószínűséggel tetszett neki a film.
+Ha a két változó független egymástól, akkor arra számítunk, hogy a férfiak és a nők körében azonos annak a valószínűsége, hogy tetszett nekik a film. A mintában természetesen eltérhet az arány a két csoportban, de várhatóan nem nagyon.
+
+Ahhoz, hogy megállapítsuk, a mintában megfigyelt eltérés tulajdonítható-e a mintavételnek, vagy ilyen jelentős eltérésnek kicsi a valószínűsége függetlenség esetén, szükségünk van valamire, amihez viszonyíthatunk. Ez az **elméleti kereszttábla**. SPSS-ben ezek az *expected count* értékek (várt gyakoriság).
+
+Tudjuk, hogy független események esetében az együttes bekövetkezés valószínűsége egyenlő a két esemény valószínűségének a szorzatával ($P(A*B)=P(A)\times P(B)$). Az elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak a belső cellákat számoljuk újra, feltételezve a függetlenséget.
+
+Annak a valószínűségét, hogy a válaszadó férfi vegyük $P(F) = \frac{45}{100}=45\%$-nak, annak a valószínűségét, hogy tetszett nekik a film pedig $P(T)=\frac{60}{100}=60\%$-nak. 
+Tudjuk, hogy függetlenség esetén $P(F*T) = P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%$
+Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni a minta nagyságával.
+Ezeket az értékeket fogjuk e~i,j~-vel jelölni (e mint *expected* vagy *elméleti*). 
+A férfiak esetében tehát így kaptuk az eredményt (az eredeti valószínűségeket is visszavezetve, szétírva):
+
+$P(F*T)\times 100 = P(F)\times P(T) \times 100 =\frac{45}{100} \times \frac{60}{100} \times 100 = \frac{45\times60}{100}$
+
+Vagyis, ha megnézik, a megfelelő érték megkapható úgy, hogy a sormarginálist (45) szorozzuk az oszlopmarginálissal (60) és osztjuk a mintanagysággal (100)
+
+$$e_{i,j}=\frac{m_{i*}\times m_{*j}}{N}$$
+
+A vizsgált kereszttábla négy cellájára ez:  
+$e_{1,1}=\frac{45\times 40}{100}=18$  
+$e_{1,2}=\frac{45\times 60}{100}=27$  
+$e_{2,1}=\frac{55\times 40}{100}=22$  
+$e_{2,2}=\frac{55\times 60}{100}=33$  
+
+```{r, expected}
+test <- data %>%
+  tabyl(nem, tetszett) %>%
+  chisq.test(correct = FALSE)
+test$expected %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+## Függetlenségvizsgálat  
+
+A megfigyelt és az elméleti kereszttábla közötti különbséget számítja ki a &chi;&sup2; próba.  
+
+Képlete:
+$$\chi^{2}=\sum_{i = 1}^{s}\sum_{j = 1}^{o}{\frac{(m_{i,j}-e_{i,j})^2}{e_{i,j}}}$$
+A képletben i és j az adott sor és oszlop sorszáma, *m* jelöli a megfigyelt és *e* az elméleti értékeket, *s* a sorok száma (ebben az esetben 2) és *o* az oszlopok száma (szintén 2).
+
+Lefordítva a képletet magyarra: a két szumma annyit jelent, hogy végigmegyünk az összes sor (i = 1-től s-ig) és összes oszlop (j = 1-től o-ig) összes celláján (ebben az esetben 4 celláról van szó), és kiszámítjuk a megfigyelt és az elméleti érték különbségét. Ennek négyzetét elosztjuk az elméleti értékkel, és ezeket összeadjuk.
+
+**A próba használhatóságának feltételei**:
+- Az elméleti kereszttábla egyik cellájában sincs kisebb érték 1-nél
+- Legfeljebb az elméleti kereszttábla celláinak ötödében van 5-nél kisebb érték
+
+A nullhipotézis az, hogy a két változó független.
+Az ellenhipotézis, hogy a két változó **nem** független.
+
+Végezzük el a próbát:
+$$\chi^{2}=\frac{(12-18)^2}{18}+\frac{(33-27)^2}{27}+\frac{(28-22)^2}{22}+\frac{(27-33)^2}{33}=6,06$$
+
+Ha a nullhipotézis igaz, a fenti próba &chi;&sup2; eloszlást követ, amelynek szabadságfoka $df = (s-1)\times(o-1) = (2-1)\times(2-1)= 1$
+
+<!-- IDE CHI2 ELOSZLÁS ÁBRA -->
+
+A &chi;&sup2;-eloszlás táblázatában az 1-es szabadságfoknak megfelelő 1. sort nézzük. Ez a próba **mindig egyoldali**, tehág csak egy felső határértéket kell kikeresni. Mivel egyoldali, mindig az 1 - &alpha; oszlopot nézzük (&alpha; a szignifikanciaszint), vagyis:  
+
+- 10%-os szignifikanciaszintnek (0,90-es oszlop) 2,71
+- 5%-os szignifikanciaszintnek (0,95-ös oszlop) 3,84
+- 2,5%-os szignifikanciaszintnek (0,975) 5,02
+- 1%-os szignifikanciaszintnek (0,990) 6,63
+- 0,5%-os szignifikanciaszintnek (0,995) 7,88 felel meg.
+
+Ha igaz, a nullhipotézis, akkor 95%-os valószínűséggel 0 és 3,84 közötti teszteredményt kapunk, és csak 100 mintából 5 esetben lesz a tesztérték 3,84 vagy nagyobb.
+
+A 6,06-os tesztérték látható, hogy még 2,5%-os szint mellett is szignifikáns lenne, 1%-os szint mellett viszont már nem. Az SPSS ehhez a próbához is kiszámítaná a pontos szignifikanciaszintet, amely ebben az esetben `r test$pvalue`.  
+
+Ezt úgy értelmezhetnénk, hogy igaz nullhipotézis (teljes függetlenség) esetén annak a valószínűsége, hogy 6,06-os vagy annál nagyobb tesztértéket kapjunk `r test$pvalue*100`%.
+
+Mivel a szignifikanciaszint alacsony / vagy másképp, a tesztérték nagyobb, mint az 5%-os (vagy amilyet választunk) szinthez tartozó határérték, elvetjük a nullhipotézist. A két változó nagy valószínűséggel a populációban is összefügg.
+
+## Asszociációs mérőszámok
+
+A &chi;&sup2; próba csak arra vonatkozik, hogy állítható-e a minta alapján, hogy a populációban is van bármilyen összefüggés a két változ2ó között, vagy elképzelhető, hogy a populációban a két változó egyáltalán nem függ össze.  
+Azt viszont, hogy ez az összefüggés erős-e, nem mondja meg a &chi;&sup2; próba, vannak viszont olyan mutatók, amelyek számszerűsítik az összefüggés erejét.  
+
+Ezek közül a legfontosabbak, amelyek kiszámítását is megnézzük, a &phi;, a Cramer-féle V, a PRE (másképpen Lambda) és a Gamma mutató.
+
+### Phi (&phi;)
+Olyan kereszttáblák esetén használható, amelyek egyik dimenziója (a sorok vagy oszlopok száma) 2. (A másik dimenzió akármennyi lehet, tehát pl. 2x10-es kereszttáblánál is jó a &phi; és 7x2-esnél is, mivel egyik kiterjedésük 2)  
+  
+
+Képlete:
+$$\phi = \sqrt{\frac{\chi^{2}}{N}}$$
+Értéke 0 és 1 közé eshet. 0 a függetlenséget jelenti, és 1 jelenti a legerősebb összefüggést.
+Kiszámításakor arra kell figyelni, hogy a &chi;&sup2; teszt eredményét már **NE** emeljék ismételten négyzetre, és persze nem szabad elfelejteni az osztás után négyzetgyököt vonni.
+
+A fenti esetben a &phi; értéke:
+$$\phi = \sqrt{\frac{6,06}{100}}=0,246$$
+Ez alapján a kapcsolat inkább gyenge, hiszen közelebb van a 0 végponthoz. 
+
+### Cramer-féle V
+Ezt a mutatót a &phi;-ből számoljuk, ha a kereszttábla mindkét dimenziója legalább 3, vagyis sorból és oszlopból is 2-nél több van.
+Képlete:
+$$Cramer V = \sqrt{\frac{\chi^{2}}{N*(min(s;o)-1)}}$$
+Vagy, ha már a &phi; értéke ismert:
+$$Cramer V = \frac{\phi}{\sqrt{min(s;o)-1}}$$
+Ha sorból vagy oszlopból csak kettő van, akkor min(s;o)-1 = 2-1 = 1, vagyis nem változik az eredmény.
+Ezt a mutatót majd egy másik példán tudjuk kiszámítani.
+
+### PRE (Lambda)
+Ellentétben az előző két mutatóval, ez nem szimmetrikus, ezért két külön lambdát kell kiszámítanunk.
+A neve a Proportional Reduction of Error-ból ered, ami kifejezi a mutató logikáját is.
+Az elgondolás a következő: ha két változó összefügg, akkor az egyik értékének ismeretében jobban meg tudjuk becsülni a másik változó értékét: pl. ha tudjuk valakinek a nemét, jobban meg tudjuk tippelni, tetszett-e neki a film. Ha viszont a két változó független egymástól, akkor a nem ismerete semmit sem segít.
+
+Nézzük a fenti példán:
+Két lambdát fogunk kiszámítani, az egyik arra vonatkozik, mennyire tudjuk a nem ismeretében jobban megtippelni, tetszett-e a válaszadónak a film; a másik arra vonatkozik, mennyire tudjuk annak ismeretében, hogy tetszett-e neki a film, megtippelni a nemét. 
+
+Hogy ne kelljen annyit visszalapozni, álljon itt ismét a megfigyelt kereszttábla:
+```{r observed} 
+data %>%
+  tabyl(nem, tetszett) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux %>%
+  set_bold(c(1, 4), everywhere) %>%
+  set_bold(everywhere, c(1, 4)) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_caption("Tapasztalati kereszttábla (megfigyelt esetszámok)")
+```
+
+Nézzük előbb az elsőt:
+Cél minél több személyt jól besorolni aszerint, tetszett-e nekik a film. A cél, hogy minden válaszadót (ebben az esetben mind a 100-at) betegyük az egyik csoportba: tetszett / nem tetszett.
+
+1. kérdés: Soroljunk be egy válaszadót! Nem tudjuk, ő férfi vagy nő, és meg kell tippelnünk, tetszett-e neki a film. Mit tippelünk?
+A 100 válaszadóból 60-nak tetszett, és csak 40-nek nem tetszett, vagyis érdemes úgy tippelni, hogy a véletlenszerűen kiválasztott válaszadónak tetszett a film, így 60%-os valószínűséggel jól tippeltünk.
+
+2. kérdés: Minden válaszadót be szeretnénk kategorizálni. Mit tegyünk? Melyik kategóriába hány embert soroljunk be?
+Az a célunk, hogy minél többen jó helyre kerüljenek. 
+
+1. lépés: Ezt úgy tudjuk biztosítani, hogy **mindenkit** abba a kategóriába sorolunk, amely a legnagyobb: a "tetszett"-be. Így 60 személyt jól, 40 személyt pedig rosszul soroltunk be. Ezt a 40-et jelöljük úgy, hogy Hiba~0~ = 40.
+
+2. lépés: Ezután megnézzük, mennyit segít a nem ismerete, hogy kevesebb embert tegyünk rossz kategóriába. Nézzük soronként:  
+Ha a válaszadó férfi, érdemes arra tippelni, hogy tetszett neki a film, így 33 férfit jól, 12-t rosszul soroltunk be.
+Ha a válaszadó nő, érdemes arra tippelni, hogy nem tetszett neki a film, így 28 nőt jól, 27-et rosszul soroltunk be.
+Összesen 12 férfit és 27 nőt, vagyis 39 személyt soroltunk be rosszul. Ez lesz a Hiba~1~ = 39.
+
+3. Kiszámítjunk, hogyan csökkent a hibásan besorolt esetek száma, és ezt az eredetileg hibásan besorolt esetek arányában fejezzük ki.
+$$\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{40-39}{40}=\frac{1}{40}=0,025=2,5\%$$
+És most nézzük a második lambdát:
+Ezúttal aszerint kell mindenkit besorolni, hogy férfi vagy nő. 
+1. lépés: Mindenkit nőnek tippelünk, mert ők vannak többen: 45 férfit sorolunk be rosszul.
+
+2. lépés: Azokat, akiknek nem tetszett, nőknek tippeljük (12 hiba), azokat, akiknek tetszett pedig férfiaknak (27 hiba), ezzel összesen 39 hibás besorolás lesz.
+
+3. Kiszámítjuk a lambdát:
+$$\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{40}=\frac{6}{40}=0,15=15\%$$
+Ezek a mutatók is 0 és 1 (=100%) közötti értékeket vehetnek fel. 0 a leggyengébb, 1 pedig a legerősebb összefüggés. Előnye, hogy olyankor is használható, ha nem teljesülnek a &chi;&sup2; próba feltételei, és ezért a &phi; és a Cramer-féle V értékek nem megbízhatók.
+Néha viszont nem működnek jól: pl. ha nagyon egyenlőtlen méretűek a kategóriák. Erre majd megpróbálok mutatni néhány példát. De a fenti példában is, ha eggyel több nőnek tetszett volna a film a mintában, már az egyik lambda 0 lett volna.
+
+### Gamma
+Ordinális változók közötti kapcsolat számszerűsítésére szolgál, ezért a fenti példában nem használható. A későbbiekben megnézzük, hogyan működik. Ehhez nyissák meg a következő leckét!
+
+## Reziduálisok:
+
+A megfigyelt értékek különböztek attól, mit várnánk teljes függetlenség esetén.
+
+Ezek voltak a megfigyelt értékek:
+```{r observed.2} 
+data %>%
+  tabyl(nem, tetszett) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux %>%
+  set_bold(c(1, 4), everywhere) %>%
+  set_bold(everywhere, c(1, 4)) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_caption("Tapasztalati kereszttábla (megfigyelt esetszámok)")
+```
+
+És ezek voltak a várható (elméleti) értékek:
+```{r, expected.2}
+test <- data %>%
+  tabyl(nem, tetszett) %>%
+  chisq.test(correct = FALSE)
+test$expected %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+A kettő közötti különbséget nevezzük reziduálisnak. Jelöljük mondjuk $r_{ij}$-vel.  
+$$r_{ij}=m{ij}-e{ij}$$
+Ha a megfigyelt esetszám kisebb, mint várható lenne függetlenség esetén, akkor negatív értéket, ha pedig több, akkor pozitív értéket kapunk.
+Pl.  
+$r_{11}=12-18=-6$  
+$r_{12}=33-27=6$  
+stb.  
+
+```{r, resid.raw}
+table(data$nem, data$tetszett) %>%
+  chisq.residuals(raw = TRUE) %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "Raw residuals")
+```
+
+Ezek önmagában nem mondják meg, hogy az eltérés jelentős-e. Pl. ha az eltérés a várhatótól 20, akkor ez jelentős lehet egy 100 fős minta esetében, de jelentéktelen egy 1000 fős mintánál. A korrigált standardizált reziduálisok (*adjusted standardized residual*) alkalmasak arra, hogy megállapítsuk, az eltérés az adott cella esetében szignifikáns-e. Jelöljük $r_{ij}^{(a)}$-val ezt a reziduálist.  
+$$r_{ij}^{(a)}=\frac{m_{ij}-e{ij}}{\sqrt{e_{ij}\times \left(1-\frac{m_{i*}}{N}\right)\times\left(1-\frac{m_{*j}}{N}\right)}}$$  
+Pl.  
+$r_{11}^{(a)}=\frac{12-18}{\sqrt{18\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{40}{100}\right)}}=-2,46$  
+$r_{12}^{(a)}=\frac{33-27}{\sqrt{27\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{60}{100}\right)}}=2,46$  
+stb.  
+
+```{r, resid.adj}
+table(data$nem, data$tetszett) %>%
+  chisq.residuals(std = TRUE) %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 3), everywhere) %>%
+  set_right_border(everywhere, c(1, 3)) %>%
+  set_markdown_contents(1, 1, "Adjusted std. residuals")
+```
+
+Ha a kereszttáblának csak 2 sora / 2 oszlopa van, akkor az ugyanabban az oszlopban / sorban lévő értékek csak előjelükben különböznek. Mivel a fenti kereszttábla 2x2-es, ezért ugyanaz az érték szerepel minden cellában, csak épp váltakozó előjellel. Ha viszont már három érték szerepel egy sorban / oszlopban, azok összege nem feltétlenül 1.

@@ -1,0 +1,319 @@
+---
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(janitor)
+library(huxtable)
+```
+
+# Kereszttáblaelemzés II.
+## Folytatás, újabb példával
+
+Tegyük fel, hogy  megkérdeztünk 200 személyt, milyen szinten beszélnek angolul és franciául. A két változó együttes eloszlását mutatja az alábbi táblázat:
+
+```{r example.2} 
+english <- c(rep("angol nem", 50), rep("angol alap", 80), rep("angol jól", 70))
+french <- c(rep("francia nem", 30), rep("francia alap", 10), rep("francia jól", 10),
+            rep("francia nem", 30), rep("francia alap", 20), rep("francia jól", 30),
+            rep("francia nem", 40), rep("francia alap", 10), rep("francia jól", 20))
+data <- data.frame(angol = factor(english, levels = c("angol nem", "angol alap", "angol jól")), 
+                                  francia = factor(french, levels = c("francia nem", "francia alap", "francia jól")))
+data %>%
+  tabyl(angol, francia) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux() %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bold(everywhere, c(1, 5)) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_caption("Tapasztalati kereszttábla (megfigyelt esetszámok)")
+```
+
+A kérdés értelemszerűen: összefügg-e a populációban, amelyből a mintát vettük, az angol és a francia nyelv ismerete, és ha igen, hogyan?
+
+A nullhipotézisünk ismét az, hogy nem függ össze: a két nyelv ismerete független egymástól
+A javasolt ellenhipotézis, hogy a két nyelv ismerete összefügg egymással.
+
+Először vizsgáljuk meg a hipotézist (nem kell feltétlenül abban a sorrendben haladni, mint az előző példánál), végezzük el a &chi;&sup2; tesztet! Ehhez először az elméleti kereszttáblát kell kiszámítani:
+
+$$e_{ij}=\frac{m_{i*}\times m_{*j}}{N}$$
+pl.  
+
+$e_{11}=\frac{50\times100}{200}=25$  
+$e_{12}=\frac{50\times40}{200}=10$  
+$e_{13}=\frac{50\times60}{200}=15$  
+$e_{21}=\frac{80\times100}{200}=40$  
+stb.  
+
+```{r, expected}
+test <- data %>%
+  tabyl(angol, francia) %>%
+  chisq.test(correct = FALSE)
+test$expected %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  as_hux() %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bold(everywhere, c(1, 5)) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_caption("Elméleti kereszttábla (várt esetszámok)")
+```
+
+Ezek után kiszámíthatjuk a &chi;&sup2; teszt eredményét:
+$$\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}=\frac{\left(30-25\right)^2}{25}+
+\frac{\left(10-10\right)^2}{10}+\frac{\left(10-15\right)^2}{15}+\frac{\left(30-40\right)^2}{40}+...=9,571$$
+
+A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó egymástól független, $df = (s-1)\times(o-1)=(3-1)\times(3-1)=4$ szabadságfokú &chi;&sup2; eloszlást követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a $\chi^2_{0,95;4}=9,49$ határérték felel meg.
+Mivel a tesztérték (9,571) nagyobb ennél a határértéknél, igaz nullhipotézis esetén kevesebb, mint 5% annak a valószínűsége, hogy ilyen, vagy ennél nagyobb eltérést kapjunk. Ezért elvetjük a nullhipotézist, és az ellenhipotézist fogadjuk el, vagyis a két nyelv ismerete a populációban is összefügg.
+
+Ezek után még meg kell válaszolni azt a kérdést, hogy milyen erősen, és hogyan függ össze: hiszen egyaránt elképzelhető, hogy aki angolul valamennyire beszél, az nagyobb valószínűséggel beszéljen franciául (pl. ha az egyik nyelv ismerete megkönnyíti a másik nyelv megtanulását), és az, hogy aki angolul valamennyire beszél, az franciául kisebb valószínűséggel beszéljen (pl. ha a két nyelv egymás alternatívája). Ahhoz, hogy megvizsgáljuk, hogy a vizsgált populációban mi a helyzet, meg kell nézni a százalékos megoszlásokat. Mivel nincs egyértelmű független vagy függő változó, ezért bármelyiket (vagy akár mindkettőt is) nézhetjük.
+
+Nézzük először a sorszázalékokat:
+```{r row.pcent}
+data %>%
+  tabyl(angol, francia) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  adorn_percentages("row") %>%
+  adorn_pct_formatting() %>%
+  as_hux() %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bold(everywhere, c(1, 5)) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+A sorzázalékolt táblából látszik, hogy a helyzet kicsit komplexebb, és valószínűleg mindkét fenti magyarázat közrejátszik: a franciául nem tudók aránya az angolul nem tudók csoportjában a legmagasabb, és ebben a csoportban a legalacsonyabb a franciául jól tudók aránya. Azok körében, akik valamennyire tudnak angolul, magasabb a franciául is tudók, illetve a franciául jól tudók aránya. Elképzelhető tehát, hogy aki már egy nyelvet valamennyire megtanult, könnyebben tanul másik nyelvet. Viszont az is látszik, hogy ha már valaki angolul jól tud, akkor kisebb valószínűséggel tud franciául akár alapszinten, akár magasabb szinten, vagyis a két nyelv egymás alternatívája is. Ha pl. ez egy fiatal populáció, elképzelhető, hogy még ebben a korban nem nagyon lehetett idejük mindkét nyelvet jól megtanulni. Az is elképzelhető, hogy valamiért elég nekik az egyik nyelv ebből a kettőből, és ezért ha már azt jól tudják, nem érzik szükségét, hogy a másikat is megtanulják.
+
+Nem is szükséges megnézni az oszlopszázalékokat, de a gyakorlás kedvéért nézzük meg:
+```{r col.pcent}
+data %>%
+  tabyl(angol, francia) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen") %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting() %>%
+  as_hux() %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bold(everywhere, c(1, 5)) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_markdown_contents(1, 1, "")
+```
+
+Ebből kicsit más kép rajzolódik ki, de azért nem annyira: Az angolul jól tudás azok körében a legvalószínűbb, akik nem tudnak franciául, második legmagasabb viszont azok között, akik jól tudnak franciául. Itt is tehát látszik a két nyelv egymást erősítő volta (a franciául jól tudók nagyobb valószínűséggel tudnak jól angolul, akik franciául nem beszélnek, nagyobb valószínűséggel nem beszélnek angolul sem), de egymás helyettesítése is (azok tudnak legnagyobb valószínűséggel jól angolul, akik franciául nem tudnak).
+
+Nézzük, milyen erős az összefüggés:
+Mivel 3x3-as kereszttábláról van szó (mindkét dimenzió > 2), ezért a &phi; nem megfelelő mutató. Ehelyett a Cramer-féle V-t használhatjuk:
+$$Cramer V = \sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}=\sqrt{\frac{9,571}{200\times(3-1)}}=0,155$$
+Eszerint tehát egy gyenge összefüggés van a két nyelv ismerete között, hiszen a [0;1] skálán egyértelműen a 0 végponthoz közeli értéket kaptunk.
+
+Használható a lambda is:
+Nézzük először, hogy hogyan csökkenti a hibák számát, ha tudjuk valakiről, mennyire beszél angolul:
+Jelöljük ezt $\lambda_{francia|angol}$-lal:
+
+1. A legtöbben nem beszélnek franciául, ezért mindenkit ebbe a csoportba sorolunk: 100 helyes és 100 helytelen besorolás
+2. Az angolul nem beszélőket a "francia nem" csoportba soroljuk: 10+10 hiba
+Az angolul alapfokon beszélőket vagy a "francia nem" vagy a "francia jól" csoportba soroljuk: 20+30 hiba
+Az angolul jól beszélőket a "francia nem" csoportba soroljuk: 10+20 hiba
+Ez összesen 20+50+30 = 100 hiba
+3. Vagyis a hibák száma 0%-kal csökkent: 
+$$\lambda_{francia|angol}=\frac{100-100}{100}=0\%$$
+
+Nézzük a másik lambdát:
+1. A legtöbben alapfokon beszélnek angolul: 80 jól és 50+70=120 rosszul besorolt személy
+2. A franciául nem beszélők legtöbbje (40-en) jól beszélnek angolul: 30+30 hiba
+A franciál alapfokon beszélőket az "angol alap"-ba soroljuk: 10+10 hiba
+A franciául jól beszélőket az "angol alap"-ba soroljuk: 10+20 hiba
+Összesen: 60+20+30 = 110 hiba
+3. A hibák száma kb. 8,3%-kal csökkent:
+$$\lambda_{angol|francia}=\frac{120-110}{120}=0,083=8,3\%$$
+
+A két lambda is gyenge kapcsolatot mutat. Az egyik lambda ráadásul 0 volt. Ennek oka, hogy minden csoportban azok aránya volt a legmagasabb (egy esetben holtversenyben), akik nem beszélnek franciául. Ezzel sajnos a lambda nem tud mit kezdeni.
+
+## Gamma kiszámítása
+
+Ebben az esetben, mivel két ordinális változóról van szó, a gamma mutató is kiszámítható.
+Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent, hogy két személy (általánosabban két megfigyelési egység) konkordáns vagy diszkordáns párt alkot.
+Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét vizsgált szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy franciául, nem érdekelnek minket.
+A többi esetben konkordánsnak tekintünk egy párt, ha mindkét szempontból ugyanolyan a viszony: pl. aki jobban tud angolul, az tud jobban franciául is.
+Diszkordánsnak tekintjük azokat a párokat, ahol az angolul jobban tudó kevésbé tud franciául.
+
+Most nézzük meg, hogy a mintában kik kikkel alkotnak konkordáns párokat:
+Kezdjük a bal felső sarokkal: 30 főt találunk ott. Ők konkordáns párokat alkotnak azokkal, akik náluk jobban beszélnek angolul (2. és 3. sor), és egyúttal jobban beszélnek franciául is (2. és 3. oszlop)
+
+```{r concordant.1}
+tab_obs <- data %>%
+  tabyl(angol, francia) %>%
+  adorn_totals(where = c("row", "col"), name = "összesen")%>%
+  as_hux()
+
+tab_obs %>%
+  set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(2, 2, "olivedrab3") %>%
+  set_background_color(3:4, 3:4, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+Hány konkordáns párt jelent ez? 
+Nézzük először a 2. sor 2. oszlopában lévő cellával: a 30 személy a 20 személlyel $30\times 20=600$ konkordáns párt alkot. A 2. sor 3. oszloppal $30\times 30 = 900$ párt alkotnak, stb.
+Ez összesen: $30\times (20+30+10+20)=2400$ konkordáns pár
+
+Lépjünk egyet jobbra az első sorban: az 1. sor 2. oszlopában lévő 10 személy további konkordáns pártokat alkot a 3. oszlop 2. és 3. sorában lévő cellákkal.
+
+```{r concordant.2}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(2, 3, "olivedrab3") %>%
+  set_background_color(3:4, 4, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+Ez összesen $10\times (30+20) = 500$ további konkordáns párt jelent.  
+Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot konkordáns párt, hiszen mindenki legalább olyan jól beszél angolul, mint ők, de mindenki legfeljebb annyira beszél jól franciául, vagyis nincsenek olyanok, akik mindkét nyelvből jobbak lennének (olyanok sem, akik mindkét nyelvből gyengébbek). Léphetünk a második sorra.  
+```{r concordant.3}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(3, 2, "olivedrab3") %>%
+  set_background_color(4, 3:4, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+Ez további $30\times (10+20)=900$ konkordáns pár.
+Végül a 2. sor 2. oszlopában található 20 személy a jobb alsó sarokban lévő 20 személlyel 400 konkordáns párt alkot. Felvethető, hogy ők konkordáns párokat alkotnak az 1. sor 1. oszlopában lévő 30 válaszadóval is, hiszen ezek franciául és angolul is alacsonyabb szinten (egyáltalán nem) beszélnek. Ezeket a párokat viszont már számoltuk egyszer, és ugyanez igaz a többi hasonló esetre is.
+```{r concordant.4}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(3, 3, "olivedrab3") %>%
+  set_background_color(4, 4, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+Összesen tehát $2400+500+900+400=4200$ konkordáns párt találtuk a mintában.
+
+A diszkordáns párok összeszámolását a jobb felső sarokban kezdjük: zöld jelöli az aktuális cellát, a pirosas szín pedig azokat a cellákat, amelyekkel diszkordáns párokat alkotnak. Az első oszlopot és az utolsó sort nem nézzük, ezek ugyanis nem alkotnak további diszkordáns párokat.
+
+```{r discordant.1}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(2, 4, "olivedrab3") %>%
+  set_background_color(3:4, 2:3, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+```{r discordant.2}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(2, 3, "olivedrab3") %>%
+  set_background_color(3:4, 2, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+```{r discordant.3}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(3, 4, "olivedrab3") %>%
+  set_background_color(4, 2:3, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+```{r discordant.4}
+tab_obs %>%
+    set_all_padding(4) %>%
+  set_bold(c(1, 5), everywhere) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_bold(2:5, c(1, 5)) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_background_color(3, 3, "olivedrab3") %>%
+  set_background_color(4, 2, "tomato1") %>%
+  set_markdown_contents(1, 1, "")
+```
+
+A diszkordáns párok száma:
+$10\times (30+20+40+10)=1000$ <br>
+$10\times (30+40)=700$ <br>
+$30\times (40+10)=1500$ <br>
+$20\times 40 = 800$ <br>
+Összesen: $1000+700+1500+800=4000$  <br>
+
+A Gamma képlete a következő:
+$$\gamma = \frac{konkordáns párok száma - diszkordáns párok száma}{konkordáns párok száma + diszkordáns párok száma}$$
+$$\gamma = \frac{4200-4000}{4200+4000}=\frac{200}{8200}=0,024$$
+Eszerint tehát a gamma is megerősíti, amit a többi mutató is jelzett: az asszociáció meglehetősen gyengécske. A gamma viszont azt is megmutatja, hogy alapvetően pozitív a kapcsolat a két változó között: a gamma 0-nál nagyobb és kisebb értéket is felvehet. Pozitív értéket akkor vesz fel, ha a konkordáns párokból van több, negatív értéket pedig akkor, ha a diszkordáns párokból. Ez elég világosan látszik a képletből. Vagyis, ha a gamma értéke pozitív, akkor jellemzőbb, hogy aki az egyik változón magasabb értéket ér el, az a másikon is. Ha pedig negatív az értéke, akkor az jellemzőbb, hogy aki egyik változón magasabb értéket ér el, az a másikon alacsonyabb. A gamma értelmezéséhez tehát tudni kell, mit jelentenek az alacsonyabb/magasabb értékek a két változó esetében.
+Ebben az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél angolul, azok várhatóan franciául is jobban beszélnek. De ez az összefüggés gyenge.
+
+## Reziduálisok
+Végül nézzük meg, mely cellák esetében szignifikáns a különbség a megfigyelt és a várható érték között. A nyers reziduálisok a következők:
+```{r, resid.raw}
+table(data$angol, data$francia) %>%
+  chisq.residuals(raw = TRUE) %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_markdown_contents(1, 1, "Raw residuals")
+```
+Hogy lássuk, mely eltérések szignifikánsak, számítsuk ki a korrigált (*adjusted*) standardizált reziduálisokat:  
+$r_{11}^{(a)}=\frac{30-25}{\sqrt{25\times \left(1-\frac{50}{200}\right)\times\left(1-\frac{100}{200}\right)}}=1,63$  
+$r_{12}^{(a)}=\frac{10-10}{\sqrt{10\times \left(1-\frac{50}{200}\right)\times\left(1-\frac{40}{200}\right)}}=0$  
+$r_{13}^{(a)}=\frac{10-15}{\sqrt{15\times \left(1-\frac{50}{200}\right)\times\left(1-\frac{60}{200}\right)}}=-1,78$  
+$r_{21}^{(a)}=\frac{30-40}{\sqrt{40\times \left(1-\frac{80}{200}\right)\times\left(1-\frac{100}{200}\right)}}=0$  
+stb.  
+
+
+Kiszámítva ezeket látható, hogy egyetlen olyan cella van, amelyben az eltérés szignifikáns, mégpedig angolul alapszinten és franciául nem beszélőből van kevesebb, mint várható volna függetlenség esetén. A többi cella esetében az eltérés nem szignifikáns.
+```{r, resid.adj}
+table(data$angol, data$francia) %>%
+  chisq.residuals(std = TRUE) %>%
+  as_hux %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1) %>%
+  set_bottom_border(c(1, 4), everywhere) %>%
+  set_right_border(everywhere, c(1, 4)) %>%
+  set_markdown_contents(1, 1, "Adjusted std. residuals")
+```
+
+## Összefoglalás:
+Kereszttábla-elemzés esetén a következő kérdések vetődnek fel:  
+1. Van-e szignifikáns összefüggés a két változó között? - Ehhez &chi;&sup2; próbát számolunk  
+2. Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs mérőszámok (&phi; Cramer-féle V, &lambda; és &gamma;)
+3. Hogyan függ össze a két változó? - Ezt a sor/oszlopszázalékok alapján tudjuk kielemezni
+4. Mely cellák esetében tér el szignifikánsan a megfigyelt és a függetlenség esetén várható esetszám? - Ezt pedig a korrigált standardizált reziduálisok adják meg

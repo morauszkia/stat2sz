@@ -1,0 +1,48 @@
+---
+title: "Statisztika 2. szeminárium"
+output: html_document
+---
+
+## 2020/2021. őszi félév
+## PPKE-BTK
+
+<!-- *** -->
+<!-- <br> <br> -->
+
+<!-- ## Kérdőív: -->
+<!-- <br> -->
+<!-- Ha még nem tette meg, kérem segítse a munkámat ennek a kérdőívnek a kitöltésével: <br><br>   -->
+
+<!-- <center> -->
+<!-- <h2> -->
+<!-- [KÉRDŐÍV]() -->
+<!-- </h2> -->
+<!-- </center> -->
+
+***
+<br><br>  
+
+## Tantárgy célja:
+<br>
+A tantárgy célja a Statisztika 2. előadáson tárgyalt statisztikai módszerek gyakorlása. A félév során a különböző khi-négyzet alapú próbák (függetlenség-, illeszkedés-, homogenitásvizsgálat), a korreláció, regresszió és az egyszempontú varianciaanalízis módszereit tekintjük át. Az órákon e próbák alkalmazásának feltételeivel, kiszámításuk módjával és az eredmények értelmezésével foglalkozunk.
+<br><br>  
+
+## Legfontosabb információk:
+<br>
+A félév során a hallgatók előre egyeztetett módon házi feladatokat kapnak, amelyek a tanultak feldolgozását segítik. A házi feladatok visszaküldése a megbeszélt formában kötelező. Témakörönként egy házi feladat lesz, illetve a ZH-k előtt gyakorló feladatsorok, amelyeknek viszont nem kötelező visszaküldeni a megoldásait.
+<br>
+A félév során két zárthelyi dolgozatra kerül sor a gyakorlaton tanultak alapján. A félév teljesítésének feltétele mindkét zárthelyi dolgozat megírása, és hogy egyik zárthelyi dolgozat eredménye se legyen elégtelen. A hallgatók félév végi jegyüket a két zárthelyi dolgozat **összesített pontszáma** alapján kapják.
+Akiknek valamelyik ZH-juk elégtelen lett, a félév végén, előre egyeztetett időpontban javító ZH-t írnak.
+<br><br>
+**A ZH-k időpontjai a 2020/21. őszi félévben:**
+<br>
+**I. ZH:** 2020.10.22.  
+**II. ZH:** 2020.12.10.  
+<br>
+A ZH-n használhatják az órai jegyzeteiket, illetve a kapott segédanyagokat (eloszlás-táblázatok, képletgyűjtemények, összefoglalók, stb.)
+<br><br>  
+
+## Segédanyagok:
+<br>
+A félév során a segédanyagokat, házi feladatsorokat, illetve azok megoldásait e-mailben kapják meg a hallgatók, illetve minden elérhető lesz egy megosztott Dropbox mappában is: [ennek linkje](https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0)  
+A Dropbox mappát a jobb felső sarokban található mappa iconra (`r icon::fa("folder")`) kattintva is elérhetik.
