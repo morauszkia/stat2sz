@@ -28,6 +28,12 @@ navbar:
           href: korrel-hip.html
         - text: "Parciális korreláció"
           href: parcialis.html
+    - text: "Regresszió"
+      menu:
+        - text: "Regresszió - alapfogalmak"
+          href: regresszio.html
+        - text: "Regresszió - becslés"
+          href: reg-becsles.html
   right: 
     - icon: fa-folder
       href: https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0

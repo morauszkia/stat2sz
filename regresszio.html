@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regresszió I. (alapfogalmak)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Statisztika 2. szeminárium</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Főoldal</a>
+</li>
+<li>
+  <a href="ismetles.html">Ismétlés</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Khi-négyzet próbák
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="kereszttabla.html">Függetlenségvizsgálat 1.</a>
+    </li>
+    <li>
+      <a href="kereszttabla2.html">Függetlenségvizsgálat 2.</a>
+    </li>
+    <li>
+      <a href="illeszkedes.html">Illeszkedésvizsgálat</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Korreláció
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="korrelacio.html">Korreláció becslése</a>
+    </li>
+    <li>
+      <a href="korrel-hip.html">Hipotézisvizsgálatok</a>
+    </li>
+    <li>
+      <a href="parcialis.html">Parciális korreláció</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regresszió
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="regresszio.html">Regresszió - alapfogalmak</a>
+    </li>
+    <li>
+      <a href="reg-becsles.html">Regresszió - becslés</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
+    <span class="fa fa-folder"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="mailto:morauszki.andras@gmail.com">
+    <span class="fa fa-envelope"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Regresszió I. (alapfogalmak)</h1>
+
+</div>
+
+
+<p><br><br></p>
+<p>Most teszünk egy kis kitérőt: míg eddig hipotézisvizsgálati módszereket néztünk (t-próba és társai, χ²-próbák, korreláció), addig most egy modellezést fogunk megnézni, vagyis nem egyszerűen arra leszünk kíváncsiak, hogy összefügg-e két változó, hanem arra, hogy az egyik (vagy néhány) változó ismeretében milyen modellel tudjuk megbecsülni egy függő változó értékét.<br />
+A korrelációnál már beszéltünk arról, hogy ha két változó lineárisan összefügg, akkor a két változó kapcsolatát ábrázoló pontfelhő jellemzően többé-kevésbé (minél erősebb az összefüggés, annál inkább) illeszkedik egy egyeneshez.<br />
+Emlékeztetőül álljon itt ismét az ott bemutatott ábra a férfiak és nők, illetve szüleik magassága közötti összefüggésről:</p>
+<p><img src="regresszio_files/figure-html/Galton-1.png" width="672" /></p>
+<p>Látható, hogy mindkét ábrán a szaggatott egyenes viszonylag jól jellemzi a két változó közötti kapcsolatot. Ugyan a pontok nagy része nem az egyenesen fekszik, de viszonylag egyenlően oszlanak meg az egyenesek két oldalán. A lineáris regresszió akkor használható jól, ha két változó között feltételezhetően ilyen lineáris kapcsolat van. Most ezeknek az egyeneseknek a képletét fogjuk keresni.</p>
+<p>Az egyenesek, lineáris függvények képlete a következőképpen néz ki: <span class="math inline">\(y = a*x +b\)</span>.<br />
+Mi a regresszió esetében ezt kicsit másképp fogjuk írni: <span class="math inline">\(y = b_0 + b_1*x\)</span><br />
+Vagyis <em>a</em> helyett <span class="math inline">\(b_1\)</span>, <em>b</em> helyett pedig <span class="math inline">\(b_0\)</span> szerepel a képletben. Ez majd főleg akkor lesz hasznosabb jelölés, ha több független változót is bevonunk a modellbe, mert ekkor majd ezek a <span class="math inline">\(b_2\)</span>, <span class="math inline">\(b_3\)</span>, ... <span class="math inline">\(b_i\)</span> paramétereket kapják.<br />
+Nézzük meg, mit jelentenek az egyes paraméterek:<br />
+Ha <em>x</em> helyébe 0-t helyettesítünk, <span class="math inline">\(y = b_0 + b_1*0 = b_0\)</span> értéket vesz fel. Vagyis <span class="math inline">\(b_0\)</span> jelöli, hol metszi az egyenes az <em>y</em> tengelyt. Ez történhet az x tengely alatt (alább: kék egyenes) vagy fölött (piros egyenes) is.<br />
+Ahhoz, hogy meglássuk, mit jelent a <span class="math inline">\(b_1\)</span> paraméter, helyettesítsünk <span class="math inline">\(x+1\)</span>-et <span class="math inline">\(x\)</span> helyébe, és nézzük meg, mennyit változik <span class="math inline">\(y\)</span> értéke: <span class="math inline">\(y_2 = b_0 + b_1*(x+1)=b_0+b_1*x+b_1\)</span>. Ha ebből kivonjuk az <span class="math inline">\(y_1 = b_0 + b_1*x\)</span>-et, akkor a különbség: <span class="math inline">\(b_0+b_1*x+b_1-(b_0+b_1*x)=b_1\)</span>-et kapunk, vagyis ha <span class="math inline">\(x\)</span> értéke egy egységnyit változik, akkor <span class="math inline">\(y\)</span> értéke <span class="math inline">\(b_1\)</span>-nyit változik. Ez az egyenes meredeksége. Ez lehet pozitív (kék egyenes) vagy negatív (piros egyenes).<br />
+Ezt a két paramétert kell becsülni.</p>
+<p><img src="regresszio_files/figure-html/parameters-1.png" width="1152" /></p>
+<p>Nézzünk egy példát:<br />
+Tegyük fel, hogy egy online kurzus résztvevőivel két tesztet oldatnak meg. Állítsunk fel egy modellt a második teszt eredményének becslésére az első teszt eredménye alapján! Az alábbi táblázat tartalmazza a résztvevők 15 fős reprezentatív mintájának eredményeit, a grafikon pedig mindezeket grafikusan jeleníti meg.</p>
+<p><table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example">
+<col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Sorszám</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">7.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15.</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">1. teszt</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">27</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">19</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">19</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">23</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">2. teszt</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">24</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">29</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td></tr>
+</table>
+<img src="regresszio_files/figure-html/example-1.png" width="672" /></p>
+<p>Látszik, hogy a pontok nem teljesen véletlenszerűen helyezkednek el, hanem a magasabb x értékekhez (több pont az első teszten) magasabb y értékek (több pont a második teszten), míg az alacsonyabb x értékekhez jellemzően alacsonyabb y értékek tartoznak. Feltételezhető tehát, hogy van valamilyen pozitív kapcsolat a két változó között. Ezt korrelációval vizsgáltuk. A célunk most az, hogy egy olyan modellt állítsunk fel, amellyel az első teszt eredményéből meg tudjuk becsülni a második teszt eredményét. Az ábra alapján feltételezhető, hogy a két eredmény közötti kapcsolat jól jellemezhető egy egyenessel, ezért (egyváltozós) lineáris regressziót fogunk alkalmazni. <br> A modellünk az alábbi egyenes lesz: <img src="regresszio_files/figure-html/regline-1.png" width="672" /> <br> A regressziós egyenes pontjai adják meg, hogy egy-egy x értékre milyen becslést adunk (zöld pontok). Vagyis az egyenes pontjainak x koordinátája a független változó értékét jelöli, az y koordináta pedig az ehhez az értékhez tartozó becslést. A regressziós egyenes paramétereit úgy adjuk meg, hogy minimalizáljuk az egyenesen lévő pontok (a becslések) és a tényleges értékek (kék pontok) közötti y változón mért (függőleges) eltérések négyzetösszegét (a piros négyzetek területének összegét). Ez, hogy nem az eltérések abszolút értékével, hanem a négyzetösszegével dolgozunk, nem újdonság, ez történt a szórás, a χ² próbák és a korreláció becslése esetében is, és lesz még rá példa a jövőben is.</p>
+<p><img src="regresszio_files/figure-html/reg.model-1.png" width="672" /> <br> A regressziós modell ezeknek a négyzetösszegeknek a minimalizálására törekszik. Ezért hívják angolul OLS (<strong>O</strong>rdinary <strong>L</strong>east <strong>S</strong>quares) regressionnek is. <a href="https://seeing-theory.brown.edu/regression-analysis/index.html#section1">Ezen az oldalon</a> megnézhetik, hogyan követi az egyenes a pontok változását, hogy minimalizálja a négyzetek területösszegét. Ha itt az I-es quartettet választják, akkor olyan ponthalmazt kapnak, amelyre jól alkalmazható a lineáris regresszió. Az egérrel át tudják helyezni az egyes pontokat. Ha már itt járnak, figyeljék meg azt is, hogy a vízszintesen két végen lévő pontok fel-le mozgatása jobban befolyásolja az eredményt, mint a középtájt lévő pontoké. Ezeknek a pontoknak nagyobb a hatóerejük (<em>leverage</em>).<br />
+A II-IV. quartettek pedig olyan eseteket mutatnak, amikor a kapcsolat nem lineáris (II), amikor egy kilógó érték &quot;rondít bele&quot; az egyébként tökéletesen lineáris kapcsolatban (III), illetve amikor egy pont kivételével nincs is kapcsolat a két változó között (IV).<br />
+Ezek egyébként Francis Anscombe statisztikus <a href="https://en.wikipedia.org/wiki/Anscombe%27s_quartet">példái</a> (1973), amelyeken azt illusztrálta, hogy maguk a regresszió mutatói akkor is lehetnek (szinte) azonosak, ha egyébként a változók közötti kapcsolat nagyon más. Ezért nem szabad vaktában regressziót használni, hanem például egy pontdiagrammal érdemes meggyőződni róla, hogy a kapcsolat valóban lineáris, illetve az esetleges kilógó értékeket is érdemes elemzés előtt megvizsgálni. Kitérő vége.<br />
+<br> Nézzünk néhány fontos jelölést:</p>
+<ul>
+<li><span class="math inline">\(x_i\)</span> jelöli majd, hogy az i. válaszadó (általánosabban, hiszen nem csak emberekről lehet szó, megfigyelési egység) milyen értéket vesz fel az x változón (példában: hány pontot szerzett az első teszten)</li>
+<li><span class="math inline">\(y_i\)</span> fogja mindig jelölni az i. megfigyelési egység tényleges y értékét (a példában: hány pontot kapott a második teszten).<br />
+</li>
+<li><p><span class="math inline">\(\hat{y}_i\)</span> fogja jelölni az i. megfigyelési egységre adott <strong>becslést</strong> (a példában: hány pontra számíthat valaki a modell alapján, aki az első teszten <span class="math inline">\(x_i\)</span> pontot szerzett)<br />
+<span class="math display">\[\hat{y}_i=b_0+b_1*x_i\]</span></p></li>
+<li>A fentiekből kikövetkeztethető, hogy <span class="math inline">\(b_0\)</span> a regressziós becslésnél azt fogja jelenteni, <em>várhatóan</em> milyen y értéket vesz fel valaki/valami (mennyi lesz a becslés ebben az esetben), ha az x változón 0 az értéke (a példában: hány pontra számíthat valaki a második teszten, ha az elsőn 0 pontot szerzett).</li>
+<li><span class="math inline">\(b_1\)</span> pedig azt fogja jelölni, mekkora <em>várható változást</em> eredményez y-ban, ha x változó értéke 1 egységnyit változik (a példában: ha valaki az első tesztre egy ponttal többet kapott, mint valaki más, mennyivel számíthat több/kevesebb pontra a második teszten)</li>
+<li><span class="math inline">\(e_i\)</span> jelöli a <strong>hibatagokat</strong>/<strong>reziduumokat</strong>, vagyis, hogy mekkora a különbség a tényleges y érték (<span class="math inline">\(y_i\)</span>) és a becslés (<span class="math inline">\(\hat{y}_i\)</span>) között. Ezek között pozitív és negatív értékek is lesznek. Várható értékük 0. Kiszámításuk:<br />
+<span class="math display">\[e_i = y_i - \hat{y}_i\]</span><br />
+</li>
+<li><p>Ebből <span class="math inline">\(y_i\)</span> felírható úgy, hogy:<br />
+<span class="math display">\[\begin{aligned}
+y_i &amp;= \hat{y}_i + e_i \\
+y_i &amp;= b_0 + b_1*x_i + e_i
+\end{aligned}\]</span></p></li>
+</ul>
+<p>Nézzünk néhány alapfogalmat:</p>
+<ul>
+<li>Az y változó más-más értékeket vesz fel az egyes megfigyelési egységek esetében, tehát van valamekkora szórása. Az egyes kitöltők nem ugyanannyi pontot kaptak a teszten. Ha ugyanannyit kaptak volna, azon nincs mit elemezni. Ennek a szórásnak a négyzetét nevezzük <strong>varianciának</strong>. A regresszióval az a célunk, hogy ennek a varianciának minél nagyobb részét megmagyarázzuk. Tegyük fel, hogy erre csak az első teszt eredményét szeretnénk felhasználni. A gyakorlatban a variancia helyett az eltérések négyzetösszegével fogunk dolgozni.</li>
+<li>A <strong>teljes négyzetösszeg</strong> számszerűsíti, mennyire térnek el egymástól a megfigyelési egységek az y változó tekintetében:<br />
+<span class="math display">\[SST = \sum_{i=1}^{N}{\left(y_i-\overline{y}\right)^2}\]</span><br />
+</li>
+<li><p>Ez a teljes négyzetösszeg a regressziós elemzés révén két részre bonható: van az eltéréseknek egy része, amit meg tudunk magyarázni: nevezzük <strong>regressziós négyzetösszegnek</strong>. Ezt számszerűsíti a becsléseknek az y átlagától való eltérése (az y átlaga egyben a becslések átlaga is):<br />
+<span class="math display">\[SSR = \sum_{i=1}^{N}{\left(\hat{y}_i-\overline{y}\right)^2}\]</span></p></li>
+<li><p>A másik rész pedig az, amit nem tudunk megmagyarázni. Ezt számszerűsíti a becsült értékeknek a tényleges értékektől való eltéréseinek négyzetösszege:<br />
+<span class="math display">\[SSH = \sum_{i=1}^{N}{\left(y_i-\hat{y}_i\right)^2}=\sum_{i=1}^{N}{e_i^2}\]</span></p></li>
+<li><p>A teljes négyzetösszeg a regressziós és a reziduális (hiba-) négyzetösszegnek az összege:<br />
+<span class="math display">\[SST = SSR + SSH\]</span></p></li>
+<li><p>A megmagyarázott résznek az arányát a teljes négyzetösszeghez képest nevezzük <strong>determinációs együtthatónak</strong>, amely a <strong>modell illeszkedését</strong> méri. Azt fejezi ki, hogy a független változó(k) segítsétével a függő változó varianciájának hány százalékát sikerült megmagyarázni. Ezt az előző egyenlőség miatt kétféleképpen is kiszámíthatjuk:<br />
+<span class="math display">\[R^2=\frac{SSR}{SST}=1-\frac{SSH}{SST}\]</span><br />
+<br></p></li>
+</ul>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

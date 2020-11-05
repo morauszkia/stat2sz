@@ -1,0 +1,217 @@
+---
+title: "Regresszió I. (alapfogalmak)"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(janitor)
+library(huxtable)
+library(HistData)
+library(ggplot2)
+library(forcats)
+library(tibble)
+library(latex2exp)
+library(patchwork)
+```
+<br><br>  
+
+## Korreláció és regresszió  
+<br><br>
+Most teszünk egy kis kitérőt: míg eddig hipotézisvizsgálati módszereket néztünk (t-próba és társai, &chi;&sup2;-próbák, korreláció), addig most egy modellezést fogunk megnézni, vagyis nem egyszerűen arra leszünk kíváncsiak, hogy összefügg-e két változó, hanem arra, hogy az egyik (vagy néhány) változó ismeretében milyen modellel tudjuk megbecsülni egy függő változó értékét.   
+A korrelációnál már beszéltünk arról, hogy ha két változó lineárisan összefügg, akkor a két változó kapcsolatát ábrázoló pontfelhő jellemzően többé-kevésbé (minél erősebb az összefüggés, annál inkább) illeszkedik egy egyeneshez.  
+Emlékeztetőül álljon itt ismét az ott bemutatott ábra a férfiak és nők, illetve szüleik magassága közötti összefüggésről:  
+
+```{r Galton, fig.height = 8, message = FALSE}
+data(GaltonFamilies)
+GaltonFamilies <- GaltonFamilies %>% mutate(
+  father = father * 2.54,
+  mother = mother * 2.54,
+  midparentHeight = midparentHeight * 2.54,
+  childHeight = childHeight * 2.54,
+  gender = fct_recode(gender, férfi = "male", nő = "female")
+)
+galton.plot <- ggplot(data = GaltonFamilies,
+               aes(x = midparentHeight, y = childHeight, color = gender))
+galton.plot + geom_point(alpha = 0.3) +
+  facet_wrap(~gender, ncol = 1, scales = "free_y") +
+  xlab("Szülők magasságának átlaga (cm)") +
+  ylab("Válaszadó magassága (cm)") +
+  geom_smooth(method = 'lm', se = FALSE, linetype = "dashed") +
+  theme_classic() +
+  guides(color = FALSE)
+```
+
+Látható, hogy mindkét ábrán a szaggatott egyenes viszonylag jól jellemzi a két változó közötti kapcsolatot. Ugyan a pontok nagy része nem az egyenesen fekszik, de viszonylag egyenlően oszlanak meg az egyenesek két oldalán. A lineáris regresszió, akárcsak a Pearson-féle korrelációs együttható akkor használható jól, ha két változó között feltételezhetően ilyen lineáris kapcsolat van. Most viszont nem azt nézzük, hogy van-e kapcsolat a populációban is, és hogy az milyen erős, hanem ezeknek az egyeneseknek a képletét fogjuk keresni.  
+  
+A regresszió és a korreláció sok tekintetben hasonló (a kiszámítás menetében is az lesz), sok tekintetben viszont más:  
+- A korrelációnál arra voltunk kíváncsiak, összefügg-e két változó, és ha igen, milyen irányú és erősségű az összefüggés.
+- A regressziónál egy modellt fogunk kapni, amely ezt a kapcsolatot minél jobban leírja. A kapott modell arra is alkalmas lesz, hogy valakinél előrejelezzük, milyen értéket vesz fel egy változón, a modellbe bevont magyarázó változók ismeretében.
+<br>  
+
+- A korreláció nem feltétlenül jelent oksági kapcsolatot, együttjárást jelent. Szimmetrikus mutató, x és y változó, illetve y és x változó között ugyanakkora a korreláció, a két változó közül nem kell kijelölni egy függő és egy független változót.
+- A regressziónál lesz egy függő változó, amelyet a független változó(k) segítségével próbálunk becsülni. Nem szimmetrikus: az x alapján y-ra felállított regressziós modell nem azonos az y alapján x-re felállított modellel.  
+  
+## A használt változók  
+
+<br>  
+A lineáris regresszió függő változója csak intervallum- vagy arányskála mérési szintű lehet. (Nominális és ordinális változókra ehhez hasonló módszerek, pl. a logisztikus regresszió használható.)  
+Független változó lehet  
+
+- intervallum- vagy arányskála mérési szintű változó
+- kétértékű (bináris / dummy) változó (pl. férfi-nő, igen-nem, stb.) - ezeket érdemes 0-1 értékekre kódolni.
+- esetleg ordinális változó is, ha lineáris kapcsolatban van a függő változóval  
+
+<br>  
+
+## A becslő egyenes
+
+<br>  
+
+Az egyenesek, lineáris függvények képlete a következőképpen néz ki: $y = a*x +b$.  
+Mi a regresszió esetében ezt kicsit másképp fogjuk írni:  
+$$y = b_0 + b_1*x$$  
+
+Vagyis *a* helyett $b_1$, *b* helyett pedig $b_0$ szerepel a képletben. Ez majd főleg akkor lesz hasznosabb jelölés, ha több független változót is bevonunk a modellbe, mert ekkor majd ezek a $b_2$, $b_3$, ... $b_i$ paramétereket kapják.  
+Nézzük meg, mit jelentenek az egyes paraméterek:  
+
+- $b_0$: Ha *x* helyébe 0-t helyettesítünk, $y = b_0 + b_1*0 = b_0$ értéket vesz fel. Vagyis $b_0$ jelöli, hol metszi az egyenes az *y* tengelyt. Ez történhet az x tengely alatt (alább: kék egyenes) vagy fölött (piros egyenes) is.  
+- $b_1$: Ahhoz, hogy meglássuk, mit jelent a $b_1$ paraméter, helyettesítsünk $x+1$-et $x$ helyébe, és nézzük meg, mennyit változik $y$ értéke: $y_2 = b_0 + b_1*(x+1)=b_0+b_1*x+b_1$. Ha ebből kivonjuk az $y_1 = b_0 + b_1*x$-et, akkor a különbség: $y_2-y_1=b_0+b_1*x+b_1-(b_0+b_1*x)=b_1$-et kapunk, vagyis ha $x$ értéke egy egységnyit változik, akkor $y$ értéke $b_1$-nyit változik. Ez az egyenes meredeksége. Ez lehet pozitív (kék egyenes) vagy negatív (piros egyenes).  
+Ezt a két paramétert kell becsülni.  
+
+```{r parameters, message = FALSE, warning = FALSE, fig.width=12, fig.height = 3}
+x <- -1:5
+ex.data <- data.frame(
+  x = x,
+  y = 0.5*x - 1,
+  z = -0.5*x + 2
+)
+
+p1 <- ggplot(data = ex.data, aes(x = x, y = y)) +
+  geom_line(color = "dodgerblue", size = 1.5) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_segment(x = -0.1, y = -1, xend = 0.1, yend = -1) +
+  geom_segment(x = 0.5, xend = 1.5, y = -0.75, yend = -0.75) +
+  geom_segment(x = 1.5, xend = 1.5, y = -0.75, yend = -0.25) +
+  annotate("text", x = -0.2, y = -0.9, label = TeX("$b_0$"), size = 6) +
+  annotate("text", x = 1, y = -0.85, label = "1", size = 6) +
+  annotate("text", x = 1.65, y = -0.5, label = TeX("$b_1$"), size = 6) +
+  ylab("") + xlab("") + theme_void()
+p2 <- ggplot(data = ex.data, aes(x = x, y = z)) +
+  geom_line(color = "tomato", size = 1.5) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_segment(x = -0.1, y = 2, xend = 0.1, yend = 2) +
+  geom_segment(x = 1, xend = 2, y = 1.5, yend = 1.5) +
+  geom_segment(x = 2, xend = 2, y = 1.5, yend = 1) +
+  annotate("text", x = -0.2, y = 1.9, label = TeX("$b_0$"), size = 6) +
+  annotate("text", x = 1.5, y = 1.6, label = "1", size = 6) +
+  annotate("text", x = 2.15, y = 1.25, label = TeX("$b_1$"), size = 6) +
+  ylab("") + xlab("") + theme_void()
+p1 + p2
+```
+  
+
+## Példa
+<br>  
+
+Tegyük fel, hogy egy online kurzus résztvevőivel két tesztet oldatnak meg. Egy belépőtesztet, amely a kurzus előtti tudásukat méri fel, és egy kilépő tesztet, amely a kurzus során megszerzett tudást. Állítsunk fel egy modellt a második teszt eredményének becslésére az első teszt eredménye alapján! Az alábbi táblázat tartalmazza a résztvevők 15 fős reprezentatív mintájának eredményeit, a grafikon pedig mindezeket grafikusan jeleníti meg.  
+
+```{r example, message = FALSE}
+results <- data.frame(
+  id = paste0(1:15,"."),
+  first = c(15, 20, 25, 30, 27, 18, 19, 22, 9, 14, 12, 15, 17, 19, 23),
+  second = c(21, 24, 28, 29, 25, 20, 17, 22, 11, 13, 10, 16, 21, 25, 18)
+)
+
+r.model <- lm(second ~ first, data = results)
+
+results <- results %>% add_column(prediction = r.model$fitted.values,
+                                  right = results$first + abs(r.model$residuals))
+
+tab <- results %>% select(id, first, second) %>%
+  as_hux() %>%
+  set_contents(1, 1, "Sorszám") %>%
+  set_contents(1, 2, "1. teszt") %>%
+  set_contents(1, 3, "2. teszt") %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere)
+  
+tab %>% t()
+
+pt.plot <- ggplot(data = results, aes(x = first, y = second)) +
+  geom_point(color = "dodgerblue", alpha = 0.7, size = 5) +
+  xlab("1. teszt eredménye") +
+  ylab("2. teszt eredménye") +
+  coord_equal() +
+  theme_classic()
+pt.plot
+```
+
+Látszik, hogy a pontok nem teljesen véletlenszerűen helyezkednek el, hanem a magasabb x értékekhez (több pont az első teszten) magasabb y értékek (több pont a második teszten), míg az alacsonyabb x értékekhez jellemzően alacsonyabb y értékek tartoznak. Feltételezhető tehát, hogy van valamilyen pozitív kapcsolat a két változó között. Ezt korrelációval vizsgáltuk. A célunk most az, hogy egy olyan modellt állítsunk fel, amellyel az első teszt eredményéből meg tudjuk becsülni a második teszt eredményét. Az ábra alapján feltételezhető, hogy a két eredmény közötti kapcsolat jól jellemezhető egy egyenessel, ezért (egyváltozós) lineáris regressziót fogunk alkalmazni.
+<br>
+A modellünk az alábbi egyenes lesz:
+```{r regline, message = FALSE}
+pt.plot + geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "black")
+```
+<br>
+A regressziós egyenes pontjai adják meg, hogy egy-egy x értékre milyen becslést adunk (zöld pontok). Vagyis az egyenes pontjainak x koordinátája a független változó értékét jelöli, az y koordináta pedig az ehhez az értékhez tartozó becslést.
+A regressziós egyenes paramétereit úgy adjuk meg, hogy minimalizáljuk az egyenesen lévő pontok (a becslések) és a tényleges értékek (kék pontok) közötti y változóban mért (függőleges) eltérések négyzetösszegét (a piros négyzetek területének összegét). Ez, hogy nem az eltérések abszolút értékével, hanem a négyzetösszegével dolgozunk, nem újdonság, ez történt a szórás, a &chi;&sup2; próbák és a korreláció becslése esetében is, és lesz még rá példa a jövőben is.  
+
+```{r reg.model, message = FALSE}
+pt.plot + 
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "black") +
+  geom_point(aes(y = prediction), color = "forestgreen", alpha = 0.7, size = 5) +
+  geom_rect(aes(xmin = first, ymin = second, xmax = right, ymax = prediction), 
+            alpha = 0.4, fill = "red")
+```
+<br>
+A regressziós modell ezeknek a négyzetösszegeknek a minimalizálására törekszik. Ezért hívják angolul OLS (**O**rdinary **L**east **S**quares) regressionnek is. [Ezen az oldalon](https://seeing-theory.brown.edu/regression-analysis/index.html#section1) megnézhetik, hogyan követi az egyenes a pontok változását, hogy minimalizálja a négyzetek területösszegét. Ha itt az I-es quartettet választják, akkor olyan ponthalmazt kapnak, amelyre jól alkalmazható a lineáris regresszió. Az egérrel át tudják helyezni az egyes pontokat. Ha már itt járnak, figyeljék meg azt is, hogy a vízszintesen két végen lévő pontok fel-le mozgatása jobban befolyásolja az eredményt, mint a középtájt lévő pontoké. Ezeknek a pontoknak nagyobb a hatóerejük (*leverage*).  
+A II-IV. quartettek pedig olyan eseteket mutatnak, amikor a kapcsolat nem lineáris (II), amikor egy kilógó érték "rondít bele" az egyébként tökéletesen lineáris kapcsolatban (III), illetve amikor egy kirívó eset kivételével nincs is kapcsolat a két változó között (IV).  
+Kitérő: Ezek egyébként Francis Anscombe statisztikus [példái](https://en.wikipedia.org/wiki/Anscombe%27s_quartet) (1973), amelyeken azt illusztrálta, hogy maguk a regresszió mutatói akkor is lehetnek (szinte) azonosak, ha egyébként a változók közötti kapcsolat nagyon eltérő. Ezért nem szabad vaktában regressziót használni, hanem például egy pontdiagrammal érdemes meggyőződni róla, hogy a kapcsolat valóban lineáris, illetve az esetleges kilógó értékeket is érdemes elemzés előtt megvizsgálni. Kitérő vége.  
+<br>  
+
+## Jelölések, alapfogalmak:
+<br>  
+
+Nézzünk néhány fontos jelölést:  
+
+- $x_i$ jelöli majd, hogy az i. válaszadó (általánosabban, hiszen nem csak emberekről lehet szó, megfigyelési egység) milyen értéket vesz fel az x változón (példában: hány pontot szerzett az első teszten)
+- $y_i$ fogja mindig jelölni az i. megfigyelési egység tényleges y értékét (a példában: hány pontot kapott a második teszten).  
+- $\hat{y}_i$ fogja jelölni az i. megfigyelési egységre adott **becslést** (a példában: hány pontra számíthat valaki a modell alapján, aki az első teszten $x_i$ pontot szerzett)  
+$$\hat{y}_i=b_0+b_1*x_i$$  
+
+- A fentiekből kikövetkeztethető, hogy $b_0$ a regressziós becslésnél azt fogja jelenteni, *várhatóan* milyen y értéket vesz fel valaki/valami (mennyi lesz a becslés ebben az esetben), ha az x változón 0 az értéke (a példában: hány pontra számíthat valaki a második teszten, ha az elsőn 0 pontot szerzett).
+- $b_1$ pedig azt fogja jelölni, mekkora *várható változást* eredményez y-ban, ha x változó értéke 1 egységnyit változik (a példában: ha valaki az első tesztre egy ponttal többet kapott, mint valaki más, mennyivel számíthat több/kevesebb pontra a második teszten)
+- $e_i$ jelöli a **hibatagokat**/**reziduumokat**, vagyis, hogy mekkora a különbség a tényleges y érték ($y_i$) és a becslés ($\hat{y}_i$) között. Ezek között pozitív és negatív értékek is lesznek. Várható értékük 0. Kiszámításuk:    
+$$e_i = y_i - \hat{y}_i$$  
+- Ebből $y_i$ felírható úgy, hogy:  
+$$\begin{aligned}
+y_i &= \hat{y}_i + e_i \\
+y_i &= b_0 + b_1*x_i + e_i
+\end{aligned}$$  
+
+Nézzünk néhány alapfogalmat:  
+
+- Az y változó más-más értékeket vesz fel az egyes megfigyelési egységek esetében, tehát van valamekkora szórása. Az egyes kitöltők nem ugyanannyi pontot kaptak a kilépő teszten. Ha ugyanannyit kaptak volna, azon nincs mit elemezni. Ennek a szórásnak a négyzetét nevezzük **varianciának**. A regresszióval az a célunk, hogy ennek a varianciának minél nagyobb részét megmagyarázzuk. Tegyük fel, hogy erre csak az első teszt eredményét szeretnénk felhasználni. Arra vagyunk kíváncsiak, hogy a kilépéskor mért különbségek mekkora része olyan, amit magukkal hoztak a résztvevők (már az első teszten is különböztek). A gyakorlatban a variancia helyett az eltérések négyzetösszegével fogunk dolgozni.
+- A **teljes négyzetösszeg** számszerűsíti, mennyire térnek el egymástól a megfigyelési egységek az y változó tekintetében:  
+$$SST = \sum_{i=1}^{N}{\left(y_i-\overline{y}\right)^2}$$  
+- Ez a teljes négyzetösszeg a regressziós elemzés révén két részre bonható: van az eltéréseknek egy része, amit meg tudunk magyarázni: nevezzük **regressziós négyzetösszegnek**. Ezt számszerűsíti a becsléseknek az y átlagától való eltérése (az y átlaga egyben a becslések átlaga is):  
+$$SSR = \sum_{i=1}^{N}{\left(\hat{y}_i-\overline{y}\right)^2}$$  
+
+- A másik rész pedig az, amit nem tudunk megmagyarázni. Ezt számszerűsíti a becsült értékeknek a tényleges értékektől való eltéréseinek négyzetösszege:  
+$$SSH = \sum_{i=1}^{N}{\left(y_i-\hat{y}_i\right)^2}=\sum_{i=1}^{N}{e_i^2}$$  
+
+- A teljes négyzetösszeg a regressziós és a reziduális (hiba-) négyzetösszegnek az összege:  
+$$SST = SSR + SSH$$  
+
+- A megmagyarázott résznek az arányát a teljes négyzetösszeghez képest nevezzük **determinációs együtthatónak**, amely a **modell illeszkedését** méri. Azt fejezi ki, hogy a független változó(k) segítsétével a függő változó varianciájának hány százalékát sikerült megmagyarázni. Ezt az előző egyenlőség miatt kétféleképpen is kiszámíthatjuk:  
+$$R^2=\frac{SSR}{SST}=1-\frac{SSH}{SST}$$  
+<br>
+
