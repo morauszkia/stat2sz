@@ -1,0 +1,320 @@
+---
+title: "Regresszió II. (becslés)"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(janitor)
+library(huxtable)
+library(ggplot2)
+library(tibble)
+library(latex2exp)
+```
+<br><br>  
+
+## A modell paraméterei
+<br>  
+
+A lineáris regresszió során először a becslő egyenes két paraméterét fogjuk becsülni. Először a $b_1$ paramétert:  
+$$b_1 = \frac{\sum_{i=1}^{n}(x_i-\overline{x})\times(y_i-\overline{y})}{\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}$$  
+Ha megnézik a képletet, ennek számlálója ugyanaz, mint a korreláció képletének a számlálója volt, a nevezőhöz pedig ebben az esetben csak az x változó eltéréseinek négyzetösszege kell, az y változóé nem. Ezekre viszont később szükség lesz, úgyhogy - ha már úgy is jól begyakoroltuk - tegyük azt, amit a korrelációnál is tettünk! A példa pedig legyen az előbbi: mennyit magyaráznak a kilépő teszt eredményéből a "hozott" különbségek (az első teszt eredménye)?
+
+Az adatok: 
+```{r example, message = FALSE}
+results <- data.frame(
+  id = paste0(1:15,"."),
+  first = c(15, 20, 25, 30, 27, 18, 19, 22, 9, 14, 12, 15, 17, 19, 23),
+  second = c(21, 24, 28, 29, 25, 20, 17, 22, 11, 13, 10, 16, 21, 25, 18)
+)
+
+r.model <- lm(second ~ first, data = results)
+
+results %>% 
+  as_hux() %>%
+  set_contents(1, 1, "Sorszám") %>%
+  set_contents(1, 2, "1. teszt") %>%
+  set_contents(1, 3, "2. teszt") %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  t()
+```
+Ahogy a korrelációnál, kiszámítjuk a két változó átlagát, az átlagtól való eltéréseket, ezek szorzatát és négyzetét. Utóbbiakat össze is adjuk:  
+```{r table}
+results <- results %>%
+  mutate(difx = first - mean(first),
+         dify = second - mean(second),
+         dxy = difx * dify,
+         dx2 = difx ** 2,
+         dy2 = dify ** 2)
+last <- c("",
+          paste("$$\\overline{x}=", mean(results$first), "$$"),
+          paste("$$\\overline{y}=", mean(results$second), "$$"),
+          "",
+          "",
+          paste("$$\\sum:", sum(results$dxy), "$$"),
+          paste("$$\\sum:", sum(results$dx2), "$$"),
+          paste("$$\\sum:", sum(results$dy2), "$$"))
+results %>%
+  as_hux() %>%
+  set_contents(1, 1, "Sorszám") %>%
+  set_contents(1, 2, "$$x_i$$") %>%
+  set_contents(1, 3, "$$y_i$$") %>%
+  set_contents(1, 4, "$$x_i-\\overline{x}$$") %>%
+  set_contents(1, 5, "$$y_i-\\overline{y}$$") %>%
+  set_contents(1, 6, "$$(x_i-\\overline{x})(y_i-\\overline{y})$$") %>%
+  set_contents(1, 7, "$$(x_i-\\overline{x})^2$$") %>%
+  set_contents(1, 8, "$$(y_i-\\overline{y})^2$$") %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(2:17, everywhere, "%d") %>%
+  set_bold(17, everywhere) %>%
+  set_background_color(17, c(2:3, 6:8), "goldenrod1") %>%
+  set_bottom_border(c(1, 16), everywhere, value = 1)
+```
+
+Ez eddig ismerős. A fenti táblázatból kiolvasható minden adat, amelyre $b_1$ becsléséhez szükségünk van:  
+$$b_1 = \frac{394}{458}= `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")`$$  
+
+Ez persze kerekített eredmény. A továbbiakban kerekítés nélkül számolok tovább (számítógéppel könnyű), hogy néhány érték azonosságát meg tudjam mutatni, ami segítheti az önellenőrzést is. A megjelenített értékek viszont mindig kerekítettek lesznek.  
+A fenti táblázatban eddig a következőket érdemes megnézni önellenőrzés gyanánt: az átlagok mindig a szélső értékek közé esnek, ráadásul normális eloszlású változóknál kb. középre. Így pl. a `r mean(results$first)` átlag a `r min(results$first)` és a `r max(results$first)` értékek közé. Ezért az átlagtól való eltérések között mindig találunk pozitív és negatív számokat is. Az eltérések sima összege 0, de ezt általában nem érdemes kiszámítani, mert idő.  
+Különösen érdemes odafigyelni az átlagok kiszámítására, mert ezen állnak vagy buknak a továbbiak. Ezután pedig arra, hogy ne csússzanak el a sorok, a megfelelő értékeket szorozzák, illetve arra, hogy a szorzatnak jó legyen az előjele. A négyzetre emelt értékek mindig pozitívok.  
+<br>
+Értelmezzük a kapott paramétert: a $b_1 = `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")`$ paraméter az egyenes meredeksége, vagyis azt jelenti, hogy aki a belépő teszten egy ponttal többet szerzett, az a kilépő teszten várhatóan `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")` ponttal teljesít jobban. Minden egyes plusz pont a belépő teszten ennyi plusz pontot jelent várhatóan a kilépő teszten.  
+<br>  
+Ezek után kiszámíthatjuk a $b_0$ paramétert. Ehhez azt használjuk ki, hogy a két átlag által megadott pont mindig a becslő egyenesen található:  
+```{r plot.means, message=FALSE, warning=FALSE}
+pt.plot <- ggplot(data = results, aes(x = first, y = second)) +
+  geom_point(color = "dodgerblue", alpha = 0.7, size = 5) +
+  xlab("1. teszt eredménye") +
+  ylab("2. teszt eredménye") +
+  coord_equal() +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dotted", color = "black") +
+  geom_point(aes(x = mean(first), y = mean(second)), size = 5, color = "tomato") +
+  annotate("text", x = 20, y = 19, 
+           label = TeX("$\\left[\\bar{x},\\bar{y}\\right]$"), size = 3, color = "black") +
+  theme_classic()
+pt.plot
+```
+  
+ 
+Ezért, ha az x átlagát helyettesítjük a becslő egyenes képletébe, az eredmény az az y érték lesz, amely éppen az egyenesen van, vagyis y átlaga:  
+$$\overline{y}=b_0 + b_1*\overline{x}$$  
+
+Ebből:  
+$$\begin{aligned}
+b_0 &= \overline{y} - b_1*\overline{x}\\
+\\
+b_0 &= 20 - 0,86*19 = `r r.model$coefficients[1] %>% round(3) %>% format(decimal.mark = ",")`
+\end{aligned}$$
+  
+<br>
+Értelmezzük ezt a paramétert is: ez az az y érték, amelynél a becslő egyenes metszi az y tengelyt, vagyis az x = 0 értéknek megfelelő becslés. Ha valaki az első tesztjére 0 pontot kapott volna, a második teszten várhatóan `r r.model$coefficients[1] %>% round(3) %>% format(decimal.mark = ",")` pontja lett volna.  
+<br>
+Itt tegyünk ismét egy kitérőt: A megfigyeléseink között `r min(results$first)` és `r max(results$first)` közötti x értékek szerepelnek, vagyis ez az az intervallum, amelyre a lineáris modell jónak tűnik. Nem tudhatjuk, mi történik ezen értékek alatt és fölött. Elképzelhető, hogy ott is érvényes az egyenes által modellezett összefüggés, de az is, hogy nem. Az ilyen extrapolációkkal mindig óvatosnak kell lenni. Interpolációra viszont alkalmas a modell, úgyhogy erre mindjárt nézünk is példákat.  
+
+<br>  
+
+## Becslés a modellel 
+
+<br>
+
+Ezzel kiszámítottuk a becslő egyenes mindkét paraméterét. Az egyenes képlete:  
+$$y = `r r.model$coefficients[1] %>% round(3) %>% format(decimal.mark = ",")` + `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")`*x$$  
+
+Ez a képlet felhasználható arra, hogy adott x értékekre kiszámítsuk a várható y értéket. Ezek lehetnek olyan x értékek, amelyek szerepeltek a mintában (nemsokára ezekre is kiszámítjuk), de olyanok is, amelyek nem (intrapoláció). A képlet:  
+$$\hat{y}=b_0 + b_1*x$$  
+
+```{r prediction}
+pred <- data.frame(
+  first = c(10, 11, 13, 16, 21, 24, 26, 28, 29)
+)
+
+pred <- pred %>%
+  mutate(yhat = predict(r.model, pred))
+```
+Például, ha $x=16$, akkor y értéke várhatóan:  
+$$\hat{y} = `r r.model$coefficients[1] %>% round(3) %>% format(decimal.mark = ",")` + `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")`*16 = `r pred %>% filter(first == 16) %>% pull(yhat) %>% round(3) %>% format(decimal.mark = ",")`$$  
+
+Ha $x = 21$, akkor y:  
+$$\hat{y} = `r r.model$coefficients[1] %>% round(3) %>% format(decimal.mark = ",")` + `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")`*21 = `r pred %>% filter(first == 21) %>% pull(yhat) %>% round(3) %>% format(decimal.mark = ",")`$$  
+
+Ugyanígy, kiszámítható a becslés mindenkire, aki bekerült a mintába:
+```{r table.with.preds}
+results <- results %>%
+  mutate(yhat = r.model$fitted.values)
+
+last <- c("Átlagok:",
+          mean(results$first),
+          mean(results$second),
+          mean(results$yhat))
+results %>%
+  select(id:second, yhat) %>%
+  as_hux() %>%
+  set_contents(1, 1, "Sorszám") %>%
+  set_contents(1, 2, "$$x_i$$") %>%
+  set_contents(1, 3, "$$y_i$$") %>%
+  set_contents(1, 4, "$$\\hat{y}$$") %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(2:17, 1:3, "%d") %>%
+  set_number_format(17, 4, "%d") %>%
+  set_number_format(2:16, 4, "%.3f") %>%
+  set_bold(17, everywhere) %>%
+  set_background_color(17, everywhere, "goldenrod1") %>%
+  set_background_color(c(2, 13), everywhere, "deepskyblue") %>%
+  set_background_color(c(8, 15), everywhere, "chartreuse3") %>%
+  set_bottom_border(c(1, 16), everywhere, value = 1) %>%
+  set_valign(c(1, 17), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.2, .2, .2, .2))
+```
+
+A fenti táblázatban szeretném felhívni a figyelmüket néhány dologra:  
+
+- Az y értékek és a becslések átlaga egyenlő. Ez mindig igaz, ezért a becslések átlagát még akkor sem kell külön kiszámítaniuk, ha a későbbiekben olyan utat választanak, amelyhez szükség lenne rá.
+- Arra számítunk, hogy a becslések nem térnek el drasztikusan a valódi y értékektől, hiszen az előbbiek az utóbbiak becslései. Ha jól dolgoztunk, közeli értékeket kell kapnunk. Lesznek esetek, amikor kicsit alábecsülünk és olyanok is, amikor kicsit fölébecsülünk. Néhány esetben ugyan lehet jelentős eltérés, de ha minden becslés jelentősen eltér, és főleg, ha az eltérések mind egy irányba mutatnak, akkor van okunk gyanakodni.
+- Ha két megfigyelési egység x értéke azonos (pl. 1. és 12. sorban), akkor a rájuk adott becslés is egyenlő lesz.
+- Ha egy megfigyelési egység x értéke éppen az átlaggal egyenlő (7. és 14. sor), akkor az ezekre adott becslés éppen az y átlaga lesz.
+- Ha két megfigyelési egység x értéke között éppen 1 a különbség (pl. 7. és 2. sor), akkor a becslések között éppen $b_1 = `r r.model$coefficients[2] %>% round(3) %>% format(decimal.mark = ",")`$ lesz a különbség.
+- Ugyanígy, ha a különbség az x értékek között $d$, akkor az y becslések között $d*b_1$ lesz a különbség.  
+
+A következő lépés, hogy kiszámítsunk a modell illeszkedését mérő determinációs együtthatót (R&sup2; értéket). Ezen a ponton választhatunk, hogyan számolunk tovább:  
+
+1. Az egyik út a  becslések szóródásának útja
+2. A másik a reziduálisok útja  
+
+Megnézzük mindkettőt, a továbbiakban pedig Önökre van bízva, melyiket követik.
+<br><br>  
+
+## A becslések szóródásának útja
+
+<br>
+Ehhez azt kell megnézni, mennyire szóródnak a becslések. Mint láttuk, a becslések átlaga egyenlő az y változó átlagával, ezért nem kell külön kiszámítani.
+Az alábbi négyzetösszeget kell kiszámítanunk:  
+$$SSR = \sum_{i=1}^{n}{\left(\hat{y}_i-\overline{y}\right)^2}$$  
+Első lépésben minden becslésből kivonjuk az y átlagát (`r mean(results$second)`), és ezt második lépésben négyzetre emeljük és összeadjuk. Önellenőrzési lehetőség, hogy ezúttal is pozitív és negatív eltérések egyaránt kell, hogy legyenek, és ezek összege egyébként 0 (de ennek kiszámítására nem érdemes időt pazarolni).  
+
+Ha számológéppel számolnak, érdemes rögtön négyzetre emelni a különbséget, mert ezzel időt takaríthatnak meg.
+Az alábbi táblázat már ezt a két oszlopot is tartalmazza. A négyzetes eltérések összege lesz az SSR, vagyis a teljes négyzetösszegnek az a része, amit a modellel magyarázunk. 
+
+```{r table.ssr}
+results <- results %>%
+  mutate(dyhat = yhat - mean(second),
+         dyhat2 = (yhat - mean(second))**2)
+
+last <- c("",
+          paste0("$$\\overline{x}=", mean(results$first), "$$"),
+          paste0("$$\\overline{y}=", mean(results$second), "$$"),
+          "",
+          paste0("$$\\sum: 0$$"), 
+          paste0("SSR: ", sum(results$dyhat2)))
+results %>%
+  select(id:second, yhat:dyhat2) %>%
+  as_hux() %>%
+  set_contents(1, 1, "Sorszám") %>%
+  set_contents(1, 2, "$$x_i$$") %>%
+  set_contents(1, 3, "$$y_i$$") %>%
+  set_contents(1, 4, "$$\\hat{y}_i$$") %>%
+  set_contents(1, 5, "$$\\hat{y}_i-\\overline{y}$$") %>%
+  set_contents(1, 6, "$$\\left(\\hat{y}_i-\\overline{y}\\right)^2$$") %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(2:17, 1:3, "%d") %>%
+  set_number_format(17, 4, "%d") %>%
+  set_number_format(2:17, 4:6, "%.3f") %>%
+  set_bold(17, everywhere) %>%
+  set_background_color(17, everywhere, "goldenrod1") %>%
+  set_background_color(c(2, 13), everywhere, "deepskyblue") %>%
+  set_background_color(c(8, 15), everywhere, "chartreuse3") %>%
+  set_bottom_border(c(1, 16), everywhere, value = 1) %>%
+  set_valign(c(1, 17), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15, .15))
+```
+
+Mint a kiemelt sorokban láthatják, ahol ugyanannyi volt a becslés, ott az átlagtól való eltérés (és annak négyzete) is egyezik. Ahol pedig a becslés éppen y átlagával volt egyenlő, ott 0 az eltérés. A kapott összeg az SSR.  
+<br><br>  
+
+## A reziduálisok útja
+
+<br>  
+Ehhez a becslések és a tényleges y értékek közötti különbségeket, vagyis a hibatagokat (reziduálisokat) kell kiszámítani, majd ezek négyzetösszegét. Ez lesz az SSH.  
+Számológéppel ebben az esetben is gyorsabb, ha rögtön négyzetre emelnek. A négyzetre emelés miatt annak igazából nincs jelentősége, hogy az y-ból vonják ki a becslést, vagy fordítva. Az önellenőrzés szempontjából hasznos, ha következetesen vonnak ki, mindig ugyanabból, mert akárcsak a korábbi esetekben, itt is pozitív és negatív eltérések egyaránt kell, hogy legyenek. Összegük 0.   
+
+$$SSH = \sum_{i=1}^{n}{e_i^2} = \sum_{i=1}^{n}{\left(y_i - \hat{y}_i\right)^2}$$  
+
+```{r table.ssh}
+results <- results %>%
+  mutate(resid = r.model$residuals,
+         res2 = resid**2)
+
+last <- c("",
+          paste0("$$\\overline{x}=", mean(results$first), "$$"),
+          paste0("$$\\overline{y}=", mean(results$second), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSH: ", sum(results$res2)))
+results %>%
+  select(id:second, yhat, resid, res2) %>%
+  as_hux() %>%
+  set_contents(1, 1, "Sorszám") %>%
+  set_contents(1, 2, "$$x_i$$") %>%
+  set_contents(1, 3, "$$y_i$$") %>%
+  set_contents(1, 4, "$$\\hat{y}_i$$") %>%
+  set_contents(1, 5, "$$e_i$$") %>%
+  set_contents(1, 6, "$$e_i^2$$") %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(2:17, 1:3, "%d") %>%
+  set_number_format(17, 4, "%d") %>%
+  set_number_format(2:17, 4:6, "%.3f") %>%
+  set_bold(17, everywhere) %>%
+  set_background_color(17, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, 16), everywhere, value = 1) %>%
+  set_valign(c(1, 17), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15, .15))
+```
+
+<br><br>  
+
+## Determinációs együttható
+
+<br>
+Az utolsó lépés, amit végrehajtunk ebben a fejezetben a modell illeszkedését mérő determinációs mutató (R&sup2;) kiszámítása. Ezt a fent kapott SSR-ből vagy SSH-ból és az SST-ből számíthatjuk ki. Utóbbi a már kiszámított  
+$$SST = \sum_{i=1}^{n}{\left(y_i-\overline{y}\right)^2}$$  
+négyzetösszeget jelenti. Ezt már az első táblázatban kiszámítottuk: $SST = `r sum(results$dy2)`$  
+Azt is tudjuk, hogy $SST = SSR + SSH$, ezért elég az SSR-ből és SSH-ból csak az egyiket kiszámítani.  
+
+Az R&sup2; képlete attól függően, melyik utat választották:  
+$$R^2=\frac{SSR}{SST}=\frac{`r sum(results$dyhat2)`}{`r sum(results$dy2)`}=`r summary(r.model)$r.squared %>% round(3)`$$  
+vagy  
+$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(results$res2)`}{`r sum(results$dy2)`}=`r summary(r.model)$r.squared %>% round(3)`$$  
+
+Az R&sup2; azt méri, hogy az y változó teljes varianciájából mekkora részt tudunk a bevont független változók segítségével megmagyarázni. A regresszió a teljes szórásnégyzetet két részre bontja: a megmagyarázott rész a regressziós szórásnégyzet (SSR), a megmagyarázatlan rész pedig a reziduálisok négyzetösszege (SSH). A fenti példára lefordítva: a kilépő teszt eredményeinek különbségeit `r summary(r.model)$r.squared %>% round(3) %>% magrittr::multiply_by(100)`%-ban magyarázzák a hozott különbségek (a belépő teszt eredményei), a fennmaradó `r 100 - summary(r.model)$r.squared %>% round(3) %>% magrittr::multiply_by(100)`%-ban pedig egyéb tényezők (mennyit tudott készülni a tesztre, mennyire követte figyelemmel az előadásokat, mennyi energiát fektetett a feladatok megoldásába, mennyi szerencséje volt a kitöltés során, stb.)
+<br><br>  
+
+## Összefoglalás
+
+<br>
+Eddig az alábbi lépéseket hajtottuk végre:  
+
+1. A regressziós modell (egyenes) paramétereinek becslése és értelmezése: előbb $b_1$, aztán $b_0$ paraméter.
+2. Ezek után az egyenes képletének segítségével minden megfigyelési egységre kiszámítottuk a becsléseket: $\hat{y}_i$
+3. Ezt követően választhatunk, melyik úton folytatjuk a számolást:
+    + Az egyik út, hogy a becslések szóródását számoljuk ki: $SSR$
+    + A másik út, hogy a hibatagok négyzetösszegét: $SSH$
+4. Végül kiszámítjuk a modell illeszkedését mérő determinációs együtthatót: $R^2$  
+  
+Innen folytatjuk a következő fejezetben.
