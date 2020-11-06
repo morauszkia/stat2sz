@@ -211,7 +211,12 @@ $$SSH = \sum_{i=1}^{N}{\left(y_i-\hat{y}_i\right)^2}=\sum_{i=1}^{N}{e_i^2}$$
 - A teljes négyzetösszeg a regressziós és a reziduális (hiba-) négyzetösszegnek az összege:  
 $$SST = SSR + SSH$$  
 
-- A megmagyarázott résznek az arányát a teljes négyzetösszeghez képest nevezzük **determinációs együtthatónak**, amely a **modell illeszkedését** méri. Azt fejezi ki, hogy a független változó(k) segítsétével a függő változó varianciájának hány százalékát sikerült megmagyarázni. Ezt az előző egyenlőség miatt kétféleképpen is kiszámíthatjuk:  
+- A megmagyarázott résznek az arányát a teljes négyzetösszeghez képest nevezzük **determinációs együtthatónak**, amely a **modell illeszkedését** méri. Azt fejezi ki, hogy a független változó(k) segítsétével a függő változó varianciájának hány százalékát sikerült megmagyarázni. 
+Ez a mutató 0 és 1 (másképpen 0% és 100%) közötti értékeket vehet fel. 0-t vesz fel, ha a két változó teljesen független, ezért mindenkit az $\overline{y}$ átlaggal becsülünk. Ekkor az $\overline{y}$-tól való eltérések egyenlők a hibatagokkal, tehát SST = SSH. 
+1-et akkor vesz fel, ha minden pont a regressziós egyenesen fekszik. Ekkor a hibatagok értéke 0, hiszen a becslések és a tényleges értékek egybeesnek. Ilyenkor SST = SSR.
+Általában a két végkpont közötti $R^2$ értékeket kapunk.
+Az $R^2$ értékét az előző egyenlőség miatt kétféleképpen is kiszámíthatjuk:  
 $$R^2=\frac{SSR}{SST}=1-\frac{SSH}{SST}$$  
 <br>
+
 
