@@ -11,7 +11,7 @@
 
 
 
-<title>Ismétlés: hipotézisvizsgálat</title>
+<title>Regresszió III. (statisztikai próbák)</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -430,70 +430,80 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Ismétlés: hipotézisvizsgálat</h1>
+<h1 class="title toc-ignore">Regresszió III. (statisztikai próbák)</h1>
 
 </div>
 
 
-<p><br><br></p>
-<p>Tegyük fel, hogy a bergengóc férfiak és nők várható jövedelme közötti különbséget vizsgáljuk. A kutatási kérdésünk, hogy egyáltalán van-e különbség a bergengóc társadalomban a férfiak és nők várható jövedelme között.</p>
-<p>Tegyük fel, hogy arra számítunk, hogy van különbség. Ez lesz a hipotézisünk, amelyet vizsgálni szeretnénk.</p>
-<p>Veszünk egy reprezentatív mintát a bergengóc társadalomból. Ebben 30 férfi van, és átlagos jövedelmük 300 fabatka, a szórás 40 fabatka. A mintában 40 nő van, akik átlagosan 270 fabatkát keresnek és 35 fabatka a szórás.</p>
-<p>A mintában tehát különbözik a férfiak és nők jövedelmének átlaga (és szórása is), de eléggé különbözik-e ahhoz, hogy ez azt valószínűsítse, hogy a populációban is különbözik a férfiak és nők jövedelmének várható értéke? Előfordulhat-e az, hogy a populációban nem különbözik, de mi épp egy olyan mintát vettünk, amelyben ekkora a különbség. Mennyi annak a valószínűsége, hogy egyenlő várható értékek esetén ekkora vagy ennél nagyobb különbséget lássunk a mintában?</p>
-<p>Ennek eldöntéséhez hipotézisvizsgálatot kell elvégezni, amely megmutatja, mekkora ennek valószínűsége, ha egyébként a populációban egyformák a várható értékek. Ha ez a valószínűség nagyon kicsi, akkor bátran feltételezzük, hogy a populációban nem egyformák a várható értékek. Ha ez a valószínűség nem elég kicsi, inkább elfogadjuk, hogy ez akár a mintavételből is adódhatott.</p>
-<p>Az első lépés, hogy megfogalmazzuk a hipotéziseinket: Elsősorban egy <strong>nullhipotézist</strong>: ez arról szól, hogy <em>nincs itt semmi látnivaló</em>, vagyis konkrét helyzetekre lefordítva:</p>
-<ul>
-<li>a populációban nincs különbség a várható értékek között, ezek egyeznek (többféleképpen is megfogalmazható ugyanaz)</li>
-<li>a populációban nincs különbés a szórások között (hisz erre is kíváncsiak lehetünk)</li>
-<li>a populációban a változó eloszlása megfelel valamilyen eloszlásnak/eloszláscsaládnak, pl. normális eloszlású (ilyennel is fogunk foglalkozni)</li>
-<li>a két populációban a változó eloszlása azonos (szintén lesz róla szó)</li>
-<li>a populációban a két változó független egymástól, az összefüggésük erőssége nulla (erről meg főleg sokat lesz szó)</li>
-</ul>
-<p>Két dolog fontos a nullhipotézissel kapcsolatban:</p>
-<ol style="list-style-type: decimal">
-<li>Mindig <strong>a populációra vonatkozik</strong>, hiszen a minta csak eszköz, hogy a populációra vonatkozó következtetéseket vonhassunk le</li>
-<li>Mindig arról szól, hogy valami (különbség, összefüggés erőssége) nulla.</li>
-</ol>
-<p>Az <strong>ellenhipotézis</strong> (másképp: <strong>alternatív</strong> hipotézis) pedig valami olyan hipotézis, amely a nullhipotézissel kölcsönösen kizáró viszonyban van, vagyis egyszerre csak egyikük lehet igaz (olyan viszont adott esetben lehet, hogy egyik sem az - egyoldali próbák esetén). Általában ez az, amit feltételezünk, és a hipotézisvizsgálat arra vonatkozik, elég okunk van-e rá, hogy feltételezzük, ez a hipotézis igaz. A fenti példában ez lehet:</p>
-<ul>
-<li>A bergengóc férfiak és nők várható jövedelme különbözik</li>
-<li>A bergengóc férfiak várható jövedelme nagyobb, mint a nőké</li>
-<li>A bergengóc férfiak várható jövedelme kisebb, mint a nőké</li>
-</ul>
-<p>Ezek közül az első kétoldali próbát eredményez, a második és harmadik egyoldali próbát jelent. Jól figyeljék meg, hogy az első a nullhipotézis komplementere, de a másik kettő nem, csak egymást kölcsönösen kizárók (vagy egyenlő, vagy nagyobb / vagy egyenlő, vagy kisebb), de lehetnek olyan esetek, hogy sem a nullhipotézis, sem az ellenhipotézis nem igaz. Az órákon mi kétoldali próbákat végeztünk, ebben a félévben viszont lesznek (és a múlt félévben az F-próba volt ilyen), amelyek csak egyoldaliak lehetnek, vagy amelyeket egyoldaliként szoktunk végezni (pl. az egyszerűség kedvéért - ld. F-próba határértékeinek kikeresése)</p>
-<p>Miután megvannak a hipotézisek, kiválasztjuk és elvégezzük a megfelelő próbát, amely eredményeképpen kapunk egy számot. Ezek a próbák úgy vannak megalkotva, hogy igaz nullhipotézis esetén meghatározott eloszlást követnek. Ez a próba <strong>nulleloszlása</strong>. Mázli, hogy sokszor a próbák a nulleloszlás nevét viselik (t-próba, F-próba, stb.). Sajnos nem mindig, úgyhogy azért a memóriánknak is van módja dolgozni (vagy van mit kikeresni a képletgyűjteményből)</p>
-<p>A próba eredményével kétféle dolgot szoktunk kezdeni:</p>
-<ul>
-<li>Statisztika órákon jobb híján azt csináltuk, hogy meghatároztunk egy még elfogadható szignifikanciaszintet (pl. α = 5%), és ehhez kerestük ki azokat a határértékeket, amelyek közé (elfogadási tartomány) a próba értéke (igaz nullhipotézis esetén) 1 - α valószínűséggel (a példában 95%) beleesik. Pl. standard normális eloszlás és kétoldali próba esetén ez volt a ±1,96. Ebben az esetben, ha a próba eredménye ezeken a határokon kívül esik (elutasítási tartomány), elvetjük a nullhipotézist, ezek között (elfogadási tartomány) megtartjuk. Ez a gyakorlat nem jó, csak jobb híján követjük a statisztika órákon, ezért jó, hogy vannak statisztikai programjaink, amelyek pontos szignifikanciaszintet adnak. A félév során majd igyekszem jelezni (már múlt félévben is igyekeztem), mi a jobb gyakorlat.</li>
-<li>Statisztiai programok ennél jobbat is tudnak: a kapott tesztértékhez (és ha kétoldali a próba, akkor ennek tükörképzéhez) kiszámítják az ez(ek)en kívül eső területet a nulleloszlás sűrűségfüggvénye alatt, vagyis annak a valószínűségét, hogy igaz nullhipotézis esetén (amit nem győzök eleget hangsúlyozni, remélem, feltűnt) ilyen, vagy ennél jelentősebb eltérést mutató tesztértéket kapjunk. Pl. ha igaz a nullhipotézis, mennyi a valószínűsége, hogy olyan mintát veszünk, amelyből a próba értéke ±2,31-nél jobban különbözik 0-tól? Ebben az esetben, ha ez a valószínűség (ez a szignifikanciaszint) kellően kicsi (pl. kisebb 5%-nál, de ez csak konvenció, nem kőbe vésett valami), elvetjük a nullhipotézist, hiszen a tényleges mintánk nem túl kompatibilis vele.</li>
-</ul>
-<p>A <strong>szignifikanciaszint</strong> az a feltételes valószínűség, hogy ha a nullhipotézis igaz, az adott teszteredménynek megfelelő vagy annál extrémebb, (a 0-nál) nagyobb eltérést mutató tesztértéket kapjunk.</p>
-<p>Akárhogy is, mindig legyenek tudatában, hogy a döntés, amelyet meghozunk, még nem biztos, hogy helyes. Az, hogy megtartjuk a nullhipotézist, nem jelenti, hogy nincs összefüggés két dolog között. A nullhipotézist sose bizonyítjuk, csak megtartjuk. Az, hogy elvetjük a nullhipotézist, szintén nem jelenti, hogy mérget vehetnénk rá, hogy van összefüggés két dolog között, csak annyit, hogy a mi konkrét mintánk nagyon valószínűtlen lenne, ha igaz lenne a nullhipotézis. Minél kisebb a szig. szint, értelemszerűen annál biztosabbak lehetünk a dolgunkban, de sose teljesen bizonyosak.</p>
-<p>Kétféle hibát tudunk elkövetni:</p>
-<ul>
-<li><strong>Elsőfajú hiba:</strong> Elvetni egy igaz nullhipotézist (hamis pozitív teszt)</li>
-<li><strong>Másodfajú hiba:</strong> Megtartani egy hamis nullhipotézist (hamis negatív teszt)</li>
-</ul>
-<p>Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint esetén vetjük el a nullhipotézist, a másodikat pedig azzal, hogy igyekszünk jól venni és kellően nagy mintát, ezután pedig a lehető legjobb próbát elvégezni, amelynek a feltételei teljesülnek. A próba ereje annak a valószínűsége, hogy feltételezve, hogy a nullhipotézis nem igaz, ezt a próba elvégzése után elvetjük.</p>
-<p>És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi különbség. A szignifikanciaszintet mindig a hatás, összefüggés, különbség becsült mértékével, erősségével együtt kell értelmezni. Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős is. <br></p>
-<div id="kulcsfogalmak" class="section level2">
-<h2>KULCSFOGALMAK</h2>
+<p>A regressziós becslés során a mintából kiszámított paraméterek természetesen ezúttal is valószínűségi változók egy-egy értékét jelentik. Más mintákból kisebb-nagyobb mértékben eltérő <span class="math inline">\(b_0\)</span>, <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, stb. paramétereket kapnánk, és ezért az R² mutató is eltérhet.</p>
+<p>Az egyes paraméterek esetén felvetődik ezért a kérdés, hogy vajon azok tényleg eltérnek-e 0-tól. A <span class="math inline">\(b_0\)</span> paraméter esetében ez leginkább azért vetődhet fel, mert a konstans nélküli egyenlet egy kicsit egyszerűbb modell, mint a konstanst is tartalmazó, de a bevont magyarázó változókhoz tartozó <span class="math inline">\(b_i\)</span> paraméterek esetében a kérdés jelentősebb: arra vonatkozik, hogy az adott változó parciális (tehát a többi bevont független változótól megtisztított - ld. parciális korreláció) hatása szignifikáns-e. Egyelőre csak ezt az utóbbit vizsgáljuk. <br><br></p>
+<div id="a-b_i-paraméterekre-vonatkozó-próba" class="section level2">
+<h2>A <span class="math inline">\(b_i\)</span> paraméterekre vonatkozó próba</h2>
 <p><br></p>
-<ul>
-<li>Nullhipotézis</li>
-<li>Ellenhipotézis</li>
-<li>Szignifikanciaszint</li>
-<li>Elfogadási tartomány</li>
-<li>Elutasítási tartomány</li>
-<li>Statisztikai szignifikancia</li>
-<li>Elsőfajú hiba</li>
-<li>Másodfajú hiba</li>
-<li>Próba ereje</li>
-<li>Nulleloszlás</li>
-</ul>
-<!-- ## Gyakorlási lehetőség:   -->
-<!-- A fentiek elsajátítását az alábbi linken ellenőrizhetik néhány gyakorlatiasabb példán: -->
-<!-- [KVÍZ]() -->
+<p>A <span class="math inline">\(b_i\)</span> becsült érték a populációra jellemző <span class="math inline">\(\beta_i\)</span> paraméter becslése. Utóbbi a populációban mutatja, milyen az adott független változó parciális hatása a függő változóra.</p>
+<p>A kérdés tehát, amit vizsgálunk, hogy állítható-e, hogy az adott változó hatása a populációban sem 0. Mivel ez a kérdés egy-egy magyarázó változóra vonatkozik, minden egyes független változóra külön-külön meg kell válaszolni.</p>
+<p>A nullhipotézis szerint <span class="math inline">\(\beta_i = 0\)</span>, ahol i = 1, 2, ... r (i jelöli, hogy éppen melyik magyarázó változó hatásáról van szó, r pedig a magyarázó változók száma)<br />
+Az ellenhipotézis szerint <span class="math inline">\(\beta_i \ne 0\)</span></p>
+<p>A próba, amelyet elvégzünk egy t-próba.<br />
+Ehhez első körben a hibatagok standard hibáját kell kiszámítani. Az alábbi három forma ugyanazt jelenti, csak a számláló van többféle módon felírva:<br />
+<span class="math display">\[SE(e)=\sqrt{\frac{{SSH}}{n-r-1}}=\sqrt{\frac{\sum_{i=1}^{n}{e_i^2}}{n-r-1}}=\sqrt{\frac{\sum_{i=1}^{n}{\left( y_i-\hat{y}_i\right)^2}}{n-r-1}}\]</span><br />
+Ebben a képletben <span class="math inline">\(r\)</span> a bevont magyarázó változók száma. A szemináriumon ez 1 lesz. Többváltozós regresszió esetén viszont ez nagyobb is lehet. A következő fejezetben ilyen példákat is nézünk. Akkor se essenek kétségbe, ha korábban a számolás során azt az utat választották, amely az SSR-hez vezetett. Ebben az esetben SSH-t kiszámíthatják úgy, hogy<br />
+<span class="math display">\[SSH = SST-SSR\]</span><br />
+A számoláshoz vegyük alapul az előző fejezetben kiszámított értékeket!<br />
+<span class="math display">\[SE(e)=\sqrt{\frac{{SSH}}{n-r-1}}=\sqrt{\frac{{137,057}}{15-1-1}}=3,247\]</span></p>
+<p>Ezt felhasználva kiszámítható a <span class="math inline">\(b_i\)</span> paraméter standard hibája:<br />
+<span class="math display">\[SE(b_i)=\frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}}\]</span><br />
+A számláló mindig azt az <span class="math inline">\(x\)</span> változót veszi alapul, amelyhez a <span class="math inline">\(b_i\)</span> paraméter tartozik. A mi esetünkben mindig csak egy <span class="math inline">\(x\)</span> változó lesz, úgyhogy egyértelmű a helyzet.<br />
+Vesszük tehát az előbb kiszámított <span class="math inline">\(SE(e)\)</span> értéket és az <span class="math inline">\(x_i\)</span> értékeknek a változó átlagától vett négyzetes eltéréseinek összegét (ezt használtuk a <span class="math inline">\(b_1\)</span> paraméter becsléséhez is), és behelyettesítve a képletbe megkapjuk <span class="math inline">\(b_1\)</span> becslésének standard hibáját:<br />
+<span class="math display">\[SE(b_1)=\frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}}=\frac{3,247}{\sqrt{458}}=0,152\]</span><br />
+Ha ez is megvan, kiszámíthatjuk a t-próba értékét az alábbi képlettel:<br />
+<span class="math display">\[t = \frac{b_i}{SE(b_i)}\]</span><br />
+Ennek a próbának a nulleloszlása <span class="math inline">\(df = n-r-1\)</span> szabadságfokú Student-féle t-eloszlás.<br />
+A mi esetünkben:<br />
+<span class="math display">\[t = \frac{0,86}{0,152}=5,67\]</span> <span class="math display">\[df = 15 - 1 - 1 = 13\]</span> <span class="math display">\[t_{13;0,975}=2,16\]</span> <span class="math display">\[5,67 &gt; 2,16\]</span><br />
+Mivel 5,67 a [-2,16;+2,16] intervallumon kívül esik, 5%-os szignifikanciaszint mellett szignifikánsnak tekinthetjük a <span class="math inline">\(b_1\)</span> paramétert. (Egyébként 1%-os szig.szint mellett is, hiszen a 0,995-ös oszlopban lévő 3,01-es határértéknél is nagyobb.) <br><br></p>
+</div>
+<div id="a-modell-egészére-vonatkozó-próba" class="section level2">
+<h2>A modell egészére vonatkozó próba</h2>
+<p><br></p>
+<p>A másik próba, amelyet megnézünk egy F-próba lesz, amely az összes magyarázó változót együtt vizsgálja.<br />
+Nullhipotézise szerint egyik magyarázó változónak sincs hatása a függő változóra a populációban: <span class="math inline">\(\forall \beta_i = 0\)</span>, ahol i = 1, 2...r (minden β érték 0)<br />
+Az ellenhipotézis szerint <span class="math inline">\(\exists \beta_i \ne 0\)</span>, i = 1, 2...r (létezik olyan β érték, amely nem 0)</p>
+<p>A próba képlete<br />
+<span class="math display">\[F=\frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}}\]</span><br />
+A próba nulleloszlása egy F eloszlás, amelynek szabadságfokai <span class="math inline">\(df_1=r\)</span> és <span class="math inline">\(df_2 = n-r-1\)</span>.</p>
+<p>Itt is, bármelyiket is számították ki az SSH / SSR párosból, a másik kiszámítható az SST-ből való kivonással.</p>
+<p>A mi esetünkben<br />
+<span class="math display">\[F = \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{338,943}{1}}{\frac{137,057}{15-1-1}}=104,387\]</span> <span class="math display">\[df_1 = 1; df_2 = 15-1-1=13\]</span> <span class="math display">\[F_{0,95;1;13}=4,67\]</span> <span class="math display">\[104,387 &gt; 4,67\]</span><br />
+Eszerint ez a próba is azt mutatja, hogy van olyan független változó (egy volt, tehát erről az egyrőn van szó), amely szignifikáns hatással van a függő változó értékére.<br />
+Ha csak egy független változó lett bevonva a modellbe, akkor a két próba ekvivalens. Ha az egyik próba szignifikáns hatást jelez, akkor a másik próba is szignifikáns hatást fog jelezni. Több független változó esetén viszont a két próba nem ekvivalens, az F próba akkor is lehet szignifikáns, ha nem minden t-próba volt az.<br />
+<br><br></p>
+</div>
+<div id="továbbiak" class="section level2">
+<h2>Továbbiak</h2>
+<p><br><br />
+A fenti próbák a legfontosabbak, de léteznek továbbiak is. Ezeket ráadásként itt megtalálják, de visszakérdezni nem fogom ezeket. <br><br></p>
+<div id="konstans-paraméterre-vonatkozó-próba" class="section level3">
+<h3>Konstans paraméterre vonatkozó próba</h3>
+<p><br></p>
+<p>Hasonlóan a <span class="math inline">\(b_1\)</span> paraméterhez, a <span class="math inline">\(b_0\)</span> paraméterre vonatkozóan is elvégezhető a t-próba. Ehhez ki kell számítanunk ennek a becslésnek a standard hibáját, amely különbözik a meredekséget mérő paraméterekétől:<br />
+<span class="math display">\[SE(b_0)=SE(e)*\sqrt{\frac{\sum_{i=1}^{n}{x_i^2}}{n*\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}}\]</span> A t-próba képlete viszont ugyanaz, ahogy a szabadságfok is:<br />
+<span class="math display">\[t = \frac{b_0}{SE(b_0)}\]</span> <span class="math display">\[df = n-r-1\]</span></p>
+<p>A példánkban:<br />
+<span class="math display">\[\sum_{i=1}^{n}{x_i^2}=15^2+20^2+25^2+...=5873\]</span> <span class="math display">\[SE(b_0)=SE(e)*\sqrt{\frac{\sum_{i=1}^{n}{x_i^2}}{n*\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}}=
+3,247*\sqrt{\frac{5873}{15*458}}=3,002\]</span> <span class="math display">\[t = \frac{3,655}{3,002}=1,217\]</span><br />
+A kritikus érték ugyanaz, mint a <span class="math inline">\(b_1\)</span> paraméternél: 2,16. Ez az érték tehát, mivel <span class="math inline">\(-2,16 &lt; 1,217 &lt; 2,16\)</span>, nem szignifikáns.<br />
+<br></p>
+</div>
+<div id="intervallumbecslés-a-modell-paramétereire" class="section level3">
+<h3>Intervallumbecslés a modell paramétereire</h3>
+<p><br></p>
+<p>Az összes paraméterre intervallumbecslés is adható, a szokásos módon:<br />
+Az intervallumbecslések általános képlete: pontbecslés <span class="math inline">\(\pm\)</span> táblázatos érték * standard hiba.</p>
+<p>A <span class="math inline">\(b_i\)</span> paraméterekre (<span class="math inline">\(i = 0, 1, 2, ..., r\)</span>) a következő képletet használhatjuk:<br />
+<span class="math display">\[b_i \pm t_{1-\frac{\alpha}{2};n-r-1}*SE(b_i)\]</span> A példában:<br />
+<span class="math display">\[b_1 \pm t_{1-\frac{\alpha}{2};n-r-1}SE(b_1) = 0,86 \pm 2,16*0,152 = [0,532;1,188]\]</span> <span class="math display">\[b_0 \pm t_{1-\frac{\alpha}{2};n-r-1}SE(b_0)=3,655 \pm 2,16*3,002 = [-2,829;10,139]\]</span> Vagyis az egyenes meredeksége 95%-os megbízhatósággal 0,532 és 1,188 közé esik, a tengelymetszet pedig -2,829 és 10,139 közé. Megjegyzés: Látszik is, hogy az első intervallum nem tartalmazza a 0-t (szignifikáns volt a t-próba), de a második tartalmazza (a t-próba sem volt szignifikáns).</p>
+</div>
 </div>
 
 

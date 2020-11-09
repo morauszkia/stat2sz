@@ -1,0 +1,116 @@
+---
+title: "Regresszió III. (statisztikai próbák)"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+A regressziós becslés során a mintából kiszámított paraméterek természetesen ezúttal is valószínűségi változók egy-egy értékét jelentik. Más mintákból kisebb-nagyobb mértékben eltérő $b_0$, $b_1$, $b_2$, stb. paramétereket kapnánk, és ezért az R&sup2; mutató is eltérhet.
+
+Az egyes paraméterek esetén felvetődik ezért a kérdés, hogy vajon azok tényleg eltérnek-e 0-tól. A $b_0$ paraméter esetében ez leginkább azért vetődhet fel, mert a konstans nélküli egyenlet egy kicsit egyszerűbb modell, mint a konstanst is tartalmazó, de a bevont magyarázó változókhoz tartozó $b_i$ paraméterek esetében a kérdés jelentősebb: arra vonatkozik, hogy az adott változó parciális (tehát a többi bevont független változótól megtisztított - ld. parciális korreláció) hatása szignifikáns-e. Egyelőre csak ezt az utóbbit vizsgáljuk.
+<br><br>  
+
+## A $b_i$ paraméterekre vonatkozó próba  
+<br>  
+
+A $b_i$ becsült érték a populációra jellemző $\beta_i$ paraméter becslése. Utóbbi a populációban mutatja, milyen az adott független változó parciális hatása a függő változóra.
+
+A kérdés tehát, amit vizsgálunk, hogy állítható-e, hogy az adott változó hatása a populációban sem 0. Mivel ez a kérdés egy-egy magyarázó változóra vonatkozik, minden egyes független változóra külön-külön meg kell válaszolni.  
+
+A nullhipotézis szerint $\beta_i = 0$, ahol i = 1, 2, ... r (i jelöli, hogy éppen melyik magyarázó változó hatásáról van szó, r pedig a magyarázó változók száma)  
+Az ellenhipotézis szerint $\beta_i \ne 0$  
+
+A próba, amelyet elvégzünk egy t-próba.  
+Ehhez első körben a hibatagok standard hibáját kell kiszámítani. Az alábbi három forma ugyanazt jelenti, csak a számláló van többféle módon felírva:  
+$$SE(e)=\sqrt{\frac{{SSH}}{n-r-1}}=\sqrt{\frac{\sum_{i=1}^{n}{e_i^2}}{n-r-1}}=\sqrt{\frac{\sum_{i=1}^{n}{\left( y_i-\hat{y}_i\right)^2}}{n-r-1}}$$  
+Ebben a képletben $r$ a bevont magyarázó változók száma. A szemináriumon ez 1 lesz. Többváltozós regresszió esetén viszont ez nagyobb is lehet. A következő fejezetben ilyen példákat is nézünk.
+Akkor se essenek kétségbe, ha korábban a számolás során azt az utat választották, amely az SSR-hez vezetett. Ebben az esetben SSH-t kiszámíthatják úgy, hogy  
+$$SSH = SST-SSR$$  
+A számoláshoz vegyük alapul az előző fejezetben kiszámított értékeket!  
+$$SE(e)=\sqrt{\frac{{SSH}}{n-r-1}}=\sqrt{\frac{{137,057}}{15-1-1}}=3,247$$  
+  
+Ezt felhasználva kiszámítható a $b_i$ paraméter standard hibája:  
+$$SE(b_i)=\frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}}$$  
+A számláló mindig azt az $x$ változót veszi alapul, amelyhez a $b_i$ paraméter tartozik. A mi esetünkben mindig csak egy $x$ változó lesz, úgyhogy egyértelmű a helyzet.  
+Vesszük tehát az előbb kiszámított $SE(e)$ értéket és az $x_i$ értékeknek a változó átlagától vett négyzetes eltéréseinek összegét (ezt használtuk a $b_1$ paraméter becsléséhez is), és behelyettesítve a képletbe megkapjuk $b_1$ becslésének standard hibáját:  
+$$SE(b_1)=\frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}}=\frac{3,247}{\sqrt{458}}=0,152$$  
+Ha ez is megvan, kiszámíthatjuk a t-próba értékét az alábbi képlettel:  
+$$t = \frac{b_i}{SE(b_i)}$$  
+Ennek a próbának a nulleloszlása $df = n-r-1$ szabadságfokú Student-féle t-eloszlás.  
+A mi esetünkben:  
+$$t = \frac{0,86}{0,152}=5,67$$
+$$df = 15 - 1 - 1 = 13$$
+$$t_{13;0,975}=2,16$$
+$$5,67 > 2,16$$  
+Mivel 5,67 a [-2,16;+2,16] intervallumon kívül esik, 5%-os szignifikanciaszint mellett szignifikánsnak tekinthetjük a $b_1$ paramétert. (Egyébként 1%-os szig.szint mellett is, hiszen a 0,995-ös oszlopban lévő 3,01-es határértéknél is nagyobb.)
+<br><br>  
+
+## A modell egészére vonatkozó próba  
+<br>  
+
+A másik próba, amelyet megnézünk egy F-próba lesz, amely az összes magyarázó változót együtt vizsgálja.  
+Nullhipotézise szerint egyik magyarázó változónak sincs hatása a függő változóra a populációban: $\forall \beta_i = 0$, ahol i = 1, 2...r (minden &beta; érték 0)  
+Az ellenhipotézis szerint $\exists \beta_i \ne 0$, i = 1, 2...r (létezik olyan &beta; érték, amely nem 0)  
+  
+A próba képlete  
+$$F=\frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}}$$  
+A próba nulleloszlása egy F eloszlás, amelynek szabadságfokai $df_1=r$ és $df_2 = n-r-1$.  
+
+Itt is, bármelyiket is számították ki az SSH / SSR párosból, a másik kiszámítható az SST-ből való kivonással.  
+
+A mi esetünkben  
+$$F = \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{338,943}{1}}{\frac{137,057}{15-1-1}}=104,387$$
+$$df_1 = 1; df_2 = 15-1-1=13$$
+$$F_{0,95;1;13}=4,67$$
+$$104,387 > 4,67$$  
+Eszerint ez a próba is azt mutatja, hogy van olyan független változó (egy volt, tehát erről az egyrőn van szó), amely szignifikáns hatással van a függő változó értékére.  
+Ha csak egy független változó lett bevonva a modellbe, akkor a két próba ekvivalens. Ha az egyik próba szignifikáns hatást jelez, akkor a másik próba is szignifikáns hatást fog jelezni. Több független változó esetén viszont a két próba nem ekvivalens, az F próba akkor is lehet szignifikáns, ha nem minden t-próba volt az.  
+<br><br>  
+
+## Továbbiak
+<br>  
+A fenti próbák a legfontosabbak, de léteznek továbbiak is. Ezeket ráadásként itt megtalálják, de visszakérdezni nem fogom ezeket. 
+<br><br>  
+
+### Konstans paraméterre vonatkozó próba
+<br>  
+
+Hasonlóan a $b_1$ paraméterhez, a $b_0$ paraméterre vonatkozóan is elvégezhető a t-próba. Ehhez ki kell számítanunk ennek a becslésnek a standard hibáját, amely különbözik a meredekséget mérő paraméterekétől:  
+$$SE(b_0)=SE(e)*\sqrt{\frac{\sum_{i=1}^{n}{x_i^2}}{n*\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}}$$
+A t-próba képlete viszont ugyanaz, ahogy a szabadságfok is:  
+$$t = \frac{b_0}{SE(b_0)}$$
+$$df = n-r-1$$  
+```{r data}
+results <- data.frame(
+  id = paste0(1:15,"."),
+  first = c(15, 20, 25, 30, 27, 18, 19, 22, 9, 14, 12, 15, 17, 19, 23),
+  second = c(21, 24, 28, 29, 25, 20, 17, 22, 11, 13, 10, 16, 21, 25, 18)
+)
+```
+A példánkban:  
+$$\sum_{i=1}^{n}{x_i^2}=15^2+20^2+25^2+...=`r sum(results$first **2)`$$
+$$SE(b_0)=SE(e)*\sqrt{\frac{\sum_{i=1}^{n}{x_i^2}}{n*\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}}=
+3,247*\sqrt{\frac{5873}{15*458}}=3,002$$
+$$t = \frac{3,655}{3,002}=1,217$$  
+A kritikus érték ugyanaz, mint a $b_1$ paraméternél: 2,16. Ez az érték tehát, mivel $-2,16 < 1,217 < 2,16$, nem szignifikáns.  
+<br>  
+
+### Intervallumbecslés a modell paramétereire
+<br>  
+
+Az összes paraméterre intervallumbecslés is adható, a szokásos módon:  
+Az intervallumbecslések általános képlete: pontbecslés $\pm$ táblázatos érték * standard hiba.
+
+A $b_i$ paraméterekre ($i = 0, 1, 2, ..., r$) a következő képletet használhatjuk:  
+$$b_i \pm t_{1-\frac{\alpha}{2};n-r-1}*SE(b_i)$$
+A példában:  
+$$b_1 \pm t_{1-\frac{\alpha}{2};n-r-1}SE(b_1) = 0,86 \pm 2,16*0,152 = [0,532;1,188]$$
+$$b_0 \pm t_{1-\frac{\alpha}{2};n-r-1}SE(b_0)=3,655 \pm 2,16*3,002 = [-2,829;10,139]$$
+Vagyis az egyenes meredeksége 95%-os megbízhatósággal 0,532 és 1,188 közé esik, a tengelymetszet pedig -2,829 és 10,139 közé. 
+Megjegyzés: Látszik is, hogy az első intervallum nem tartalmazza a 0-t (szignifikáns volt a t-próba), de a második tartalmazza (a t-próba sem volt szignifikáns).
