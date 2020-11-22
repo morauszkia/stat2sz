@@ -226,7 +226,7 @@ if (df2 != (total.n - nrow(data))) {
   cat(paste0("Mivel ", total.n-nrow(data), " nem szerepel az F-eloszlás táblázatában a $df_2$ értékek között, ezért ehelyett a ", df2, ". sort nézzük."))
 }
 ```
-A táblázatban az $F_{`r df1`; `r df2`}$ értéket keressük, ami `r qf(0.95, df1, df2) %>% round(2) %>% format(decimal.mark = ",")`.
+A táblázatban az $F_{`r df1`; `r df2`}$ értéket keressük, ami `r qf(0.95, df1, df2)`.
 ```{r decision, results = 'asis'}
 if (F.test > qf(0.95, df1, df2)) {
   cat("Mivel a kapott tesztérték nagyobb a határértéknél, a nullhipotézist 5%-os szignifikanciaszint mellett elvetjük. Az egyes csoportokban a várható érték nem egyenlő.<br><br>Ezután meg kell vizsgálnunk, melyek azok a páronkénti különbségek, amelyek szignifikánsak. Erre az ún. post-hoc tesztek szolgálnak.")
@@ -239,18 +239,18 @@ if (F.test > qf(0.95, df1, df2)) {
 ## Post-hoc tesztek
 <br>  
 
-Ha az ANOVA eredménye szignifikáns különbségeket jelez, meg kell vizsgálnunk, mely csoportok között van, és mely csoportok között nincs szignifikáns különbség. Számtalan próba közül választhatunk. Az SPSS pl. felkínálja az Fisher-féle LSD (Least Significant Difference), Bonferroni, Sidak, Scheffe-próbát és 10 további próbát arra az esetre, ha teljesült a szóráshomogenitás (az ANOVA feltétele), és 4 próbát arra az esetre is, ha ez a feltétel nem teljesül.  
+Ha az ANOVA eredménye szignifikáns különbségeket jelez, meg kell vizsgálnunk, mely csoportok között van, és mely csoportok között nincs szignifikáns különbség. Számtalan próba közül választhatunk. Az SPSS pl. felkínálja az Fisher-féle LSD (Least Significant Difference), Bonferroni, Sidak, Scheffé-próbát és 10 további próbát arra az esetre, ha teljesült a szóráshomogenitás (az ANOVA feltétele), és 4 próbát arra az esetre is, ha ez a feltétel nem teljesül.  
 <br>  
 
-Nézzük meg, hogyan működik a Scheffe-próba. Ha az interneten keresnek, sokféle változatával találkoznak, mi egyet nézünk meg ezek közül. Ennek előnye, hogy a kapott eredményeket ugyanúgy kell értelmezni, mint az F-próba eredményét, ráadásul a határérték is ugyanaz marad.  
+Nézzük meg, hogyan működik a Scheffé-próba. Ha az interneten keresnek, sokféle változatával találkoznak, mi egyet nézünk meg ezek közül. Ennek előnye, hogy a kapott eredményeket ugyanúgy kell értelmezni, mint az F-próba eredményét, ráadásul a határérték is ugyanaz marad.  
   
-A Scheffe-féle post-hoc próba képlete:
+A Scheffé-féle post-hoc próba képlete:
 $$F_{ij}=\frac{\left(\bar{x}_i-\bar{x}_j\right)^2}{\textit{VAR}_B*(K-1)*\left(\frac{1}{N_i}+\frac{1}{N_j}\right)}$$
   
 A számlálóban a két vizsgált csoport átlaga különbségének négyzete szerepel, a nevezőben pedig az ANOVA próbához kiszámított $\textit{VAR}_B$ értéke, szorozva a csoportok száma mínusz 1-gyel, illetve a két vizsgált csoport mintanagysága reciprokának összegével.  
 <br>  
 
-A fenti példában, mivel `r nrow(data)` csoport volt, ezért - ha az ANOVA próba eredménye szignifikáns volt, és ezért elvetettük a nullhipotézist - összesen `r nrow(data)*(nrow(data)-1)/2` Scheffe-próbát kell elvégezni.
+A fenti példában, mivel `r nrow(data)` csoport volt, ezért - ha az ANOVA próba eredménye szignifikáns volt, és ezért elvetettük a nullhipotézist - összesen `r nrow(data)*(nrow(data)-1)/2` Scheffé-próbát kell elvégezni.
 
 ```{r post-hoc, results='asis'}
 for (i in 1:(nrow(data)-1)) {
