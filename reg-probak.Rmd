@@ -10,6 +10,14 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+<br><br>  
+
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
 
 A regressziós becslés során a mintából kiszámított paraméterek természetesen ezúttal is valószínűségi változók egy-egy értékét jelentik. Más mintákból kisebb-nagyobb mértékben eltérő $b_0$, $b_1$, $b_2$, stb. paramétereket kapnánk, és ezért az R&sup2; mutató is eltérhet.
 

@@ -12,6 +12,12 @@ knitr::opts_chunk$set(echo = FALSE)
 library(huxtable)
 library(dplyr)
 ```
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
 
 <br><br>
 

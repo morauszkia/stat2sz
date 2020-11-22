@@ -18,6 +18,13 @@ library(latex2exp)
 ```
 <br><br>  
 
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
+
 ## A modell paraméterei
 <br>  
 

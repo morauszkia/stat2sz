@@ -407,6 +407,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="anova.html">ANOVA</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -435,6 +438,13 @@ div.tocify {
 </div>
 
 
+<p><br><br></p>
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
 <p>A regressziós becslés során a mintából kiszámított paraméterek természetesen ezúttal is valószínűségi változók egy-egy értékét jelentik. Más mintákból kisebb-nagyobb mértékben eltérő <span class="math inline">\(b_0\)</span>, <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, stb. paramétereket kapnánk, és ezért az R² mutató is eltérhet.</p>
 <p>Az egyes paraméterek esetén felvetődik ezért a kérdés, hogy vajon azok tényleg eltérnek-e 0-tól. A <span class="math inline">\(b_0\)</span> paraméter esetében ez leginkább azért vetődhet fel, mert a konstans nélküli egyenlet egy kicsit egyszerűbb modell, mint a konstanst is tartalmazó, de a bevont magyarázó változókhoz tartozó <span class="math inline">\(b_i\)</span> paraméterek esetében a kérdés jelentősebb: arra vonatkozik, hogy az adott változó parciális (tehát a többi bevont független változótól megtisztított - ld. parciális korreláció) hatása szignifikáns-e. Egyelőre csak ezt az utóbbit vizsgáljuk. <br><br></p>
 <div id="a-b_i-paraméterekre-vonatkozó-próba" class="section level2">

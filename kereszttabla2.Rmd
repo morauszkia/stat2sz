@@ -17,6 +17,12 @@ library(huxtable)
 library(questionr)
 ```
 <br><br>  
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
 
 ## Folytatás, újabb példával
   

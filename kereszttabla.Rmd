@@ -18,6 +18,12 @@ library(questionr)
 ```
   
 <br><br>
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
 
 Az első nagyobb téma ebben a félévben a &chi;&sup2; (Khí-négyzet) tesztek lesznek. Ezek közül az első a kereszttáblaelemzés.
 

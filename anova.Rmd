@@ -1,0 +1,294 @@
+---
+title: "ANOVA alapjai"
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(scipen = 100, digits = 2, OutDec = ",")
+library(dplyr)
+library(ggplot2)
+library(huxtable)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+```
+<br><br>  
+
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
+
+A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVÁ-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVÁ-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet.
+<br><br>  
+
+## Várható értékre vonatkozó próbák
+<br>  
+
+A t-próba, Welch-próba, illetve nemparaméteres megfelelőjük, a Mann-Whitney-próba arra szolgált, hogy megvizsgáljuk, két populációban (vagy egy populáció két szegmensében: pl. férfiak és nők, akik választottak és akik nem, stb.) eltér-e egy intervallum- vagy arányskála mérési szintű változó középértéke. A t-próba és a Welch-próba a várható érték (átlag), a Mann-Whitney-próba pedig a medián eltérését vizsgálta. 
+<br>  
+
+Vannak helyzetek, amikor kettőnél több populációban (egy populáció kettőnél több csoportjában) szeretnénk megvizsgálni valaminek az átlagát. Pl. felekezetenként vizsgáljuk az egyházak iránti bizalmat, és vannak a katolikusok, reformátusok, evangélikusok, egyéb protestáns felekezetek, egyéb keresztény felekezetek, nem keresztény felekezetek, felekezeten kívüliek, stb. 
+<br>  
+
+Ha ilyen esetekben t-próbákat használnánk, a következő problémával kellene számolni: még ha igaz is a nullhipotézis, mely szerint nincs különbség a várható értékek között, akkor is 5% annak a valószínűsége, hogy szignifikáns próbát kapunk a mintavételből adódóan. Tegyük fel, hogy egyik páronkénti különbség sem valós. Ebben az esetben minden próba esetében 0,95 annak a valószínűsége, hogy helyesen döntünk: megtartjuk a $H_0: \mu_1=\mu_2$ nullhipotézist.  
+<br>  
+
+$k$ csoport esetén $k*(k-1)/2$ páronkénti összevetést kell elvégeznünk. Az alábbi táblázat mutatja annak a valószínűségét, hogy minden esetben nem szignifikáns (tehát helyes) eredményt kapunk:
+```{r comparisons}
+groups <- 2:10
+comparisons <- groups*(groups-1)/2
+prob <- ((0.95 ** comparisons) * 100) %>% round(1) %>% paste0("%")
+
+table <- data.frame(groups,
+                    comparisons,
+                    prob) %>%
+  as_hux() %>%
+  set_markdown_contents(1, everywhere, c("Csoportok<br>száma", "Páronkénti<br>összehasonlítás", "Valószínűség")) %>%
+  set_all_borders(everywhere, everywhere, 0.5) %>%
+  set_bottom_border(1, everywhere, 1.5) %>%
+  set_bold(1, everywhere) %>%
+  set_align(-1, everywhere, "right")
+table
+```  
+  
+Láthatják, hogy a csoportok számának növekedésével gyors ütemben csökken annak a valószínűsége, hogy jól döntünk, és nő annak a valószínűsége, hogy kapunk legalább egy tévesen szignifikáns eredményt.  
+<br>
+A páronkénti t-próbák helyett ezért az egyutas ANOVA-t használjuk. Ez a következő nullhipotézist vizsgálja:
+$$H_0: \mu_1=\mu_2=...=\mu_k$$
+Vagyis: a változó várható értéke mindegyik populációban/csoportban egyenlő.
+Az ellenhipotézis a következőképpen írható fel:  
+$$H_1: \neg(\mu_1=\mu_2=...=\mu_k)$$
+Vagyis: nem igaz, hogy az összes várható érték egyenlő. De az nem szükséges, hogy egyik egyenlőség se teljesüljön.   
+<br><br>  
+
+## Az ANOVA feltételei
+<br>  
+
+Az ANOVÁ-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képzünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.  
+  
+
+pl. több országban vizsgáljuk az átlagos jövedelmet, több különböző szakon vizsgáljuk az egyetemmel való elégedettséget, stb.  
+  
+  
+
+Az ANOVA alkalmazásának további feltétele, hogy  
+
+- a függő változó minden csoportban normális eloszlású
+- a függő változó szórása minden csoportban azonosnak tekinthető (szóráshomogenitás)
+- az egyes csoportok mintaelemszámai hasonlók
+  
+Az első feltétel teljesülését normalitásvizsgálattal (pl. Kolmogorov-Smirnov, Shapiro-Wilk, stb.), a második feltétel teljesülését pedig ún. Levene-próbával vizsgálhatjuk. Ezeket nem nézzük meg, a megfelelő statisztikai programokkal ezek elvégezhetők.
+
+<br><br>  
+
+## Az egyszempontú ANOVA logikája
+<br>  
+
+Mint írtam, az egyszempontú ANOVA logikája ugyanaz, mint a regresszióé, úgyhogy nézzük, annak mi volt a logikája.
+Vegyük azt a példát, hogy a vizsga eredményét becsüljük a felkészülésre fordított idő alapján. A hallgatók vizsgaeredményei különböznek. Ezeket a különbségeket igyekszünk magyarázni a felkészülési idővel. A különbségek teljes mértékét mértük az SST-vel.  
+  
+
+A hallgatók vizsgaeredményeinek különbségeit bizonyos mértékben a felkészülésre fordított idő különbségei magyarázzák: aki többet készült, várhatóan nem ugyanannyi pontra számíthat, mint aki kevesebbet készült. Ez a különbségeknek az a része, amit a modellel meg tudunk magyarázni. Ezt jelöltük SSR-rel.  
+  
+
+Ezen túl viszont azoknak az eredménye is különbözik valamennyire, akik ugyanannyit készültek. Ebben számos oknak lehet szerepe: az egyiknek eleve jobban megy a tantárgy, jobb napja volt, a tanár részrehajló, segítőkészebb volt a szomszédja, szerencséje volt, és jobban tippelt, stb.
+Ez utóbbi a különbségeknek az a része, amit nem tudunk megmagyarázni. Ezt jelöltük SSH-val.  
+
+<br>  
+
+Az ANOVÁ-nál ugyanez a logika, csak más típusúak a változók. Tegyük fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik más-más csoportot írtak, más-más eredményt értek-e el.  
+
+Lesz a különbségeknek egy része, amely azzal magyarázható, hogy két ember nem ugyanazt a csoportot írta. Ezek a csoportok közötti különbségek - SSK-val fogjuk jelölni (K mint Külső vagy csoportok Közötti eltérések négyzetösszege).  
+
+De biztos vannak különbségek az egyes csoportokon belül is: ez a különbségeknek az a része, amit nem tudunk azzal megmagyarázni, hogy két személy más-más csoportot írt volna. Ezeket más okok magyarázzák. Ezeket a különbségeket jelöli majd az SSB (B mint Belső vagy csoporton Belüli különbségek négyzetösszege).  
+A kettő összege ebben az esetben is kiadja a teljes négyzetösszeget: SST-t.  
+
+<br>  
+Az ANOVA azt vizsgálja majd, kellően nagyok-e a csoportok közötti különbségek a csoportokon belüli különbségekhez képest ahhoz, hogy elvessük a nullhipotézist.  
+
+<br>  
+Érdemes megnézni <a href="https://seeing-theory.brown.edu/regression-analysis/index.html#section3" target="_blank">ezt az oldalt</a>, ahol találnak olyan példa adatokat, amelyek között vannak, amelyekre szignifikáns, és olyanok, amelyekre nem szignifikáns az ANOVA. Az adatokat meg is változtathatják, a pontok áthúzásával, és megnézhetik, hogyan változik az ANOVA eredménye attól függően, hogyan állnak a pontok. Ha a csoportokon belül jobban szórónak a pontok, és ha a csoportátlagok közelebb kerülnek egymáshoz, akkor csökken az ANOVA (F-próba) értéke. Egy ponton túl a szignifikanciaszint is észrevehető mértékben megnő.
+<br><br>  
+
+## Az ANOVA kiszámítása
+<br>  
+
+Az ANOVA kiszámításához a fenti SSB és SSK értékekre van szükségünk.  
+Az SSB-t, a csoporton belüli eltérések négyzetösszegét úgy kapjuk, hogy minden egyes csoportban, minden egyes megfigyelési egységre kiszámítjuk az adott csoport átlagától (ez egyben az adott személyre adott becslésünk) való eltérést, és ezeket az eltéréseket négyzetre emelve összeadjuk:
+$$\textit{SSB} = \sum_{i=1}^{K}\sum_{j=1}^{N_i}\left(x_{ij}-\bar{x}_i\right)^2$$  
+A fenti képletben $K$ a csoportok száma, $i$ jelöli, melyik csoportról van épp szó, $N_i$ az adott csoport elemszáma, $x_{ij}$ az i. csoport j. tagjának értéke, az $\bar{x}_i$ pedig az i. csoport átlaga.  
+Az SSK-t, a csoportok közötti eltérések négyzetösszegét úgy kapjuk, hogy minden megfigyelési egység esetében az adott csoport átlagával (az adott megfigyelési egységre adott becslésünkkel) számolunk, és így kiszámítjuk az eltérést a minta összátlagához (másképp: a főátlaghoz) képest, és ezeknek az eltéréseknek vesszük a négyzetösszegét:
+$$\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2$$  
+A fenti képletben $\bar{\bar{x}}$ jelöli a főátlagot, ami egyszerűen az $x$ változó átlaga a minta egészében.  
+<br>  
+
+### Az ANOVA kiszámítása leíró statisztikákból
+<br>  
+A fenti számítás nagy minták esetén elég sok számolással járna, ezért a szemináriumon nem közvetlenül az egyes megfigyelési egységek $x$ értékeiből indulunk ki, hanem a csoportokra vonatkozó statisztikai mutatókból: az $\bar{x}_i$ csoportátlagból és az $s_i^*$ szórásból.  
+Az SSB kiszámításához a csoportokon belüli négyzetes eltérések összegét kell tudnunk kiszámítani, ami a szórásból megkapható. Az i. csoporton belüli szórás képlete: 
+$$s_i^*=\sqrt{\frac{\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}}{N_i-1}}$$  
+Az egyenletet négyzetre emelve, majd $(N_i-1)$-gyel szorozva kapjuk:
+$$\sum_{i=1}^{n_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}$$  
+Ha ezt minden csoportra kiszámítjuk, és összeadjuk, megkapjuk az SSB-t:
+$$\textit{SSB}=\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}$$  
+Az SSK kiszámításához a főátlag (az egész minta átlaga) kiszámítása szükséges. Ezt a csoportátlagok súlyozott átlagaként kapjuk meg:
+$$\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}$$
+Ezután már csak be kell helyettesíteni az SSK képletébe:
+$$\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2$$
+Az ANOVA maga egy F-próba, amely hasonlít a regressziónál nézett F-próbára:  
+
+- A számláló a megmagyarázott rész (ott SSR, itt SSK) osztva a szabadságfokával (ott r, itt K-1)
+- A nevező a megmagyarázatlan rész (ott SSH, itt SSB) osztva a szabadságfokával (ott n-r-1, itt N-K)
+- Az F-próba ennek a kettőnek a hányadosa  
+
+Jelöljük $\textit{VAR}_K$-val (máshol $MS_K$ jelöléssel is találkozhatnak) a számlálóban szereplő törtet, $\textit{VAR}_B$-vel (vagy $MS_B$) pedig a nevezőben szereplőt:
+$$\textit{VAR}_K=\frac{\textit{SSK}}{K-1}=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}$$
+$$\textit{VAR}_B=\frac{\textit{SSB}}{N-K}=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}$$
+$$F=\frac{\textit{VAR}_K}{\textit{VAR}_B}$$
+Ez a próba igaz nullhipotézis esetén $F(K-1; N-K)$ eloszlást követ, vagyis $df_1=K-1$ és $df_2=N-K$. Ha a próba értéke nagyobb a megfelelő határértéknél, akkor a próba szignifikáns különbséget mutat, a $H_0: \mu_1=\mu_2=...=\mu_k$ nullhipotézist elvetjük.  
+Ha a próba értéke kisebb a határértéknél, akkor megtartjuk a nullhipotézist.
+
+<br>  
+
+### Példa
+<br>  
+
+Van egy mintánk középföldei lakosokból, akik körében a faj és a testmagasság összefüggését vizsgáljuk. Arra vagyunk kíváncsiak, állítható-e, hogy a középföldei felnőtt emberek, tündék, törpök és hobbitok várható testmagassága nem azonos.
+A nullhipotézisünk szerint a négy csoportban azonos a várható magasság, az ellenhipotézis szerint pedig nem azonos.
+
+Az ANOVA a csoportok közötti különbségek mértékét és a csoportokon belüli különbségeket veti össze, és azt vizsgálja, elég nagyok-e a csoportok közötti különbségek a csoportokon belüliekhez képest.  
+  
+Az adatok:
+```{r anova.data}
+means <- c(170, 190, 110, 100)
+sds <- c(10, 12, 11, 9)
+ns <- c(25, 15, 12, 8)
+
+data <- data.frame(átlag = means, szórás = sds, elemszám = ns) %>%
+  set_rownames(c("ember", "tünde", "hobbit", "törp"))
+
+group.sum <- means %>% multiply_by(ns)
+total.n <- sum(ns)
+k <- length(means)
+main.mean <- means %>% multiply_by(ns) %>% sum() %>% divide_by(total.n) #%>% round(2)
+ssk <- ns %>% multiply_by((means - main.mean)** 2) %>% sum() #%>% round(2)
+ssb <- (ns-1) %>% multiply_by(sds**2) %>% sum() #%>% round(2)
+vark <- ssk %>% divide_by(k-1) #%>% round(2)
+varb <- ssb %>% divide_by(total.n - k) #%>% round(2)
+df2s <- c(1:30, 40, 60, 120)
+F.test <- vark %>% divide_by(varb) #%>% round(2)
+
+df1 <- k - 1
+df2 <- df2s %>% as_tibble %>%
+  filter(df2s <= (total.n-k)) %>%
+  max()
+
+data %>%
+  t() %>%
+  as_huxtable(add_colnames = TRUE, add_rownames = TRUE) %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_all_borders() %>%
+  set_bold(1, everywhere) %>%
+  set_bold(everywhere, 1)
+```
+  
+
+Egyszerűen mindent kiszámítunk szép sorban, ahogy a képletgyűjteményben is szerepel:  
+
+$$
+\begin{align}
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{`r paste(ns, "*", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\\
+\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
+      &=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round(2), "\\right)^2", collapse = " + ")`}
+      {`r k`-1}= \\
+      &=\frac{`r paste0(ns, " * ", (means-main.mean) %>% round(2), "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+\\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+      &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
+\\
+F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
+\end{align}
+$$
+<br>  
+
+A próba nulleloszlása egy F-eloszlás $df_1 = K-1 = `r nrow(data)`-1 = `r df1`$ és $df_2 = N-K = `r paste0(total.n, "-", nrow(data))` = `r total.n - nrow(data)`$ szabadságfokokkal. 
+```{r df2, results="asis"}
+if (df2 != (total.n - nrow(data))) {
+  cat(paste0("Mivel ", total.n-nrow(data), " nem szerepel az F-eloszlás táblázatában a $df_2$ értékek között, ezért ehelyett a ", df2, ". sort nézzük."))
+}
+```
+A táblázatban az $F_{`r df1`; `r df2`}$ értéket keressük, ami `r qf(0.95, df1, df2) %>% round(2) %>% format(decimal.mark = ",")`.
+```{r decision, results = 'asis'}
+if (F.test > qf(0.95, df1, df2)) {
+  cat("Mivel a kapott tesztérték nagyobb a határértéknél, a nullhipotézist 5%-os szignifikanciaszint mellett elvetjük. Az egyes csoportokban a várható érték nem egyenlő.<br><br>Ezután meg kell vizsgálnunk, melyek azok a páronkénti különbségek, amelyek szignifikánsak. Erre az ún. post-hoc tesztek szolgálnak.")
+} else {
+  cat("Mivel a kapott tesztérték kisebb a határértéknél, a nullhipotézist megtartjuk. Nem állítható, hogy a várható értékek az egyes csoportokban különböznének.")
+}
+```  
+<br><br>  
+
+## Post-hoc tesztek
+<br>  
+
+Ha az ANOVA eredménye szignifikáns különbségeket jelez, meg kell vizsgálnunk, mely csoportok között van, és mely csoportok között nincs szignifikáns különbség. Számtalan próba közül választhatunk. Az SPSS pl. felkínálja az Fisher-féle LSD (Least Significant Difference), Bonferroni, Sidak, Scheffe-próbát és 10 további próbát arra az esetre, ha teljesült a szóráshomogenitás (az ANOVA feltétele), és 4 próbát arra az esetre is, ha ez a feltétel nem teljesül.  
+<br>  
+
+Nézzük meg, hogyan működik a Scheffe-próba. Ha az interneten keresnek, sokféle változatával találkoznak, mi egyet nézünk meg ezek közül. Ennek előnye, hogy a kapott eredményeket ugyanúgy kell értelmezni, mint az F-próba eredményét, ráadásul a határérték is ugyanaz marad.  
+  
+A Scheffe-féle post-hoc próba képlete:
+$$F_{ij}=\frac{\left(\bar{x}_i-\bar{x}_j\right)^2}{\textit{VAR}_B*(K-1)*\left(\frac{1}{N_i}+\frac{1}{N_j}\right)}$$
+  
+A számlálóban a két vizsgált csoport átlaga különbségének négyzete szerepel, a nevezőben pedig az ANOVA próbához kiszámított $\textit{VAR}_B$ értéke, szorozva a csoportok száma mínusz 1-gyel, illetve a két vizsgált csoport mintanagysága reciprokának összegével.  
+<br>  
+
+A fenti példában, mivel `r nrow(data)` csoport volt, ezért - ha az ANOVA próba eredménye szignifikáns volt, és ezért elvetettük a nullhipotézist - összesen `r nrow(data)*(nrow(data)-1)/2` Scheffe-próbát kell elvégezni.
+
+```{r post-hoc, results='asis'}
+for (i in 1:(nrow(data)-1)) {
+  for (j in (i+1):nrow(data)) {
+    test <- means[i] %>% subtract(means[j]) %>% raise_to_power(2) %>% 
+            divide_by(varb*(k-1)*(1/ns[i]+1/ns[j]))
+    cat(paste0(rownames(data)[i], " és ", rownames(data)[j]), ":")
+    eq <- paste0("$$F_{", i, j, "} = \\frac{\\left(", means[i], "-", means[j], "\\right)^2}{",
+                  varb,"*(", k, "-1)*\\left(\\frac{1}{", ns[i], "}+\\frac{1}{", ns[j],"}\\right)}=\\frac{", 
+                  (means[i]-means[j])**2 ,"}{", varb %>% multiply_by(k-1) %>% multiply_by(1/ns[i]+1/ns[j]) %>% 
+                  round(2), "}=", test %>% round(2))
+    if (test > qf(0.95, df1, df2)) {
+      cat(paste0(eq, ">", qf(0.95, df1, df2) %>% round(2), 
+                 "\\implies \\textit{szignifikáns}$$"))
+    } else {
+      cat(paste0(eq, "<", qf(0.95, df1, df2) %>% round(2), 
+                 "\\implies \\textit{nem szignifikáns}$$"))
+    }
+  }
+}
+```  
+<br><br>  
+
+## Kapcsolat ereje
+<br>  
+
+Végül, ha az ANOVA próba szignifikáns lett, megvizsgálható, milyen erős a kapcsolat a két változó között: a skála mérési szintű változó különbségeiből mennyit magyaráz a független változó. Ez megfelel a regresszió $R^2$ mutatójának, és ugyanúgy is kell kiszámítani, de az ANOVA esetében éta-négyzetnek hívjuk. Képlete:
+$$\eta^2=\frac{\textit{SSK}}{\textit{SST}}=\frac{\textit{SSK}}{\textit{SSK}+\textit{SSB}}$$
+Ha esetleg korábban nem jegyeztük fel az $\textit{SSK}$-t és $\textit{SSB}$-t, akkor azok "visszafejthetők" a $\textit{VAR}_K$ és $\textit{VAR}_B$ értékekből:
+$$
+\begin{aligned}
+\textit{SSK} &= \textit{VAR}_K*(K-1) \\
+\textit{SSB} &= \textit{VAR}_B*(N-K)
+\end{aligned}
+$$
+  
+A fenti példában $\textit{SSK}=`r ssk`$ és $\textit{SSB} = `r ssb`$, ezért $\textit{SST} = `r ssk` + `r ssb` = `r ssk+ssb`$. Behelyettesítve a fenti képletbe: 
+$$\eta^2=\frac{`r ssk`}{`r ssk+ssb`}=`r ssk/(ssk+ssb)`$$  
+  
+
+Vagyis a faj, amelyhez a személy tartozik kb. `r ssk %>% divide_by(ssk+ssb) %>% round(2) %>% multiply_by(100)`%-ban magyarázza a felnőttkori magasság különbségeit.

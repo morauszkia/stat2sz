@@ -21,6 +21,13 @@ library(patchwork)
 ```
 <br><br>  
 
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
+
 ## Korreláció és regresszió  
 <br><br>
 Most teszünk egy kis kitérőt: míg eddig hipotézisvizsgálati módszereket néztünk (t-próba és társai, &chi;&sup2;-próbák, korreláció), addig most egy modellezést fogunk megnézni, vagyis nem egyszerűen arra leszünk kíváncsiak, hogy összefügg-e két változó, hanem arra, hogy az egyik (vagy néhány) változó ismeretében milyen modellel tudjuk megbecsülni egy függő változó értékét.   

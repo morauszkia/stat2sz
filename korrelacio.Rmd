@@ -20,6 +20,13 @@ library(forcats)
 ```
 <br><br>  
 
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
+
 A korrelációszámítás ugyanarra a kérdésre keresi a választ, mint a kereszttáblához kapcsolódó függetlenségvizsgálat: van-e összefüggés valamely vizsgált populációban két változó között? Míg azonban a kereszttábla két nominális vagy ordinális változó összefüggésénél használható, a korreláció alapvetően két intervallum- vagy arányskála mérési szintű változó összefüggését vizsgálja. Ezen túl rangkorrelációt két ordinális változó között is tudunk már számolni. 
 
 A korreláció esetén sincs feltétlenül független és függő változó, és a köztük lévő együttjárás, kapcsolat sem kell, hogy oksági kapcsolat legyen.

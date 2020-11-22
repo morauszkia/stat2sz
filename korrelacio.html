@@ -407,6 +407,9 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li>
+  <a href="anova.html">ANOVA</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -436,6 +439,12 @@ div.tocify {
 
 
 <p><br><br></p>
+<style>
+  p {
+    text-align: justify;
+    line-height: 1.5;
+  }
+</style>
 <p>A korrelációszámítás ugyanarra a kérdésre keresi a választ, mint a kereszttáblához kapcsolódó függetlenségvizsgálat: van-e összefüggés valamely vizsgált populációban két változó között? Míg azonban a kereszttábla két nominális vagy ordinális változó összefüggésénél használható, a korreláció alapvetően két intervallum- vagy arányskála mérési szintű változó összefüggését vizsgálja. Ezen túl rangkorrelációt két ordinális változó között is tudunk már számolni.</p>
 <p>A korreláció esetén sincs feltétlenül független és függő változó, és a köztük lévő együttjárás, kapcsolat sem kell, hogy oksági kapcsolat legyen.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:methods">
@@ -457,7 +466,7 @@ div.tocify {
 <div id="pearson-féle-korrelációs-együttható" class="section level2">
 <h2>Pearson-féle korrelációs együttható</h2>
 <p><br> A Pearson-féle korrelációs együttható két <strong>normális eloszlású intervallum- vagy aránskála mérési szintű</strong> változó közötti <strong>lineáris</strong> kapcsolat erősségét méri. Ha a két változó között más típusú kapcsolat van, nem pedig lineáris, akkor elképzelhető, hogy a korrelációs együttható értéke annak ellenére alacsony, hogy a két változó viszonylag erősen összefügg. Ha viszont a két változó független egymástól, akkor a korrelációs együttható is nulla közeli értéket vesz fel. Ha a populációról van szó, akkor függetlenség esetén 0 az értéke, minta esetén természetesen lehetnek ettől kisebb eltérések. A Pearson-féle korrelációs együtthatót r-rel fogjuk jelölni, időnként, ha szükséges (mert pl. több korrelációval dolgozunk), indexben kiegészítjük úgy, hogy egyértelmű legyen, mely korrelációról van szó: pl. jelölve, mely változók közötti korreláció, r<sub>xy</sub> formában vagy pedig számozva, r<sub>1</sub>, r<sub>2</sub>, stb. formában.</p>
-<p>A fenti esetben a női válaszadók körében r = 0.513 a korreláció a szülők átlagos magassága és a válaszadó magassága között, a férfiak körében pedig r = 0.483.</p>
+<p>A fenti esetben a női válaszadók körében r = 0,51 a korreláció a szülők átlagos magassága és a válaszadó magassága között, a férfiak körében pedig r = 0,48.</p>
 <p>A korrelációs együttható értéke -1 és +1 között van. 0 jelenti a függetlenséget, -1 és +1 a legerősebb összefüggést. A negatív értékek negatív irányú összefüggést jelölnek, vagyis ebben az esetben minél nagyobb egyik változó értéke, várhatóan annál kisebb a másik változóé. A pozitív értékek pozitív kapcsolatot mutatnak, vagyis minél nagyobb egyik változó értéke, várhatóan annál nagyobb a másik változóé is. Ez látható a fenti példában is: minél magasabbak a szülők, annál magasabb a gyermekük.</p>
 <p>Az alábbi ábrán azt láthatják, milyen pontdiagramnak milyen lineáris korrelációs együttható felel meg (ezek csak körülbelüli értékek). Láthatják, hogy minél erősebb az összefüggés, annál inkább egy egyenesre illeszkednek a pontok (ezért nevezzük lineárisnak az összefüggést). Szintén láthatják, hogy a pozitív korrelációk esetén emelkedik az egyenes (a nagyobb x értékekhez nagyobb y értékek tartoznak), a negatív korrelációk esetén pedig lejt (nagyobb x értékekhez kisebb y értékek tartoznak).</p>
 <p><img src="korrelacio_files/figure-html/cor.scatter-1.png" width="672" /></p>

@@ -36,6 +36,8 @@ navbar:
           href: reg-becsles.html
         - text: "Regresszió - statisztikai próbák"
           href: reg-probak.html
+    - text: "ANOVA"
+      href: anova.html
   right: 
     - icon: fa-folder
       href: https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0
