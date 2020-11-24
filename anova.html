@@ -445,7 +445,7 @@ div.tocify {
     line-height: 1.5;
   }
 </style>
-<p>A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVÁ-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVÁ-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet. <br><br></p>
+<p>A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVA-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet. <br><br></p>
 <div id="várható-értékre-vonatkozó-próbák" class="section level2">
 <h2>Várható értékre vonatkozó próbák</h2>
 <p><br></p>
@@ -487,7 +487,7 @@ div.tocify {
 <div id="az-anova-feltételei" class="section level2">
 <h2>Az ANOVA feltételei</h2>
 <p><br></p>
-<p>Az ANOVÁ-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képzünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.</p>
+<p>Az ANOVA-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képzünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.</p>
 <p>pl. több országban vizsgáljuk az átlagos jövedelmet, több különböző szakon vizsgáljuk az egyetemmel való elégedettséget, stb.</p>
 <p>Az ANOVA alkalmazásának további feltétele, hogy</p>
 <ul>
@@ -505,7 +505,7 @@ div.tocify {
 <p>A hallgatók vizsgaeredményeinek különbségeit bizonyos mértékben a felkészülésre fordított idő különbségei magyarázzák: aki többet készült, várhatóan nem ugyanannyi pontra számíthat, mint aki kevesebbet készült. Ez a különbségeknek az a része, amit a modellel meg tudunk magyarázni. Ezt jelöltük SSR-rel.</p>
 <p>Ezen túl viszont azoknak az eredménye is különbözik valamennyire, akik ugyanannyit készültek. Ebben számos oknak lehet szerepe: az egyiknek eleve jobban megy a tantárgy, jobb napja volt, a tanár részrehajló, segítőkészebb volt a szomszédja, szerencséje volt, és jobban tippelt, stb. Ez utóbbi a különbségeknek az a része, amit nem tudunk megmagyarázni. Ezt jelöltük SSH-val.</p>
 <p><br></p>
-<p>Az ANOVÁ-nál ugyanez a logika, csak más típusúak a változók. Tegyük fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik más-más csoportot írtak, más-más eredményt értek-e el.</p>
+<p>Az ANOVA-nál ugyanez a logika, csak más típusúak a változók. Tegyük fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik más-más csoportot írtak, más-más eredményt értek-e el.</p>
 <p>Lesz a különbségeknek egy része, amely azzal magyarázható, hogy két ember nem ugyanazt a csoportot írta. Ezek a csoportok közötti különbségek - SSK-val fogjuk jelölni (K mint Külső vagy csoportok Közötti eltérések négyzetösszege).</p>
 <p>De biztos vannak különbségek az egyes csoportokon belül is: ez a különbségeknek az a része, amit nem tudunk azzal megmagyarázni, hogy két személy más-más csoportot írt volna. Ezeket más okok magyarázzák. Ezeket a különbségeket jelöli majd az SSB (B mint Belső vagy csoporton Belüli különbségek négyzetösszege).<br />
 A kettő összege ebben az esetben is kiadja a teljes négyzetösszeget: SST-t.</p>
@@ -528,8 +528,8 @@ A fenti képletben <span class="math inline">\(\bar{\bar{x}}\)</span> jelöli a 
 <p><br><br />
 A fenti számítás nagy minták esetén elég sok számolással járna, ezért a szemináriumon nem közvetlenül az egyes megfigyelési egységek <span class="math inline">\(x\)</span> értékeiből indulunk ki, hanem a csoportokra vonatkozó statisztikai mutatókból: az <span class="math inline">\(\bar{x}_i\)</span> csoportátlagból és az <span class="math inline">\(s_i^*\)</span> szórásból.<br />
 Az SSB kiszámításához a csoportokon belüli négyzetes eltérések összegét kell tudnunk kiszámítani, ami a szórásból megkapható. Az i. csoporton belüli szórás képlete: <span class="math display">\[s_i^*=\sqrt{\frac{\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}}{N_i-1}}\]</span><br />
-Az egyenletet négyzetre emelve, majd <span class="math inline">\((N_i-1)\)</span>-gyel szorozva kapjuk: <span class="math display">\[\sum_{i=1}^{n_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}\]</span><br />
-Ha ezt minden csoportra kiszámítjuk, és összeadjuk, megkapjuk az SSB-t: <span class="math display">\[\textit{SSB}=\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}\]</span><br />
+Az egyenletet négyzetre emelve, majd <span class="math inline">\((N_i-1)\)</span>-gyel szorozva kapjuk: <span class="math display">\[\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}\]</span><br />
+Ha ezt minden csoportra kiszámítjuk, és összeadjuk, megkapjuk az SSB-t: <span class="math display">\[\textit{SSB}=\sum_{i=1}^{K}{\left(N_i-1\right)*s_i^{*2}}\]</span><br />
 Az SSK kiszámításához a főátlag (az egész minta átlaga) kiszámítása szükséges. Ezt a csoportátlagok súlyozott átlagaként kapjuk meg: <span class="math display">\[\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}\]</span> Ezután már csak be kell helyettesíteni az SSK képletébe: <span class="math display">\[\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2\]</span> Az ANOVA maga egy F-próba, amely hasonlít a regressziónál nézett F-próbára:</p>
 <ul>
 <li>A számláló a megmagyarázott rész (ott SSR, itt SSK) osztva a szabadságfokával (ott r, itt K-1)</li>
@@ -564,7 +564,7 @@ Ha a próba értéke kisebb a határértéknél, akkor megtartjuk a nullhipotéz
 \textit{VAR}_K &amp;=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
       &amp;=\frac{25 * \left(170 - 153,67\right)^2 + 15 * \left(190 - 153,67\right)^2 + 12 * \left(110 - 153,67\right)^2 + 8 * \left(100 - 153,67\right)^2}
       {4-1}= \\
-      &amp;=\frac{25 * 16,33^2 + 15 * 36,33^2 + 12 * -43,67^2 + 8 * -53,67^2}{3}=\frac{72393,33}{3}= 24131,11 \\
+      &amp;=\frac{25 * 16,33^2 + 15 * 36,33^2 + 12 * \left(-43,67\right)^2 + 8 * \left(-53,67\right)^2}{3}=\frac{72393,33}{3}= 24131,11 \\
 \\
 \textit{VAR}_B &amp;=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{\left(25-1\right)*10^2 + \left(15-1\right)*12^2 + \left(12-1\right)*11^2 + \left(8-1\right)*9^2}{60 - 4}= \\
       &amp;=\frac{6314}{56} = 112,75 \\

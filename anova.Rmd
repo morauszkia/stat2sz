@@ -26,7 +26,7 @@ library(kableExtra)
   }
 </style>
 
-A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVÁ-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVÁ-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet.
+A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVA-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet.
 <br><br>  
 
 ## Várható értékre vonatkozó próbák
@@ -72,7 +72,7 @@ Vagyis: nem igaz, hogy az összes várható érték egyenlő. De az nem szüksé
 ## Az ANOVA feltételei
 <br>  
 
-Az ANOVÁ-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képzünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.  
+Az ANOVA-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képzünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.  
   
 
 pl. több országban vizsgáljuk az átlagos jövedelmet, több különböző szakon vizsgáljuk az egyetemmel való elégedettséget, stb.  
@@ -104,7 +104,7 @@ Ez utóbbi a különbségeknek az a része, amit nem tudunk megmagyarázni. Ezt 
 
 <br>  
 
-Az ANOVÁ-nál ugyanez a logika, csak más típusúak a változók. Tegyük fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik más-más csoportot írtak, más-más eredményt értek-e el.  
+Az ANOVA-nál ugyanez a logika, csak más típusúak a változók. Tegyük fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik más-más csoportot írtak, más-más eredményt értek-e el.  
 
 Lesz a különbségeknek egy része, amely azzal magyarázható, hogy két ember nem ugyanazt a csoportot írta. Ezek a csoportok közötti különbségek - SSK-val fogjuk jelölni (K mint Külső vagy csoportok Közötti eltérések négyzetösszege).  
 
@@ -136,9 +136,9 @@ A fenti számítás nagy minták esetén elég sok számolással járna, ezért 
 Az SSB kiszámításához a csoportokon belüli négyzetes eltérések összegét kell tudnunk kiszámítani, ami a szórásból megkapható. Az i. csoporton belüli szórás képlete: 
 $$s_i^*=\sqrt{\frac{\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}}{N_i-1}}$$  
 Az egyenletet négyzetre emelve, majd $(N_i-1)$-gyel szorozva kapjuk:
-$$\sum_{i=1}^{n_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}$$  
+$$\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}$$  
 Ha ezt minden csoportra kiszámítjuk, és összeadjuk, megkapjuk az SSB-t:
-$$\textit{SSB}=\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}$$  
+$$\textit{SSB}=\sum_{i=1}^{K}{\left(N_i-1\right)*s_i^{*2}}$$  
 Az SSK kiszámításához a főátlag (az egész minta átlaga) kiszámítása szükséges. Ezt a csoportátlagok súlyozott átlagaként kapjuk meg:
 $$\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}$$
 Ezután már csak be kell helyettesíteni az SSK képletébe:
@@ -191,6 +191,14 @@ df2 <- df2s %>% as_tibble %>%
   filter(df2s <= (total.n-k)) %>%
   max()
 
+brackets <- (means-main.mean) < 0
+ob <- NA
+cb <- NA
+ob[brackets] <- "\\left("
+ob[!brackets] <- ""
+cb[brackets] <- "\\right)"
+cb[!brackets] <- ""
+
 data %>%
   t() %>%
   as_huxtable(add_colnames = TRUE, add_rownames = TRUE) %>%
@@ -210,7 +218,7 @@ $$
 \textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
       &=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round(2), "\\right)^2", collapse = " + ")`}
       {`r k`-1}= \\
-      &=\frac{`r paste0(ns, " * ", (means-main.mean) %>% round(2), "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+      &=\frac{`r paste0(ns, " * ", ob, (means-main.mean) %>% round(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
 \\
 \textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
       &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
