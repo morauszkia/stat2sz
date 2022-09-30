@@ -3,30 +3,11 @@ title: "Statisztika 2. szeminárium"
 output: html_document
 ---
 
-## 2020/2021. őszi félév
+## 2022/2023. őszi félév
 ## PPKE-BTK
 
-<!-- *** -->
-<!-- <br> <br> -->
-
-<!-- ## Kérdőív: -->
-<!-- <br> -->
-<!-- Ha még nem tette meg, kérem segítse a munkámat ennek a kérdőívnek a kitöltésével: <br><br>   -->
-
-<!-- <center> -->
-<!-- <h2> -->
-<!-- [KÉRDŐÍV]() -->
-<!-- </h2> -->
-<!-- </center> -->
 
 ***
-
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
 
 <br><br>  
 
@@ -37,20 +18,31 @@ A tantárgy célja a Statisztika 2. előadáson tárgyalt statisztikai módszere
 
 ## Legfontosabb információk:
 <br>
-A félév során a hallgatók előre egyeztetett módon házi feladatokat kapnak, amelyek a tanultak feldolgozását segítik. A házi feladatok visszaküldése a megbeszélt formában kötelező. Témakörönként egy házi feladat lesz, illetve a ZH-k előtt gyakorló feladatsorok, amelyeknek viszont nem kötelező visszaküldeni a megoldásait.
-<br>
-A félév során két zárthelyi dolgozatra kerül sor a gyakorlaton tanultak alapján. A félév teljesítésének feltétele mindkét zárthelyi dolgozat megírása, és hogy egyik zárthelyi dolgozat eredménye se legyen elégtelen. A hallgatók félév végi jegyüket a két zárthelyi dolgozat **összesített pontszáma** alapján kapják.
-Akiknek valamelyik ZH-juk elégtelen lett, a félév végén, előre egyeztetett időpontban javító ZH-t írnak.
+A félév során az előadáshoz kapcsolódóan végzünk számításokat számológéppel, illetve MS Excelben. A cél, hogy az egyes statisztikai módszerek matematikai hátterét megismerjék, így például tudják, hogy egy-egy SPSS művelet során mi történik, milyen adatokat veszünk alapul, és hogyan lehet a kapott eredményeket értelmezni.  
 <br><br>
-**A ZH-k időpontjai a 2020/21. őszi félévben:**
-<br>
-**I. ZH:** 2020.10.22.  
-**II. ZH:** 2020.12.10.  
-<br>
-A ZH-n használhatják az órai jegyzeteiket, illetve a kapott segédanyagokat (eloszlás-táblázatok, képletgyűjtemények, összefoglalók, stb.)
-<br><br>  
 
-## Segédanyagok:
-<br>
-A félév során a segédanyagokat, házi feladatsorokat, illetve azok megoldásait e-mailben kapják meg a hallgatók, illetve minden elérhető lesz egy megosztott Dropbox mappában is: [ennek linkje](https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0)  
-A Dropbox mappát a jobb felső sarokban található mappa iconra (`r icon::fa("folder")`) kattintva is elérhetik.
+**Érintett témakörök:**  
+
+1.	Kereszttábla-elemzés (és más khí-négyzet próbák): függetlenségvizsgálat, asszociációs mérőszámok, illeszkedés- és homogenitásvizsgálat
+2.	Korrelációszámítás: lineáris korreláció becslése, parciális korreláció, hipotézisvizsgálatok
+3.	Regressziószámítás: egyváltozós lineáris regresszió becslése, hipotézisvizsgálatok, sokváltozós lineáris regressziós modellek értelmezése
+4.	Egyutas varianciaanalízis (ANOVA): kiszámítása és értelmezése, post hoc próbák
+
+**Órai jelenlét:**  
+Ahogy a korábbi félévben, nem tartom magam szigorúan a maximum három hiányzáshoz, de a korábbi félévek tapasztalatai azt mutatják, hogy az órai jelenlét növeli a siker valószínűségét. Ahhoz, hogy maximálisan profitálni tudjanak az órai jelenlétükből, érdemes a feladatokat velem együtt számolni és/vagy a kapott házi feladatokat már félév közben oldani, illetve a kérdéseiket összegyűjteni, és az órákon feltenni.  
+
+**Házi feladatok:**  
+Témakörönként egy házi feladatot fognak kapni. Ezek nem kötelezőek, de javasolt végigszámolni, hogy lássák, mi az, amit sikerült elsajátítaniuk, és mi az, amit nem. 
+
+**Kommunikáció módja:**  
+Megbeszéljük, de előreláthatólag az e-mail / MS Teams / sli.do / megosztott Google Drive mappa valamilyen kombinációja.
+
+## Értékelés módja:  
+A félév során ezúttal is két zárthelyi lesz. Hacsak nem változik a félév rendje:  
+
+1. ZH: 2022. október 26. az 1-2. témakörből (kereszttábla + korreláció)
+2. ZH: 2022. december 14. a 3-4. témakörből (regresszió + ANOVA)
+
+A ZH-khoz minden kapott segédeszközt (képletgyűjtemény, eloszlástáblák, órai jegyzetek, házi feladatok megoldásai, stb.) használhatnak. Ezek közül képletgyűjteményt (A5 méretben) és eloszlástáblákat kapnak tőlem.  
+
+A félév sikeres teljesítéséhez **mindkét ZH-nak legalább elégségesnek** kell lennie. Akinek nem sikerül valamelyik ZH, vagy elégedetlen a jegyével, a félév végén (várhatóan a vizsgaidőszak első hetében) javíthat.

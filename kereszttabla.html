@@ -13,16 +13,28 @@
 
 <title>Kereszttáblaelemzés</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -33,37 +45,23 @@
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
 
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -73,10 +71,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -93,40 +87,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 66px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h2 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h3 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h4 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h5 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h6 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -154,7 +124,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -166,7 +136,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -176,11 +146,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -192,7 +179,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -324,7 +310,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -335,10 +321,10 @@ div.tocify {
 
 
 
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -354,7 +340,7 @@ div.tocify {
   <a href="ismetles.html">Ismétlés</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Khi-négyzet próbák
      
     <span class="caret"></span>
@@ -372,7 +358,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Korreláció
      
     <span class="caret"></span>
@@ -390,7 +376,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Regresszió
      
     <span class="caret"></span>
@@ -413,12 +399,6 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
-    <span class="fa fa-folder"></span>
-     
-  </a>
-</li>
-<li>
   <a href="mailto:morauszki.andras@gmail.com">
     <span class="fa fa-envelope"></span>
      
@@ -429,7 +409,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -445,9 +425,17 @@ div.tocify {
     line-height: 1.5;
   }
 </style>
-<p>Az első nagyobb téma ebben a félévben a χ² (Khí-négyzet) tesztek lesznek. Ezek közül az első a kereszttáblaelemzés.</p>
-<p>Először elhelyezzük a módszert a többi között. Ugyan erre a kereszttábla esetében nem lesz szükség, de a két változó közül, amelyek között vizsgáljuk az összefüggést, tegyünk különbséget: az egyik a <strong>független</strong>, a másik pedig a <strong>függő</strong> változó. Arra számítunk, hogy a független változó értéke hatással van a függő változó értékére. Pl. az, hogy valaki milyen nemű (független változó) hatással van arra, tetszik-e neki egy film (függő változó)</p>
-<p>Attól függően, milyen mérési szintűek a változóink, más-más próbával vizsgálható az összefüggésük.</p>
+<p>Az első nagyobb téma ebben a félévben a χ² (Khí-négyzet) tesztek
+lesznek. Ezek közül az első a kereszttáblaelemzés.</p>
+<p>Először elhelyezzük a módszert a többi között. Ugyan erre a
+kereszttábla esetében nem lesz szükség, de a két változó közül, amelyek
+között vizsgáljuk az összefüggést, tegyünk különbséget: az egyik a
+<strong>független</strong>, a másik pedig a <strong>függő</strong>
+változó. Arra számítunk, hogy a független változó értéke hatással van a
+függő változó értékére. Pl. az, hogy valaki milyen nemű (független
+változó) hatással van arra, tetszik-e neki egy film (függő változó)</p>
+<p>Attól függően, milyen mérési szintűek a változóink, más-más próbával
+vizsgálható az összefüggésük.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:methods">
 <col><col><col><col><tr>
 <td rowspan="2" colspan="2" style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;"></td><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Függő változó</td></tr>
@@ -461,12 +449,21 @@ div.tocify {
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Intervallum-, arányskála</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;"></td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;">Korreláció</td></tr>
 </table>
 
-<p>Az előző félévben a nominális/ordinális független változó, illetve a skála mérési szintű függő változó összefüggésének vizsgálatára néztünk próbákat: pl. független változó volt a nem, függő változó pedig a jövedelem. Azt vizsgáltuk, eltér-e a jövedelem várható értéke a független változó szerinti két kategóriában. Ezeket neveztük független mintás vagy kétmintás t-próbának, Welch-próbának.</p>
-<p>A kereszttábla esetében olyan változópárok közötti összefüggést vizsgálunk, amelyek <strong>mindkét tagja nominális vagy ordinális szintű</strong>. Ilyen például a fenti példa a nemmel és azzal, tetszett-e nekik egy film.</p>
+<p>Az előző félévben a nominális/ordinális független változó, illetve a
+skála mérési szintű függő változó összefüggésének vizsgálatára néztünk
+próbákat: pl. független változó volt a nem, függő változó pedig a
+jövedelem. Azt vizsgáltuk, eltér-e a jövedelem várható értéke a
+független változó szerinti két kategóriában. Ezeket neveztük független
+mintás vagy kétmintás t-próbának, Welch-próbának.</p>
+<p>A kereszttábla esetében olyan változópárok közötti összefüggést
+vizsgálunk, amelyek <strong>mindkét tagja nominális vagy ordinális
+szintű</strong>. Ilyen például a fenti példa a nemmel és azzal,
+tetszett-e nekik egy film.</p>
 <p><br></p>
 <div id="tapasztalati-kereszttábla" class="section level2">
 <h2>Tapasztalati kereszttábla</h2>
-<p><br> Tegyük fel, hogy a fenti kérdést vizsgáljuk, és van egy 100 fős mintánk, amely a következőképpen oszlik meg:</p>
+<p><br> Tegyük fel, hogy a fenti kérdést vizsgáljuk, és van egy 100 fős
+mintánk, amely a következőképpen oszlik meg:</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.1">
 <caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
@@ -478,7 +475,10 @@ div.tocify {
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
 </table>
 
-<p>Ebből a kereszttáblából &quot;darabszámok&quot; olvashatók ki. Az, hogy mi kerül a sorokba és az oszlopokba alapvetően szabadon eldönthető. Így nézne ki a kereszttábla, ha megcserélnénk a sorokat és oszlopokat: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.1b">
+<p>Ebből a kereszttáblából “darabszámok” olvashatók ki. Az, hogy mi
+kerül a sorokba és az oszlopokba alapvetően szabadon eldönthető. Így
+nézne ki a kereszttábla, ha megcserélnénk a sorokat és oszlopokat:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.1b">
 <caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">férfi</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
@@ -488,20 +488,42 @@ div.tocify {
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">45</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">55</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
 </table>
-</p>
-<p>Néhány szempont ehhez: - Ha az egyik változó sok kategóriából áll, míg a másik kevesebből, érdemes előbbit tenni a sorokba, mert úgy kevésbé széles, de hosszú táblázatot kapunk. - Egyesek javasolják, hogy a független változó kerüljön az oszlopokba. Ha ehhez tartják magukat, akkor lehet, hogy megkönnyítik, de lehet, hogy megnehezítik a saját életüket. A fenti példában, az első változatban épp a sorok mutatják a független változó különböző értékeit (férfi vagy nő) és az oszlopok a függő változóét (tetszett-e a film). - Az elemzés szempontjából nincs jelentősége, mi kerül a sorokba és mi az oszlopokba.</p>
-<p>Visszatérve a fenti kereszttáblához: ez olyan kérdésekre ad választ, mint - Hány férfi van a mintában? Válasz: 45 - Hány olyan válaszadó van, akinek tetszett a film? Válasz: 60 - Hány olyan női válaszadó van, akinek nem tetszett? Válasz: 28 - Hány olyan férfi, akinek tetszett? Válasz: 33</p>
-<p>Olyan kérdéseket már nem válaszolhatunk meg közvetlenül, mint - A nők hány százalékának tetszett a film? - A férfiak hány százalékának nem tetszett a film? - A filmet szeretők hány százaléka nő? - A férfiak vagy a nők körében magasabb azok aránya, akiknek tetszett a film?</p>
-<p>Ezeket a kérdéseket az így vagy úgy százalékolt kereszttáblákból tudjuk megválaszolni.</p>
+
+<p>Néhány szempont ehhez: - Ha az egyik változó sok kategóriából áll,
+míg a másik kevesebből, érdemes előbbit tenni a sorokba, mert úgy
+kevésbé széles, de hosszú táblázatot kapunk. - Egyesek javasolják, hogy
+a független változó kerüljön az oszlopokba. Ha ehhez tartják magukat,
+akkor lehet, hogy megkönnyítik, de lehet, hogy megnehezítik a saját
+életüket. A fenti példában, az első változatban épp a sorok mutatják a
+független változó különböző értékeit (férfi vagy nő) és az oszlopok a
+függő változóét (tetszett-e a film). - Az elemzés szempontjából nincs
+jelentősége, mi kerül a sorokba és mi az oszlopokba.</p>
+<p>Visszatérve a fenti kereszttáblához: ez olyan kérdésekre ad választ,
+mint - Hány férfi van a mintában? Válasz: 45 - Hány olyan válaszadó van,
+akinek tetszett a film? Válasz: 60 - Hány olyan női válaszadó van,
+akinek nem tetszett? Válasz: 28 - Hány olyan férfi, akinek tetszett?
+Válasz: 33</p>
+<p>Olyan kérdéseket már nem válaszolhatunk meg közvetlenül, mint - A nők
+hány százalékának tetszett a film? - A férfiak hány százalékának nem
+tetszett a film? - A filmet szeretők hány százaléka nő? - A férfiak vagy
+a nők körében magasabb azok aránya, akiknek tetszett a film?</p>
+<p>Ezeket a kérdéseket az így vagy úgy százalékolt kereszttáblákból
+tudjuk megválaszolni.</p>
 <p><br></p>
 </div>
 <div id="százalékolt-táblák" class="section level2">
 <h2>Százalékolt táblák:</h2>
 <p><br></p>
 <ol style="list-style-type: decimal">
-<li><strong>Sorszázalékoknak</strong> nevezzük majd, ha az egyes sorokon belül számítjuk az arányokat A fenti esetben és elrendezésnél ez lesz a leghasznosabb.</li>
+<li><strong>Sorszázalékoknak</strong> nevezzük majd, ha az egyes sorokon
+belül számítjuk az arányokat A fenti esetben és elrendezésnél ez lesz a
+leghasznosabb.</li>
 </ol>
-<p>Kiszámítás módja: az adott cella elemszámát elosztjuk a sorösszeggel. A képletgyűjteményben m<sub>i,j</sub> jelöli az i. sor, j. oszlop cellájában szereplő értéket és m<sub>i*</sub> jelöli az i. sor összegét. A *-ra azért van szükség, hogy világos legyen, hogy a sorszám a sort vagy az oszlopot jelöli:</p>
+<p>Kiszámítás módja: az adott cella elemszámát elosztjuk a sorösszeggel.
+A képletgyűjteményben m<sub>i,j</sub> jelöli az i. sor, j. oszlop
+cellájában szereplő értéket és m<sub>i*</sub> jelöli az i. sor összegét.
+A *-ra azért van szükség, hogy világos legyen, hogy a sorszám a sort
+vagy az oszlopot jelöli:</p>
 <ul>
 <li>m<sub>1*</sub> az első sor</li>
 <li>m<sub>*1</sub> pedig az első oszlop</li>
@@ -517,10 +539,22 @@ div.tocify {
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100,0%</td></tr>
 </table>
 
-<p>Ebből a táblázatból közvetlenül kiolvasható és összevethető, hogy a férfiak és a nők körében külön-külön milyen arányban voltak, akiknek tetszett/nem tetszett az adott film. Azt eltérés nagysága persze továbbra is csak a mintára vonatkozik, és ebből még nem egyértelmű, hogy a populációban is van különbség.</p>
-<p>Ellenőrző kérdések: - A férfiak hány százalékának nem tetszett a film? - A nők között milyen arányban voltak, akiknek tetszett? - Melyik csoportban magasabb azoknak az aránya, akik szerették a filmet? - Hogyan viszonyulnak az egyes csoportok a minta egészéhez?</p>
+<p>Ebből a táblázatból közvetlenül kiolvasható és összevethető, hogy a
+férfiak és a nők körében külön-külön milyen arányban voltak, akiknek
+tetszett/nem tetszett az adott film. Azt eltérés nagysága persze
+továbbra is csak a mintára vonatkozik, és ebből még nem egyértelmű, hogy
+a populációban is van különbség.</p>
+<p>Ellenőrző kérdések: - A férfiak hány százalékának nem tetszett a
+film? - A nők között milyen arányban voltak, akiknek tetszett? - Melyik
+csoportban magasabb azoknak az aránya, akik szerették a filmet? - Hogyan
+viszonyulnak az egyes csoportok a minta egészéhez?</p>
 <ol start="2" style="list-style-type: decimal">
-<li><strong>Oszlopszázalék</strong> Lehetőség van oszloponként is százalékolni. Ebben az esetben a cellaelemszámokat az oszlopösszegekkel osztjuk. Ebben az esetben ez talán kevésbé hat természetesen, de olyan kérdésekre kapunk választ, hogy a filmet szeretőknek hány százaléka volt nő a mintában? (Válasz: 45%) Azoknak, akik nem szerették a filmet, hány százalékuk volt férfi? (30%)</li>
+<li><strong>Oszlopszázalék</strong> Lehetőség van oszloponként is
+százalékolni. Ebben az esetben a cellaelemszámokat az oszlopösszegekkel
+osztjuk. Ebben az esetben ez talán kevésbé hat természetesen, de olyan
+kérdésekre kapunk választ, hogy a filmet szeretőknek hány százaléka volt
+nő a mintában? (Válasz: 45%) Azoknak, akik nem szerették a filmet, hány
+százalékuk volt férfi? (30%)</li>
 </ol>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:col.pcent">
 <col><col><col><col><tr>
@@ -534,7 +568,9 @@ div.tocify {
 </table>
 
 <ol start="3" style="list-style-type: decimal">
-<li><strong>Cellaszázalék</strong>: A cellaelemszámokat a mintaelemszámmal elosztva megkapjuk, hogy az egyes cellákban a minta hány százaléka van. Ezt a kapcsolat elemzésében kevésbé használjuk.</li>
+<li><strong>Cellaszázalék</strong>: A cellaelemszámokat a
+mintaelemszámmal elosztva megkapjuk, hogy az egyes cellákban a minta
+hány százaléka van. Ezt a kapcsolat elemzésében kevésbé használjuk.</li>
 </ol>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:tot.pcent">
 <col><col><col><col><tr>
@@ -547,29 +583,73 @@ div.tocify {
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100,0%</td></tr>
 </table>
 
-<p>A sor/oszlopszázalékok segítségével tudjuk megvizsgálni, a mintában hogyan függ össze a két vizsgált változó. A százalékolást érdemes a független változó szerint végrehajtani. A fenti esetben a független változó, a nem a sorokban van, ezért a sorszázalékok &quot;természetesebben&quot; hatnak: a mindennapokban is valószínűleg azt néznénk meg, hogy a férfiak és a nők hány százalékának tetszett a film, és hogy ez az arány különbözik-e. Ha a nem az oszlopokban lett volna, akkor oszlopszázalékokat lett volna célszerű nézni.</p>
-<p>A fenti sorszázalékolt táblából az látszik, hogy a férfiak körében magasabb volt azoknak az aránya, akik szerették a filmet: kb. 73% a 49%-kal szemben.</p>
+<p>A sor/oszlopszázalékok segítségével tudjuk megvizsgálni, a mintában
+hogyan függ össze a két vizsgált változó. A százalékolást érdemes a
+független változó szerint végrehajtani. A fenti esetben a független
+változó, a nem a sorokban van, ezért a sorszázalékok “természetesebben”
+hatnak: a mindennapokban is valószínűleg azt néznénk meg, hogy a férfiak
+és a nők hány százalékának tetszett a film, és hogy ez az arány
+különbözik-e. Ha a nem az oszlopokban lett volna, akkor
+oszlopszázalékokat lett volna célszerű nézni.</p>
+<p>A fenti sorszázalékolt táblából az látszik, hogy a férfiak körében
+magasabb volt azoknak az aránya, akik szerették a filmet: kb. 73% a
+49%-kal szemben.</p>
 <p><br></p>
 </div>
 <div id="elméleti-kereszttábla" class="section level2">
 <h2>Elméleti kereszttábla</h2>
 <p><br></p>
-<p>Azt látjuk, hogy a mintában a férfiak körében magasabb volt azoknak az aránya, akiknem tetszett a film, mint a nők között. Ezt lefordítva a múlt félévből ismerős feltételes valószínűségek nyelvére, azt mondhatjuk, hogy a mintában, ha a válaszadó férfi, akkor nagyobb valószínűséggel tetszett neki a film. Ha a két változó független egymástól, akkor arra számítunk, hogy a férfiak és a nők körében azonos annak a valószínűsége, hogy tetszett nekik a film. A mintában természetesen eltérhet az arány a két csoportban, de várhatóan nem nagyon.</p>
-<p>Ahhoz, hogy megállapítsuk, a mintában megfigyelt eltérés tulajdonítható-e a mintavételnek, vagy ilyen jelentős eltérésnek kicsi a valószínűsége függetlenség esetén, szükségünk van valamire, amihez viszonyíthatunk. Ez az <strong>elméleti kereszttábla</strong>. SPSS-ben ezek az <em>expected count</em> értékek (várt gyakoriság).</p>
-<p>Tudjuk, hogy független események esetében az együttes bekövetkezés valószínűsége egyenlő a két esemény valószínűségének a szorzatával (<span class="math inline">\(P(A*B)=P(A)\times P(B)\)</span>). Az elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak a belső cellákat számoljuk újra, feltételezve a függetlenséget.</p>
-<p>Annak a valószínűségét, hogy a válaszadó férfi vegyük <span class="math inline">\(P(F) = \frac{45}{100}=45\%\)</span>-nak, annak a valószínűségét, hogy tetszett nekik a film pedig <span class="math inline">\(P(T)=\frac{60}{100}=60\%\)</span>-nak.</p>
-<p>Tudjuk, hogy függetlenség esetén <span class="math inline">\(P(F*T) = P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%\)</span></p>
-<p>Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni a minta nagyságával.</p>
-<p>Ezeket az értékeket fogjuk e<sub>i,j</sub>-vel jelölni (e mint <em>expected</em> vagy <em>elméleti</em>). A férfiak esetében tehát így kaptuk az eredményt (az eredeti valószínűségeket is visszavezetve, szétírva):</p>
-<p><span class="math inline">\(P(F*T)\times 100 = P(F)\times P(T) \times 100 =\frac{45}{100} \times \frac{60}{100} \times 100 = \frac{45\times60}{100}\)</span></p>
-<p>Vagyis, ha megnézik, a megfelelő érték megkapható úgy, hogy a sormarginálist (45) szorozzuk az oszlopmarginálissal (60) és osztjuk a mintanagysággal (100)</p>
-<p><span class="math display">\[e_{ij}=\frac{m_{i*}\times m_{*j}}{N}\]</span></p>
+<p>Azt látjuk, hogy a mintában a férfiak körében magasabb volt azoknak
+az aránya, akiknem tetszett a film, mint a nők között. Ezt lefordítva a
+múlt félévből ismerős feltételes valószínűségek nyelvére, azt
+mondhatjuk, hogy a mintában, ha a válaszadó férfi, akkor nagyobb
+valószínűséggel tetszett neki a film. Ha a két változó független
+egymástól, akkor arra számítunk, hogy a férfiak és a nők körében azonos
+annak a valószínűsége, hogy tetszett nekik a film. A mintában
+természetesen eltérhet az arány a két csoportban, de várhatóan nem
+nagyon.</p>
+<p>Ahhoz, hogy megállapítsuk, a mintában megfigyelt eltérés
+tulajdonítható-e a mintavételnek, vagy ilyen jelentős eltérésnek kicsi a
+valószínűsége függetlenség esetén, szükségünk van valamire, amihez
+viszonyíthatunk. Ez az <strong>elméleti kereszttábla</strong>. SPSS-ben
+ezek az <em>expected count</em> értékek (várt gyakoriság).</p>
+<p>Tudjuk, hogy független események esetében az együttes bekövetkezés
+valószínűsége egyenlő a két esemény valószínűségének a szorzatával
+(<span class="math inline">\(P(A*B)=P(A)\times P(B)\)</span>). Az
+elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve
+a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak
+a belső cellákat számoljuk újra, feltételezve a függetlenséget.</p>
+<p>Annak a valószínűségét, hogy a válaszadó férfi vegyük <span
+class="math inline">\(P(F) = \frac{45}{100}=45\%\)</span>-nak, annak a
+valószínűségét, hogy tetszett nekik a film pedig <span
+class="math inline">\(P(T)=\frac{60}{100}=60\%\)</span>-nak.</p>
+<p>Tudjuk, hogy függetlenség esetén <span class="math inline">\(P(F*T) =
+P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%\)</span></p>
+<p>Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a
+mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni
+a minta nagyságával.</p>
+<p>Ezeket az értékeket fogjuk e<sub>i,j</sub>-vel jelölni (e mint
+<em>expected</em> vagy <em>elméleti</em>). A férfiak esetében tehát így
+kaptuk az eredményt (az eredeti valószínűségeket is visszavezetve,
+szétírva):</p>
+<p><span class="math inline">\(P(F*T)\times 100 = P(F)\times P(T) \times
+100 =\frac{45}{100} \times \frac{60}{100} \times 100 =
+\frac{45\times60}{100}\)</span></p>
+<p>Vagyis, ha megnézik, a megfelelő érték megkapható úgy, hogy a
+sormarginálist (45) szorozzuk az oszlopmarginálissal (60) és osztjuk a
+mintanagysággal (100)</p>
+<p><span class="math display">\[e_{ij}=\frac{m_{i*}\times
+m_{*j}}{N}\]</span></p>
 <p>A vizsgált kereszttábla négy cellájára ez:<br />
-<span class="math inline">\(e_{11}=\frac{45\times 40}{100}=18\)</span><br />
-<span class="math inline">\(e_{12}=\frac{45\times 60}{100}=27\)</span><br />
-<span class="math inline">\(e_{21}=\frac{55\times 40}{100}=22\)</span><br />
-<span class="math inline">\(e_{22}=\frac{55\times 60}{100}=33\)</span></p>
-<p><table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected">
+<span class="math inline">\(e_{11}=\frac{45\times
+40}{100}=18\)</span><br />
+<span class="math inline">\(e_{12}=\frac{45\times
+60}{100}=27\)</span><br />
+<span class="math inline">\(e_{21}=\frac{55\times
+40}{100}=22\)</span><br />
+<span class="math inline">\(e_{22}=\frac{55\times
+60}{100}=33\)</span></p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected">
 <col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
@@ -579,19 +659,38 @@ div.tocify {
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100</td></tr>
 </table>
- <br></p>
+
+<p><br></p>
 </div>
 <div id="függetlenségvizsgálat" class="section level2">
 <h2>Függetlenségvizsgálat</h2>
-<p><br> A megfigyelt és az elméleti kereszttábla közötti különbséget számítja ki a χ² próba.</p>
-<p>Képlete: <span class="math display">\[\chi^{2}=\sum_{i = 1}^{s}\sum_{j = 1}^{o}{\frac{(m_{ij}-e_{ij})^2}{e_{ij}}}\]</span> A képletben i és j az adott sor és oszlop sorszáma, <em>m</em> jelöli a megfigyelt és <em>e</em> az elméleti értékeket, <em>s</em> a sorok száma (ebben az esetben 2) és <em>o</em> az oszlopok száma (szintén 2).</p>
-<p>Lefordítva a képletet magyarra: a két szumma annyit jelent, hogy végigmegyünk az összes sor (i = 1-től s-ig) és összes oszlop (j = 1-től o-ig) összes celláján (ebben az esetben 4 celláról van szó), és kiszámítjuk a megfigyelt és az elméleti érték különbségét. Ennek négyzetét elosztjuk az elméleti értékkel, és ezeket összeadjuk.</p>
-<p><strong>A próba használhatóságának feltételei</strong>: - Az elméleti kereszttábla egyik cellájában sincs kisebb érték 1-nél - Legfeljebb az elméleti kereszttábla celláinak ötödében van 5-nél kisebb érték</p>
-<p>A nullhipotézis az, hogy a két változó független. Az ellenhipotézis, hogy a két változó <strong>nem</strong> független.</p>
-<p>Végezzük el a próbát: <span class="math display">\[\chi^{2}=\frac{(12-18)^2}{18}+\frac{(33-27)^2}{27}+\frac{(28-22)^2}{22}+\frac{(27-33)^2}{33}=6,06\]</span></p>
-<p>Ha a nullhipotézis igaz, a fenti próba χ² eloszlást követ, amelynek szabadságfoka <span class="math inline">\(df = (s-1)\times(o-1) = (2-1)\times(2-1)= 1\)</span></p>
+<p><br> A megfigyelt és az elméleti kereszttábla közötti különbséget
+számítja ki a χ² próba.</p>
+<p>Képlete: <span class="math display">\[\chi^{2}=\sum_{i =
+1}^{s}\sum_{j = 1}^{o}{\frac{(m_{ij}-e_{ij})^2}{e_{ij}}}\]</span> A
+képletben i és j az adott sor és oszlop sorszáma, <em>m</em> jelöli a
+megfigyelt és <em>e</em> az elméleti értékeket, <em>s</em> a sorok száma
+(ebben az esetben 2) és <em>o</em> az oszlopok száma (szintén 2).</p>
+<p>Lefordítva a képletet magyarra: a két szumma annyit jelent, hogy
+végigmegyünk az összes sor (i = 1-től s-ig) és összes oszlop (j = 1-től
+o-ig) összes celláján (ebben az esetben 4 celláról van szó), és
+kiszámítjuk a megfigyelt és az elméleti érték különbségét. Ennek
+négyzetét elosztjuk az elméleti értékkel, és ezeket összeadjuk.</p>
+<p><strong>A próba használhatóságának feltételei</strong>: - Az elméleti
+kereszttábla egyik cellájában sincs kisebb érték 1-nél - Legfeljebb az
+elméleti kereszttábla celláinak ötödében van 5-nél kisebb érték</p>
+<p>A nullhipotézis az, hogy a két változó független. Az ellenhipotézis,
+hogy a két változó <strong>nem</strong> független.</p>
+<p>Végezzük el a próbát: <span
+class="math display">\[\chi^{2}=\frac{(12-18)^2}{18}+\frac{(33-27)^2}{27}+\frac{(28-22)^2}{22}+\frac{(27-33)^2}{33}=6,06\]</span></p>
+<p>Ha a nullhipotézis igaz, a fenti próba χ² eloszlást követ, amelynek
+szabadságfoka <span class="math inline">\(df = (s-1)\times(o-1) =
+(2-1)\times(2-1)= 1\)</span></p>
 <!-- IDE CHI2 ELOSZLÁS ÁBRA -->
-<p>A χ²-eloszlás táblázatában az 1-es szabadságfoknak megfelelő 1. sort nézzük. Ez a próba <strong>mindig egyoldali</strong>, tehág csak egy felső határértéket kell kikeresni. Mivel egyoldali, mindig az 1 - α oszlopot nézzük (α a szignifikanciaszint), vagyis:</p>
+<p>A χ²-eloszlás táblázatában az 1-es szabadságfoknak megfelelő 1. sort
+nézzük. Ez a próba <strong>mindig egyoldali</strong>, tehág csak egy
+felső határértéket kell kikeresni. Mivel egyoldali, mindig az 1 - α
+oszlopot nézzük (α a szignifikanciaszint), vagyis:</p>
 <ul>
 <li>10%-os szignifikanciaszintnek (0,90-es oszlop) 2,71</li>
 <li>5%-os szignifikanciaszintnek (0,95-ös oszlop) 3,84</li>
@@ -599,35 +698,81 @@ div.tocify {
 <li>1%-os szignifikanciaszintnek (0,990) 6,63</li>
 <li>0,5%-os szignifikanciaszintnek (0,995) 7,88 felel meg.</li>
 </ul>
-<p>Ha igaz, a nullhipotézis, akkor 95%-os valószínűséggel 0 és 3,84 közötti teszteredményt kapunk, és csak 100 mintából 5 esetben lesz a tesztérték 3,84 vagy nagyobb.</p>
-<p>A 6,06-os tesztérték látható, hogy még 2,5%-os szint mellett is szignifikáns lenne, 1%-os szint mellett viszont már nem. Az SPSS ehhez a próbához is kiszámítaná a pontos szignifikanciaszintet, amely ebben az esetben .</p>
-<p>Ezt úgy értelmezhetnénk, hogy igaz nullhipotézis (teljes függetlenség) esetén annak a valószínűsége, hogy 6,06-os vagy annál nagyobb tesztértéket kapjunk %.</p>
-<p>Mivel a szignifikanciaszint alacsony / vagy másképp, a tesztérték nagyobb, mint az 5%-os (vagy amilyet választunk) szinthez tartozó határérték, elvetjük a nullhipotézist. A két változó nagy valószínűséggel a populációban is összefügg.</p>
+<p>Ha igaz, a nullhipotézis, akkor 95%-os valószínűséggel 0 és 3,84
+közötti teszteredményt kapunk, és csak 100 mintából 5 esetben lesz a
+tesztérték 3,84 vagy nagyobb.</p>
+<p>A 6,06-os tesztérték látható, hogy még 2,5%-os szint mellett is
+szignifikáns lenne, 1%-os szint mellett viszont már nem. Az SPSS ehhez a
+próbához is kiszámítaná a pontos szignifikanciaszintet, amely ebben az
+esetben .</p>
+<p>Ezt úgy értelmezhetnénk, hogy igaz nullhipotézis (teljes
+függetlenség) esetén annak a valószínűsége, hogy 6,06-os vagy annál
+nagyobb tesztértéket kapjunk %.</p>
+<p>Mivel a szignifikanciaszint alacsony / vagy másképp, a tesztérték
+nagyobb, mint az 5%-os (vagy amilyet választunk) szinthez tartozó
+határérték, elvetjük a nullhipotézist. A két változó nagy
+valószínűséggel a populációban is összefügg.</p>
 <p><br></p>
 </div>
 <div id="asszociációs-mérőszámok" class="section level2">
 <h2>Asszociációs mérőszámok</h2>
-<p><br> A χ² próba csak arra vonatkozik, hogy állítható-e a minta alapján, hogy a populációban is van bármilyen összefüggés a két változ2ó között, vagy elképzelhető, hogy a populációban a két változó egyáltalán nem függ össze.<br />
-Azt viszont, hogy ez az összefüggés erős-e, nem mondja meg a χ² próba, vannak viszont olyan mutatók, amelyek számszerűsítik az összefüggés erejét.</p>
-<p>Ezek közül a legfontosabbak, amelyek kiszámítását is megnézzük, a φ, a Cramer-féle V, a PRE (másképpen Lambda) és a Gamma mutató.</p>
+<p><br> A χ² próba csak arra vonatkozik, hogy állítható-e a minta
+alapján, hogy a populációban is van bármilyen összefüggés a két változ2ó
+között, vagy elképzelhető, hogy a populációban a két változó egyáltalán
+nem függ össze.<br />
+Azt viszont, hogy ez az összefüggés erős-e, nem mondja meg a χ² próba,
+vannak viszont olyan mutatók, amelyek számszerűsítik az összefüggés
+erejét.</p>
+<p>Ezek közül a legfontosabbak, amelyek kiszámítását is megnézzük, a φ,
+a Cramer-féle V, a PRE (másképpen Lambda) és a Gamma mutató.</p>
 <p><br></p>
 <div id="phi-φ" class="section level3">
 <h3>Phi (φ)</h3>
-<p>Olyan kereszttáblák esetén használható, amelyek egyik dimenziója (a sorok vagy oszlopok száma) 2. (A másik dimenzió akármennyi lehet, tehát pl. 2x10-es kereszttáblánál is jó a φ és 7x2-esnél is, mivel egyik kiterjedésük 2)</p>
-<p>Képlete: <span class="math display">\[\phi = \sqrt{\frac{\chi^{2}}{N}}\]</span> Értéke 0 és 1 közé eshet. 0 a függetlenséget jelenti, és 1 jelenti a legerősebb összefüggést. Kiszámításakor arra kell figyelni, hogy a χ² teszt eredményét már <strong>NE</strong> emeljék ismételten négyzetre, és persze nem szabad elfelejteni az osztás után négyzetgyököt vonni.</p>
-<p>A fenti esetben a φ értéke: <span class="math display">\[\phi = \sqrt{\frac{6,06}{100}}=0,246\]</span> Ez alapján a kapcsolat inkább gyenge, hiszen közelebb van a 0 végponthoz.</p>
+<p>Olyan kereszttáblák esetén használható, amelyek egyik dimenziója (a
+sorok vagy oszlopok száma) 2. (A másik dimenzió akármennyi lehet, tehát
+pl. 2x10-es kereszttáblánál is jó a φ és 7x2-esnél is, mivel egyik
+kiterjedésük 2)</p>
+<p>Képlete: <span class="math display">\[\phi =
+\sqrt{\frac{\chi^{2}}{N}}\]</span> Értéke 0 és 1 közé eshet. 0 a
+függetlenséget jelenti, és 1 jelenti a legerősebb összefüggést.
+Kiszámításakor arra kell figyelni, hogy a χ² teszt eredményét már
+<strong>NE</strong> emeljék ismételten négyzetre, és persze nem szabad
+elfelejteni az osztás után négyzetgyököt vonni.</p>
+<p>A fenti esetben a φ értéke: <span class="math display">\[\phi =
+\sqrt{\frac{6,06}{100}}=0,246\]</span> Ez alapján a kapcsolat inkább
+gyenge, hiszen közelebb van a 0 végponthoz.</p>
 <p><br></p>
 </div>
 <div id="cramer-féle-v" class="section level3">
 <h3>Cramer-féle V</h3>
-<p>Ezt a mutatót a φ-ből számoljuk, ha a kereszttábla mindkét dimenziója legalább 3, vagyis sorból és oszlopból is 2-nél több van. Képlete: <span class="math display">\[Cramer V = \sqrt{\frac{\chi^{2}}{N*(min(s;o)-1)}}\]</span> Vagy, ha már a φ értéke ismert: <span class="math display">\[Cramer V = \frac{\phi}{\sqrt{min(s;o)-1}}\]</span> Ha sorból vagy oszlopból csak kettő van, akkor min(s;o)-1 = 2-1 = 1, vagyis nem változik az eredmény. Ezt a mutatót majd egy másik példán tudjuk kiszámítani.</p>
+<p>Ezt a mutatót a φ-ből számoljuk, ha a kereszttábla mindkét dimenziója
+legalább 3, vagyis sorból és oszlopból is 2-nél több van. Képlete: <span
+class="math display">\[Cramer V =
+\sqrt{\frac{\chi^{2}}{N*(min(s;o)-1)}}\]</span> Vagy, ha már a φ értéke
+ismert: <span class="math display">\[Cramer V =
+\frac{\phi}{\sqrt{min(s;o)-1}}\]</span> Ha sorból vagy oszlopból csak
+kettő van, akkor min(s;o)-1 = 2-1 = 1, vagyis nem változik az eredmény.
+Ezt a mutatót majd egy másik példán tudjuk kiszámítani.</p>
 <p><br></p>
 </div>
 <div id="pre-lambda" class="section level3">
 <h3>PRE (Lambda)</h3>
-<p>Ellentétben az előző két mutatóval, ez nem szimmetrikus, ezért két külön lambdát kell kiszámítanunk. A neve a Proportional Reduction of Error-ból ered, ami kifejezi a mutató logikáját is. Az elgondolás a következő: ha két változó összefügg, akkor az egyik értékének ismeretében jobban meg tudjuk becsülni a másik változó értékét: pl. ha tudjuk valakinek a nemét, jobban meg tudjuk tippelni, tetszett-e neki a film. Ha viszont a két változó független egymástól, akkor a nem ismerete semmit sem segít.</p>
-<p>Nézzük a fenti példán: Két lambdát fogunk kiszámítani, az egyik arra vonatkozik, mennyire tudjuk a nem ismeretében jobban megtippelni, tetszett-e a válaszadónak a film; a másik arra vonatkozik, mennyire tudjuk annak ismeretében, hogy tetszett-e neki a film, megtippelni a nemét.</p>
-<p>Hogy ne kelljen annyit visszalapozni, álljon itt ismét a megfigyelt kereszttábla: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:observed">
+<p>Ellentétben az előző két mutatóval, ez nem szimmetrikus, ezért két
+külön lambdát kell kiszámítanunk. A neve a Proportional Reduction of
+Error-ból ered, ami kifejezi a mutató logikáját is. Az elgondolás a
+következő: ha két változó összefügg, akkor az egyik értékének
+ismeretében jobban meg tudjuk becsülni a másik változó értékét: pl. ha
+tudjuk valakinek a nemét, jobban meg tudjuk tippelni, tetszett-e neki a
+film. Ha viszont a két változó független egymástól, akkor a nem ismerete
+semmit sem segít.</p>
+<p>Nézzük a fenti példán: Két lambdát fogunk kiszámítani, az egyik arra
+vonatkozik, mennyire tudjuk a nem ismeretében jobban megtippelni,
+tetszett-e a válaszadónak a film; a másik arra vonatkozik, mennyire
+tudjuk annak ismeretében, hogy tetszett-e neki a film, megtippelni a
+nemét.</p>
+<p>Hogy ne kelljen annyit visszalapozni, álljon itt ismét a megfigyelt
+kereszttábla:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:observed">
 <caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
@@ -637,31 +782,69 @@ Azt viszont, hogy ez az összefüggés erős-e, nem mondja meg a χ² próba, va
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
 </table>
-</p>
-<p>Nézzük előbb az elsőt: Cél minél több személyt jól besorolni aszerint, tetszett-e nekik a film. A cél, hogy minden válaszadót (ebben az esetben mind a 100-at) betegyük az egyik csoportba: tetszett / nem tetszett.</p>
+
+<p>Nézzük előbb az elsőt: Cél minél több személyt jól besorolni
+aszerint, tetszett-e nekik a film. A cél, hogy minden válaszadót (ebben
+az esetben mind a 100-at) betegyük az egyik csoportba: tetszett / nem
+tetszett.</p>
 <ol style="list-style-type: decimal">
-<li><p>kérdés: Soroljunk be egy válaszadót! Nem tudjuk, ő férfi vagy nő, és meg kell tippelnünk, tetszett-e neki a film. Mit tippelünk? A 100 válaszadóból 60-nak tetszett, és csak 40-nek nem tetszett, vagyis érdemes úgy tippelni, hogy a véletlenszerűen kiválasztott válaszadónak tetszett a film, így 60%-os valószínűséggel jól tippeltünk.</p></li>
-<li><p>kérdés: Minden válaszadót be szeretnénk kategorizálni. Mit tegyünk? Melyik kategóriába hány embert soroljunk be? Az a célunk, hogy minél többen jó helyre kerüljenek.</p></li>
-<li><p>lépés: Ezt úgy tudjuk biztosítani, hogy <strong>mindenkit</strong> abba a kategóriába sorolunk, amely a legnagyobb: a &quot;tetszett&quot;-be. Így 60 személyt jól, 40 személyt pedig rosszul soroltunk be. Ezt a 40-et jelöljük úgy, hogy Hiba<sub>0</sub> = 40.</p></li>
-<li><p>lépés: Ezután megnézzük, mennyit segít a nem ismerete, hogy kevesebb embert tegyünk rossz kategóriába. Nézzük soronként:<br />
-Ha a válaszadó férfi, érdemes arra tippelni, hogy tetszett neki a film, így 33 férfit jól, 12-t rosszul soroltunk be. Ha a válaszadó nő, érdemes arra tippelni, hogy nem tetszett neki a film, így 28 nőt jól, 27-et rosszul soroltunk be. Összesen 12 férfit és 27 nőt, vagyis 39 személyt soroltunk be rosszul. Ez lesz a Hiba<sub>1</sub> = 39.</p></li>
-<li>Kiszámítjunk, hogyan csökkent a hibásan besorolt esetek száma, és ezt az eredetileg hibásan besorolt esetek arányában fejezzük ki. <span class="math display">\[\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{40-39}{40}=\frac{1}{40}=0,025=2,5\%\]</span> És most nézzük a második lambdát: Ezúttal aszerint kell mindenkit besorolni, hogy férfi vagy nő.</li>
-<li><p>lépés: Mindenkit nőnek tippelünk, mert ők vannak többen: 45 férfit sorolunk be rosszul.</p></li>
-<li><p>lépés: Azokat, akiknek nem tetszett, nőknek tippeljük (12 hiba), azokat, akiknek tetszett pedig férfiaknak (27 hiba), ezzel összesen 39 hibás besorolás lesz.</p></li>
-<li><p>Kiszámítjuk a lambdát: <span class="math display">\[\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{40}=\frac{6}{40}=0,15=15\%\]</span> Ezek a mutatók is 0 és 1 (=100%) közötti értékeket vehetnek fel. 0 a leggyengébb, 1 pedig a legerősebb összefüggés. Előnye, hogy olyankor is használható, ha nem teljesülnek a χ² próba feltételei, és ezért a φ és a Cramer-féle V értékek nem megbízhatók. Néha viszont nem működnek jól: pl. ha nagyon egyenlőtlen méretűek a kategóriák. Erre majd megpróbálok mutatni néhány példát. De a fenti példában is, ha eggyel több nőnek tetszett volna a film a mintában, már az egyik lambda 0 lett volna.</p></li>
+<li><p>kérdés: Soroljunk be egy válaszadót! Nem tudjuk, ő férfi vagy nő,
+és meg kell tippelnünk, tetszett-e neki a film. Mit tippelünk? A 100
+válaszadóból 60-nak tetszett, és csak 40-nek nem tetszett, vagyis
+érdemes úgy tippelni, hogy a véletlenszerűen kiválasztott válaszadónak
+tetszett a film, így 60%-os valószínűséggel jól tippeltünk.</p></li>
+<li><p>kérdés: Minden válaszadót be szeretnénk kategorizálni. Mit
+tegyünk? Melyik kategóriába hány embert soroljunk be? Az a célunk, hogy
+minél többen jó helyre kerüljenek.</p></li>
+<li><p>lépés: Ezt úgy tudjuk biztosítani, hogy
+<strong>mindenkit</strong> abba a kategóriába sorolunk, amely a
+legnagyobb: a “tetszett”-be. Így 60 személyt jól, 40 személyt pedig
+rosszul soroltunk be. Ezt a 40-et jelöljük úgy, hogy Hiba<sub>0</sub> =
+40.</p></li>
+<li><p>lépés: Ezután megnézzük, mennyit segít a nem ismerete, hogy
+kevesebb embert tegyünk rossz kategóriába. Nézzük soronként:<br />
+Ha a válaszadó férfi, érdemes arra tippelni, hogy tetszett neki a film,
+így 33 férfit jól, 12-t rosszul soroltunk be. Ha a válaszadó nő, érdemes
+arra tippelni, hogy nem tetszett neki a film, így 28 nőt jól, 27-et
+rosszul soroltunk be. Összesen 12 férfit és 27 nőt, vagyis 39 személyt
+soroltunk be rosszul. Ez lesz a Hiba<sub>1</sub> = 39.</p></li>
+<li><p>Kiszámítjunk, hogyan csökkent a hibásan besorolt esetek száma, és
+ezt az eredetileg hibásan besorolt esetek arányában fejezzük ki. <span
+class="math display">\[\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{40-39}{40}=\frac{1}{40}=0,025=2,5\%\]</span>
+És most nézzük a második lambdát: Ezúttal aszerint kell mindenkit
+besorolni, hogy férfi vagy nő.</p></li>
+<li><p>lépés: Mindenkit nőnek tippelünk, mert ők vannak többen: 45
+férfit sorolunk be rosszul.</p></li>
+<li><p>lépés: Azokat, akiknek nem tetszett, nőknek tippeljük (12 hiba),
+azokat, akiknek tetszett pedig férfiaknak (27 hiba), ezzel összesen 39
+hibás besorolás lesz.</p></li>
+<li><p>Kiszámítjuk a lambdát: <span
+class="math display">\[\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{40}=\frac{6}{40}=0,15=15\%\]</span>
+Ezek a mutatók is 0 és 1 (=100%) közötti értékeket vehetnek fel. 0 a
+leggyengébb, 1 pedig a legerősebb összefüggés. Előnye, hogy olyankor is
+használható, ha nem teljesülnek a χ² próba feltételei, és ezért a φ és a
+Cramer-féle V értékek nem megbízhatók. Néha viszont nem működnek jól:
+pl. ha nagyon egyenlőtlen méretűek a kategóriák. Erre majd megpróbálok
+mutatni néhány példát. De a fenti példában is, ha eggyel több nőnek
+tetszett volna a film a mintában, már az egyik lambda 0 lett
+volna.</p></li>
 </ol>
 <p><br></p>
 </div>
 <div id="gamma" class="section level3">
 <h3>Gamma</h3>
-<p>Ordinális változók közötti kapcsolat számszerűsítésére szolgál, ezért a fenti példában nem használható. A későbbiekben megnézzük, hogyan működik. Ehhez nyissák meg a következő leckét!</p>
+<p>Ordinális változók közötti kapcsolat számszerűsítésére szolgál, ezért
+a fenti példában nem használható. A későbbiekben megnézzük, hogyan
+működik. Ehhez nyissák meg a következő leckét!</p>
 <p><br></p>
 </div>
 </div>
 <div id="reziduálisok" class="section level2">
 <h2>Reziduálisok</h2>
-<p><br> A megfigyelt értékek különböztek attól, mit várnánk teljes függetlenség esetén.</p>
-<p>Ezek voltak a megfigyelt értékek: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:observed.2">
+<p><br> A megfigyelt értékek különböztek attól, mit várnánk teljes
+függetlenség esetén.</p>
+<p>Ezek voltak a megfigyelt értékek:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:observed.2">
 <caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
@@ -671,8 +854,9 @@ Ha a válaszadó férfi, érdemes arra tippelni, hogy tetszett neki a film, így
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td></tr>
 </table>
-</p>
-<p>És ezek voltak a várható (elméleti) értékek: <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected.2">
+
+<p>És ezek voltak a várható (elméleti) értékek:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected.2">
 <col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nem tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">tetszett</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
@@ -682,9 +866,12 @@ Ha a válaszadó férfi, érdemes arra tippelni, hogy tetszett neki a film, így
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">100</td></tr>
 </table>
-</p>
-<p>A kettő közötti különbséget nevezzük reziduálisnak. Jelöljük mondjuk <span class="math inline">\(r_{ij}\)</span>-vel.<br />
-<span class="math display">\[r_{ij}=m{ij}-e{ij}\]</span> Ha a megfigyelt esetszám kisebb, mint várható lenne függetlenség esetén, akkor negatív értéket, ha pedig több, akkor pozitív értéket kapunk. Pl.<br />
+
+<p>A kettő közötti különbséget nevezzük reziduálisnak. Jelöljük mondjuk
+<span class="math inline">\(r_{ij}\)</span>-vel.<br />
+<span class="math display">\[r_{ij}=m{ij}-e{ij}\]</span> Ha a megfigyelt
+esetszám kisebb, mint várható lenne függetlenség esetén, akkor negatív
+értéket, ha pedig több, akkor pozitív értéket kapunk. Pl.<br />
 <span class="math inline">\(r_{11}=12-18=-6\)</span><br />
 <span class="math inline">\(r_{12}=33-27=6\)</span><br />
 stb.</p>
@@ -698,11 +885,21 @@ stb.</p>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-6</td></tr>
 </table>
 
-<p>Ezek önmagában nem mondják meg, hogy az eltérés jelentős-e. Pl. ha az eltérés a várhatótól 20, akkor ez jelentős lehet egy 100 fős minta esetében, de jelentéktelen egy 1000 fős mintánál. A korrigált standardizált reziduálisok (<em>adjusted standardized residual</em>) alkalmasak arra, hogy megállapítsuk, az eltérés az adott cella esetében szignifikáns-e. Jelöljük <span class="math inline">\(r_{ij}^{(a)}\)</span>-val ezt a reziduálist.<br />
-<span class="math display">\[r_{ij}^{(a)}=\frac{m_{ij}-e{ij}}{\sqrt{e_{ij}\times \left(1-\frac{m_{i*}}{N}\right)\times\left(1-\frac{m_{*j}}{N}\right)}}\]</span><br />
+<p>Ezek önmagában nem mondják meg, hogy az eltérés jelentős-e. Pl. ha az
+eltérés a várhatótól 20, akkor ez jelentős lehet egy 100 fős minta
+esetében, de jelentéktelen egy 1000 fős mintánál. A korrigált
+standardizált reziduálisok (<em>adjusted standardized residual</em>)
+alkalmasak arra, hogy megállapítsuk, az eltérés az adott cella esetében
+szignifikáns-e. Jelöljük <span
+class="math inline">\(r_{ij}^{(a)}\)</span>-val ezt a reziduálist.<br />
+<span
+class="math display">\[r_{ij}^{(a)}=\frac{m_{ij}-e{ij}}{\sqrt{e_{ij}\times
+\left(1-\frac{m_{i*}}{N}\right)\times\left(1-\frac{m_{*j}}{N}\right)}}\]</span><br />
 Pl.<br />
-<span class="math inline">\(r_{11}^{(a)}=\frac{12-18}{\sqrt{18\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{40}{100}\right)}}=-2,46\)</span><br />
-<span class="math inline">\(r_{12}^{(a)}=\frac{33-27}{\sqrt{27\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{60}{100}\right)}}=2,46\)</span><br />
+<span class="math inline">\(r_{11}^{(a)}=\frac{12-18}{\sqrt{18\times
+\left(1-\frac{45}{100}\right)\times\left(1-\frac{40}{100}\right)}}=-2,46\)</span><br />
+<span class="math inline">\(r_{12}^{(a)}=\frac{33-27}{\sqrt{27\times
+\left(1-\frac{45}{100}\right)\times\left(1-\frac{60}{100}\right)}}=2,46\)</span><br />
 stb.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:resid.adj">
 <col><col><col><tr>
@@ -714,7 +911,11 @@ stb.</p>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">nő</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2,46</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2,46</td></tr>
 </table>
 
-<p>Ha a kereszttáblának csak 2 sora / 2 oszlopa van, akkor az ugyanabban az oszlopban / sorban lévő értékek csak előjelükben különböznek. Mivel a fenti kereszttábla 2x2-es, ezért ugyanaz az érték szerepel minden cellában, csak épp váltakozó előjellel. Ha viszont már három érték szerepel egy sorban / oszlopban, azok összege nem feltétlenül 1.</p>
+<p>Ha a kereszttáblának csak 2 sora / 2 oszlopa van, akkor az ugyanabban
+az oszlopban / sorban lévő értékek csak előjelükben különböznek. Mivel a
+fenti kereszttábla 2x2-es, ezért ugyanaz az érték szerepel minden
+cellában, csak épp váltakozó előjellel. Ha viszont már három érték
+szerepel egy sorban / oszlopban, azok összege nem feltétlenül 1.</p>
 </div>
 
 
@@ -728,7 +929,7 @@ stb.</p>
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -746,7 +947,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -755,6 +956,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

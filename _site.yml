@@ -1,12 +1,9 @@
 name: "statistics_2"
 output_dir: "."
 output:
-  html_document:
-    theme: readable
-    highlight: kate
+  html_document
 navbar:
   title: "Statisztika 2. szeminárium"
-  type: "inverse"
   left:
     - text: "Főoldal"
       href: index.html
@@ -39,7 +36,5 @@ navbar:
     - text: "ANOVA"
       href: anova.html
   right: 
-    - icon: fa-folder
-      href: https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0
     - icon: fa-envelope
       href: mailto:morauszki.andras@gmail.com

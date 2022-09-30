@@ -1,10 +1,7 @@
 ---
 title: "Ismétlés: hipotézisvizsgálat"
 output: 
-  html_document:
-    toc: true
-    toc_float: 
-      collapsed: false
+  html_document
 ---
 
 <br><br>
@@ -64,26 +61,17 @@ Kétféle hibát tudunk elkövetni:
 
 Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint esetén vetjük el a nullhipotézist, a másodikat pedig azzal, hogy igyekszünk jól venni és kellően nagy mintát, ezután pedig a lehető legjobb próbát elvégezni, amelynek a feltételei teljesülnek. A próba ereje annak a valószínűsége, hogy feltételezve, hogy a nullhipotézis nem igaz, ezt a próba elvégzése után elvetjük.
 
-És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi különbség. A szignifikanciaszintet mindig a hatás, összefüggés, különbség becsült mértékével, erősségével együtt kell értelmezni.
-Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős is.
+És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi különbség. A szignifikanciaszintet mindig a hatás, összefüggés, különbség becsült mértékével, erősségével együtt kell értelmezni.  
+*Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős is.*
 <br>  
   
-## KULCSFOGALMAK
+## Ellenőrző kérdések
   
-<br>  
 
-- Nullhipotézis
-- Ellenhipotézis
-- Szignifikanciaszint
-- Elfogadási tartomány
-- Elutasítási tartomány
-- Statisztikai szignifikancia
-- Elsőfajú hiba
-- Másodfajú hiba
-- Próba ereje
-- Nulleloszlás
-
-<!-- ## Gyakorlási lehetőség:   -->
-
-<!-- A fentiek elsajátítását az alábbi linken ellenőrizhetik néhány gyakorlatiasabb példán: -->
-<!-- [KVÍZ]() -->
+- Mi a nullhipotézis? Általában miről szól?
+- Mi az ellenhipotézis? Milyen viszonyban áll a nullhipotézissel?
+- Mit jelent a szignifikanciaszint? Általában milyen szignifikanciaszintet tűzünk ki?
+- Mit jelent az elfogadási és az elutasítási tartomány?
+- Mit jelent, és mit NEM jelent, hogy egy összefüggés vagy különbség statisztikailag szignifikáns? És mit jelent, ha nem az?
+- Mi az elsőfajú és másodfajú hiba? Mit tehetünk ezek csökkentéséért? Mi a próba ereje, és hogyan növelhetjük?
+- Mit értünk egy próba nulleloszlása alatt? Mire tudjuk használni?

@@ -13,14 +13,27 @@
 
 <title>Statisztika 2. szeminárium</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -29,37 +42,23 @@
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
 
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -69,10 +68,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -89,40 +84,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 66px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h2 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h3 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h4 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h5 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h6 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -150,7 +121,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -162,7 +133,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -172,11 +143,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -188,7 +176,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -252,10 +239,10 @@ $(document).ready(function () {
 
 
 
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -271,7 +258,7 @@ $(document).ready(function () {
   <a href="ismetles.html">Ismétlés</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Khi-négyzet próbák
      
     <span class="caret"></span>
@@ -289,7 +276,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Korreláció
      
     <span class="caret"></span>
@@ -307,7 +294,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Regresszió
      
     <span class="caret"></span>
@@ -330,12 +317,6 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
-    <span class="fa fa-folder"></span>
-     
-  </a>
-</li>
-<li>
   <a href="mailto:morauszki.andras@gmail.com">
     <span class="fa fa-envelope"></span>
      
@@ -346,7 +327,7 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -356,43 +337,76 @@ $(document).ready(function () {
 
 
 <div id="őszi-félév" class="section level2">
-<h2>2020/2021. őszi félév</h2>
+<h2>2022/2023. őszi félév</h2>
 </div>
 <div id="ppke-btk" class="section level2">
 <h2>PPKE-BTK</h2>
-<!-- *** -->
-<!-- <br> <br> -->
-<!-- ## Kérdőív: -->
-<!-- <br> -->
-<!-- Ha még nem tette meg, kérem segítse a munkámat ennek a kérdőívnek a kitöltésével: <br><br>   -->
-<!-- <center> -->
-<!-- <h2> -->
-<!-- [KÉRDŐÍV]() -->
-<!-- </h2> -->
-<!-- </center> -->
 <hr />
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
 <p><br><br></p>
 </div>
 <div id="tantárgy-célja" class="section level2">
 <h2>Tantárgy célja:</h2>
-<p><br> A tantárgy célja a Statisztika 2. előadáson tárgyalt statisztikai módszerek gyakorlása. A félév során a különböző khi-négyzet alapú próbák (függetlenség-, illeszkedés-, homogenitásvizsgálat), a korreláció, regresszió és az egyszempontú varianciaanalízis módszereit tekintjük át. Az órákon e próbák alkalmazásának feltételeivel, kiszámításuk módjával és az eredmények értelmezésével foglalkozunk. <br><br></p>
+<p><br> A tantárgy célja a Statisztika 2. előadáson tárgyalt
+statisztikai módszerek gyakorlása. A félév során a különböző khi-négyzet
+alapú próbák (függetlenség-, illeszkedés-, homogenitásvizsgálat), a
+korreláció, regresszió és az egyszempontú varianciaanalízis módszereit
+tekintjük át. Az órákon e próbák alkalmazásának feltételeivel,
+kiszámításuk módjával és az eredmények értelmezésével foglalkozunk.
+<br><br></p>
 </div>
 <div id="legfontosabb-információk" class="section level2">
 <h2>Legfontosabb információk:</h2>
-<p><br> A félév során a hallgatók előre egyeztetett módon házi feladatokat kapnak, amelyek a tanultak feldolgozását segítik. A házi feladatok visszaküldése a megbeszélt formában kötelező. Témakörönként egy házi feladat lesz, illetve a ZH-k előtt gyakorló feladatsorok, amelyeknek viszont nem kötelező visszaküldeni a megoldásait. <br> A félév során két zárthelyi dolgozatra kerül sor a gyakorlaton tanultak alapján. A félév teljesítésének feltétele mindkét zárthelyi dolgozat megírása, és hogy egyik zárthelyi dolgozat eredménye se legyen elégtelen. A hallgatók félév végi jegyüket a két zárthelyi dolgozat <strong>összesített pontszáma</strong> alapján kapják. Akiknek valamelyik ZH-juk elégtelen lett, a félév végén, előre egyeztetett időpontban javító ZH-t írnak. <br><br> <strong>A ZH-k időpontjai a 2020/21. őszi félévben:</strong> <br> <strong>I. ZH:</strong> 2020.10.22.<br />
-<strong>II. ZH:</strong> 2020.12.10.<br />
-<br> A ZH-n használhatják az órai jegyzeteiket, illetve a kapott segédanyagokat (eloszlás-táblázatok, képletgyűjtemények, összefoglalók, stb.) <br><br></p>
+<p><br> A félév során az előadáshoz kapcsolódóan végzünk számításokat
+számológéppel, illetve MS Excelben. A cél, hogy az egyes statisztikai
+módszerek matematikai hátterét megismerjék, így például tudják, hogy
+egy-egy SPSS művelet során mi történik, milyen adatokat veszünk alapul,
+és hogyan lehet a kapott eredményeket értelmezni.<br />
+<br><br></p>
+<p><strong>Érintett témakörök:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Kereszttábla-elemzés (és más khí-négyzet próbák):
+függetlenségvizsgálat, asszociációs mérőszámok, illeszkedés- és
+homogenitásvizsgálat</li>
+<li>Korrelációszámítás: lineáris korreláció becslése, parciális
+korreláció, hipotézisvizsgálatok</li>
+<li>Regressziószámítás: egyváltozós lineáris regresszió becslése,
+hipotézisvizsgálatok, sokváltozós lineáris regressziós modellek
+értelmezése</li>
+<li>Egyutas varianciaanalízis (ANOVA): kiszámítása és értelmezése, post
+hoc próbák</li>
+</ol>
+<p><strong>Órai jelenlét:</strong><br />
+Ahogy a korábbi félévben, nem tartom magam szigorúan a maximum három
+hiányzáshoz, de a korábbi félévek tapasztalatai azt mutatják, hogy az
+órai jelenlét növeli a siker valószínűségét. Ahhoz, hogy maximálisan
+profitálni tudjanak az órai jelenlétükből, érdemes a feladatokat velem
+együtt számolni és/vagy a kapott házi feladatokat már félév közben
+oldani, illetve a kérdéseiket összegyűjteni, és az órákon feltenni.</p>
+<p><strong>Házi feladatok:</strong><br />
+Témakörönként egy házi feladatot fognak kapni. Ezek nem kötelezőek, de
+javasolt végigszámolni, hogy lássák, mi az, amit sikerült
+elsajátítaniuk, és mi az, amit nem.</p>
+<p><strong>Kommunikáció módja:</strong><br />
+Megbeszéljük, de előreláthatólag az e-mail / MS Teams / sli.do /
+megosztott Google Drive mappa valamilyen kombinációja.</p>
 </div>
-<div id="segédanyagok" class="section level2">
-<h2>Segédanyagok:</h2>
-<p><br> A félév során a segédanyagokat, házi feladatsorokat, illetve azok megoldásait e-mailben kapják meg a hallgatók, illetve minden elérhető lesz egy megosztott Dropbox mappában is: <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">ennek linkje</a><br />
-A Dropbox mappát a jobb felső sarokban található mappa iconra (<i class="fas  fa-folder "></i>) kattintva is elérhetik.</p>
+<div id="értékelés-módja" class="section level2">
+<h2>Értékelés módja:</h2>
+<p>A félév során ezúttal is két zárthelyi lesz. Hacsak nem változik a
+félév rendje:</p>
+<ol style="list-style-type: decimal">
+<li>ZH: 2022. október 26. az 1-2. témakörből (kereszttábla +
+korreláció)</li>
+<li>ZH: 2022. december 14. a 3-4. témakörből (regresszió + ANOVA)</li>
+</ol>
+<p>A ZH-khoz minden kapott segédeszközt (képletgyűjtemény,
+eloszlástáblák, órai jegyzetek, házi feladatok megoldásai, stb.)
+használhatnak. Ezek közül képletgyűjteményt (A5 méretben) és
+eloszlástáblákat kapnak tőlem.</p>
+<p>A félév sikeres teljesítéséhez <strong>mindkét ZH-nak legalább
+elégségesnek</strong> kell lennie. Akinek nem sikerül valamelyik ZH,
+vagy elégedetlen a jegyével, a félév végén (várhatóan a vizsgaidőszak
+első hetében) javíthat.</p>
 </div>
 
 
@@ -404,7 +418,7 @@ A Dropbox mappát a jobb felső sarokban található mappa iconra (<i class="fas
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -422,7 +436,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>

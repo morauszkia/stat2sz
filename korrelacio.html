@@ -13,16 +13,28 @@
 
 <title>Korrelációszámítás</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -33,37 +45,23 @@
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
 
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -73,10 +71,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -93,40 +87,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 66px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h2 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h3 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h4 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h5 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h6 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -154,7 +124,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -166,7 +136,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -176,11 +146,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -192,7 +179,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -324,7 +310,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -335,10 +321,10 @@ div.tocify {
 
 
 
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -354,7 +340,7 @@ div.tocify {
   <a href="ismetles.html">Ismétlés</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Khi-négyzet próbák
      
     <span class="caret"></span>
@@ -372,7 +358,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Korreláció
      
     <span class="caret"></span>
@@ -390,7 +376,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Regresszió
      
     <span class="caret"></span>
@@ -413,12 +399,6 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
-    <span class="fa fa-folder"></span>
-     
-  </a>
-</li>
-<li>
   <a href="mailto:morauszki.andras@gmail.com">
     <span class="fa fa-envelope"></span>
      
@@ -429,7 +409,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -445,8 +425,16 @@ div.tocify {
     line-height: 1.5;
   }
 </style>
-<p>A korrelációszámítás ugyanarra a kérdésre keresi a választ, mint a kereszttáblához kapcsolódó függetlenségvizsgálat: van-e összefüggés valamely vizsgált populációban két változó között? Míg azonban a kereszttábla két nominális vagy ordinális változó összefüggésénél használható, a korreláció alapvetően két intervallum- vagy arányskála mérési szintű változó összefüggését vizsgálja. Ezen túl rangkorrelációt két ordinális változó között is tudunk már számolni.</p>
-<p>A korreláció esetén sincs feltétlenül független és függő változó, és a köztük lévő együttjárás, kapcsolat sem kell, hogy oksági kapcsolat legyen.</p>
+<p>A korrelációszámítás ugyanarra a kérdésre keresi a választ, mint a
+kereszttáblához kapcsolódó függetlenségvizsgálat: van-e összefüggés
+valamely vizsgált populációban két változó között? Míg azonban a
+kereszttábla két nominális vagy ordinális változó összefüggésénél
+használható, a korreláció alapvetően két intervallum- vagy arányskála
+mérési szintű változó összefüggését vizsgálja. Ezen túl rangkorrelációt
+két ordinális változó között is tudunk már számolni.</p>
+<p>A korreláció esetén sincs feltétlenül független és függő változó, és
+a köztük lévő együttjárás, kapcsolat sem kell, hogy oksági kapcsolat
+legyen.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:methods">
 <col><col><col><col><tr>
 <td rowspan="2" colspan="2" style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;"></td><td colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Függő változó</td></tr>
@@ -460,28 +448,107 @@ div.tocify {
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">Intervallum-, arányskála</td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; font-weight: normal;"></td><td style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 1pt 1pt 1pt;    padding: 4pt 4pt 4pt 4pt; background-color: rgb(255, 99, 71); font-weight: normal;">Korreláció</td></tr>
 </table>
 
-<p>Az alábbi pontdiagramok 481 fiú és 453 lány testmagasságának és szüleik testmagasságai átlagának összefüggését szemléltetik. Minden egyes pont egy gyerek az adatbázisból. Az <em>x</em> koordináta a szülei magasságának átlaga, az <em>y</em> koordináta pedig a gyermek magassága. Látható, hogy a magasabb szülők gyermekei között nagyobb számban találunk magasabb gyermekeket, és fordítva, az alacsonyabb szülők gyermekei között több az alacsonyabb. Ennek eredményeképpen a pontfelhő egy-egy emelkedő meredekségű egyenes két oldalán szóródik. Ezt az összefüggést, ennek erősségét és irányát számszerűsíti a korrelációs együttható. Ennek több formája van. Az első, amelyet megnézünk a <strong>Pearson-féle lineáris korrelációs együttható</strong>.</p>
+<p>Az alábbi pontdiagramok 481 fiú és 453 lány testmagasságának és
+szüleik testmagasságai átlagának összefüggését szemléltetik. Minden
+egyes pont egy gyerek az adatbázisból. Az <em>x</em> koordináta a szülei
+magasságának átlaga, az <em>y</em> koordináta pedig a gyermek magassága.
+Látható, hogy a magasabb szülők gyermekei között nagyobb számban
+találunk magasabb gyermekeket, és fordítva, az alacsonyabb szülők
+gyermekei között több az alacsonyabb. Ennek eredményeképpen a pontfelhő
+egy-egy emelkedő meredekségű egyenes két oldalán szóródik. Ezt az
+összefüggést, ennek erősségét és irányát számszerűsíti a korrelációs
+együttható. Ennek több formája van. Az első, amelyet megnézünk a
+<strong>Pearson-féle lineáris korrelációs együttható</strong>.</p>
+<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
+## &quot;none&quot;)` instead.</code></pre>
 <p><img src="korrelacio_files/figure-html/Galton-1.png" width="672" /></p>
 <p><br></p>
 <div id="pearson-féle-korrelációs-együttható" class="section level2">
 <h2>Pearson-féle korrelációs együttható</h2>
-<p><br> A Pearson-féle korrelációs együttható két <strong>normális eloszlású intervallum- vagy aránskála mérési szintű</strong> változó közötti <strong>lineáris</strong> kapcsolat erősségét méri. Ha a két változó között más típusú kapcsolat van, nem pedig lineáris, akkor elképzelhető, hogy a korrelációs együttható értéke annak ellenére alacsony, hogy a két változó viszonylag erősen összefügg. Ha viszont a két változó független egymástól, akkor a korrelációs együttható is nulla közeli értéket vesz fel. Ha a populációról van szó, akkor függetlenség esetén 0 az értéke, minta esetén természetesen lehetnek ettől kisebb eltérések. A Pearson-féle korrelációs együtthatót r-rel fogjuk jelölni, időnként, ha szükséges (mert pl. több korrelációval dolgozunk), indexben kiegészítjük úgy, hogy egyértelmű legyen, mely korrelációról van szó: pl. jelölve, mely változók közötti korreláció, r<sub>xy</sub> formában vagy pedig számozva, r<sub>1</sub>, r<sub>2</sub>, stb. formában.</p>
-<p>A fenti esetben a női válaszadók körében r = 0,51 a korreláció a szülők átlagos magassága és a válaszadó magassága között, a férfiak körében pedig r = 0,48.</p>
-<p>A korrelációs együttható értéke -1 és +1 között van. 0 jelenti a függetlenséget, -1 és +1 a legerősebb összefüggést. A negatív értékek negatív irányú összefüggést jelölnek, vagyis ebben az esetben minél nagyobb egyik változó értéke, várhatóan annál kisebb a másik változóé. A pozitív értékek pozitív kapcsolatot mutatnak, vagyis minél nagyobb egyik változó értéke, várhatóan annál nagyobb a másik változóé is. Ez látható a fenti példában is: minél magasabbak a szülők, annál magasabb a gyermekük.</p>
-<p>Az alábbi ábrán azt láthatják, milyen pontdiagramnak milyen lineáris korrelációs együttható felel meg (ezek csak körülbelüli értékek). Láthatják, hogy minél erősebb az összefüggés, annál inkább egy egyenesre illeszkednek a pontok (ezért nevezzük lineárisnak az összefüggést). Szintén láthatják, hogy a pozitív korrelációk esetén emelkedik az egyenes (a nagyobb x értékekhez nagyobb y értékek tartoznak), a negatív korrelációk esetén pedig lejt (nagyobb x értékekhez kisebb y értékek tartoznak).</p>
+<p><br> A Pearson-féle korrelációs együttható két <strong>normális
+eloszlású intervallum- vagy aránskála mérési szintű</strong> változó
+közötti <strong>lineáris</strong> kapcsolat erősségét méri. Ha a két
+változó között más típusú kapcsolat van, nem pedig lineáris, akkor
+elképzelhető, hogy a korrelációs együttható értéke annak ellenére
+alacsony, hogy a két változó viszonylag erősen összefügg. Ha viszont a
+két változó független egymástól, akkor a korrelációs együttható is nulla
+közeli értéket vesz fel. Ha a populációról van szó, akkor függetlenség
+esetén 0 az értéke, minta esetén természetesen lehetnek ettől kisebb
+eltérések. A Pearson-féle korrelációs együtthatót r-rel fogjuk jelölni,
+időnként, ha szükséges (mert pl. több korrelációval dolgozunk), indexben
+kiegészítjük úgy, hogy egyértelmű legyen, mely korrelációról van szó:
+pl. jelölve, mely változók közötti korreláció, r<sub>xy</sub> formában
+vagy pedig számozva, r<sub>1</sub>, r<sub>2</sub>, stb. formában.</p>
+<p>A fenti esetben a női válaszadók körében r = 0,51 a korreláció a
+szülők átlagos magassága és a válaszadó magassága között, a férfiak
+körében pedig r = 0,48.</p>
+<p>A korrelációs együttható értéke -1 és +1 között van. 0 jelenti a
+függetlenséget, -1 és +1 a legerősebb összefüggést. A negatív értékek
+negatív irányú összefüggést jelölnek, vagyis ebben az esetben minél
+nagyobb egyik változó értéke, várhatóan annál kisebb a másik változóé. A
+pozitív értékek pozitív kapcsolatot mutatnak, vagyis minél nagyobb egyik
+változó értéke, várhatóan annál nagyobb a másik változóé is. Ez látható
+a fenti példában is: minél magasabbak a szülők, annál magasabb a
+gyermekük.</p>
+<p>Az alábbi ábrán azt láthatják, milyen pontdiagramnak milyen lineáris
+korrelációs együttható felel meg (ezek csak körülbelüli értékek).
+Láthatják, hogy minél erősebb az összefüggés, annál inkább egy egyenesre
+illeszkednek a pontok (ezért nevezzük lineárisnak az összefüggést).
+Szintén láthatják, hogy a pozitív korrelációk esetén emelkedik az
+egyenes (a nagyobb x értékekhez nagyobb y értékek tartoznak), a negatív
+korrelációk esetén pedig lejt (nagyobb x értékekhez kisebb y értékek
+tartoznak).</p>
 <p><img src="korrelacio_files/figure-html/cor.scatter-1.png" width="672" /></p>
 <p><br></p>
-<p><strong>A korrelációs együttható tulajdonságai:</strong> A korreláció <strong>szimmetrikus</strong> mutató, tehát a szülők magassága és a gyermekek magassága közötti korreláció ugyanannyi, mint a gyermekek magassága és a szülők magassága közti.<br />
-A korrelációs együttható <strong>független a változók mértékegységétől</strong>. Ha a magasság nem cm-ben lenne mérve, hanem hüvelykben, lábban, méterben, vagy bármilyen más mértékegységben, a korrelációs együttható akkor sem változna. A korrelációból <strong>nem következik</strong>, hogy a két változó között <strong>oksági kapcsolat</strong> van. A korreláció csak együttjárást, összefüggést jelez, de ez még csak nem is feltétlenül közvetlen összefüggés, hanem például eredhet abból is, hogy két változó ugyanarra a harmadik változóra (okra) vezethető vissza. Így például azok a változók, amelyek összefüggnek a jövedelemmel, egymással is korrelálni fognak, még ha nincs is köztük közvetlen összefüggés.</p>
+<p><strong>A korrelációs együttható tulajdonságai:</strong> A korreláció
+<strong>szimmetrikus</strong> mutató, tehát a szülők magassága és a
+gyermekek magassága közötti korreláció ugyanannyi, mint a gyermekek
+magassága és a szülők magassága közti.<br />
+A korrelációs együttható <strong>független a változók
+mértékegységétől</strong>. Ha a magasság nem cm-ben lenne mérve, hanem
+hüvelykben, lábban, méterben, vagy bármilyen más mértékegységben, a
+korrelációs együttható akkor sem változna. A korrelációból <strong>nem
+következik</strong>, hogy a két változó között <strong>oksági
+kapcsolat</strong> van. A korreláció csak együttjárást, összefüggést
+jelez, de ez még csak nem is feltétlenül közvetlen összefüggés, hanem
+például eredhet abból is, hogy két változó ugyanarra a harmadik
+változóra (okra) vezethető vissza. Így például azok a változók, amelyek
+összefüggnek a jövedelemmel, egymással is korrelálni fognak, még ha
+nincs is köztük közvetlen összefüggés.</p>
 <p><br></p>
 <div id="kiszámítása" class="section level3">
 <h3>Kiszámítása</h3>
-<p><br> Az alábbi ábrán a női válaszadókat láthatják. A szaggatott vonalak a szülői magasságok átlagát (függőleges) és a válaszadók átlagmagasságát (vízszintes) jelölik. Az egyes válaszadók lehetnek magasabbak vagy alacsonyabbak is az átlagnál, és szüleik is lehetnek magasabbak és alacsonyabbak, mint az átlagos szülők. Vannak olyanok, akiknek szüleik is, és ők is magasabbak a megfelelő átlagnál (piros szín), vannak olyanok akik maguk magasabbak, de szüleik alacsonyabbak (lila), vannak, akik alacsonyabbak és szüleik is azok (kék), végül olyanok is, akik magasabb szülők gyermekei, de ők maguk az átlagnál alacsonyabbak (zöld). A korreláció ezeket az eltéréseket használja fel. <img src="korrelacio_files/figure-html/quarters-1.png" width="672" /></p>
+<p><br> Az alábbi ábrán a női válaszadókat láthatják. A szaggatott
+vonalak a szülői magasságok átlagát (függőleges) és a válaszadók
+átlagmagasságát (vízszintes) jelölik. Az egyes válaszadók lehetnek
+magasabbak vagy alacsonyabbak is az átlagnál, és szüleik is lehetnek
+magasabbak és alacsonyabbak, mint az átlagos szülők. Vannak olyanok,
+akiknek szüleik is, és ők is magasabbak a megfelelő átlagnál (piros
+szín), vannak olyanok akik maguk magasabbak, de szüleik alacsonyabbak
+(lila), vannak, akik alacsonyabbak és szüleik is azok (kék), végül
+olyanok is, akik magasabb szülők gyermekei, de ők maguk az átlagnál
+alacsonyabbak (zöld). A korreláció ezeket az eltéréseket használja fel.
+<img src="korrelacio_files/figure-html/quarters-1.png" width="672" /></p>
 <p>A korrelációs együttható képlete:<br />
-<span class="math display">\[r = \frac{\sum_{i=1}^{n}(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i = 1}^{n}(x_i-\overline{x})^2\times\sum_{i=1}^{n}(y_i-\overline{y})^2}}\]</span><br />
-A számlálóban lévő szorzat attól függően, hogy a két változó értéke hogyan tér el a megfelelő átlagtól lehet pozitív vagy negatív. Ezen kívül minél nagyobb az eltérés, annál nagyobb a szorzat. A jobb felső és bal alsó negyedben a szorzat pozitív, a jobb alsó és bal felső negyedben a szorzat negatív. Attól függően, mely eltérések jellemzőbbek (a nagyobb eltérések nagyobb súllyal számítanak) lesz a szorzatok összege pozitív vagy negatív. Ha a kettő hasonló mértékű, akkor kioltják egymást, és az összeg 0 (közeli) lesz.</p>
-<p>Tegyük fel, hogy van az alábbi 20 fős mintánk, amelyben azt vizsgáltuk, mennyire bízik valaki a kormányban, és mennyire a parlamentben (%-ban megadva). Tegyük fel, hogy a két változó normális eloszlású.</p>
-<p>Az alábbi táblázatban minden oszlop egy megfigyelésnek (egy válaszadónak) felel meg. Látható a válaszadó sorszáma, hogy mennyire bízik a kormányban, és mennyire bízik a parlamentben.</p>
+<span class="math display">\[r =
+\frac{\sum_{i=1}^{n}(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i
+=
+1}^{n}(x_i-\overline{x})^2\times\sum_{i=1}^{n}(y_i-\overline{y})^2}}\]</span><br />
+A számlálóban lévő szorzat attól függően, hogy a két változó értéke
+hogyan tér el a megfelelő átlagtól lehet pozitív vagy negatív. Ezen
+kívül minél nagyobb az eltérés, annál nagyobb a szorzat. A jobb felső és
+bal alsó negyedben a szorzat pozitív, a jobb alsó és bal felső negyedben
+a szorzat negatív. Attól függően, mely eltérések jellemzőbbek (a nagyobb
+eltérések nagyobb súllyal számítanak) lesz a szorzatok összege pozitív
+vagy negatív. Ha a kettő hasonló mértékű, akkor kioltják egymást, és az
+összeg 0 (közeli) lesz.</p>
+<p>Tegyük fel, hogy van az alábbi 20 fős mintánk, amelyben azt
+vizsgáltuk, mennyire bízik valaki a kormányban, és mennyire a
+parlamentben (%-ban megadva). Tegyük fel, hogy a két változó normális
+eloszlású.</p>
+<p>Az alábbi táblázatban minden oszlop egy megfigyelésnek (egy
+válaszadónak) felel meg. Látható a válaszadó sorszáma, hogy mennyire
+bízik a kormányban, és mennyire bízik a parlamentben.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:corr.ex1">
 <col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Sorszám</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">7</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">19</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td></tr>
@@ -491,8 +558,17 @@ A számlálóban lévő szorzat attól függően, hogy a két változó értéke
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Parlament</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">90</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">75</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">80</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">75</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30</td></tr>
 </table>
 
-<p>A korrelációs együttható kiszámításához először a két változó átlagát kell kiszámítani a számtani átlag szokásos képletével:<br />
-A kormány iránti bizalom átlaga 57, a parlament iránti bizalom átlaga pedig 59. Látható, hogy a korrelációs együttható kiszámításához szükség van az egyes x és y értékeknek az átlagtól való eltérésére. Ezeket az eltéréseket egyrészt szoroznunk kell egymással (a számláló kiszámításához), illetve külön-külön négyzetre kell emelni (a nevezőhöz). Utóbbi háromnak (szorzat, egyik és másik négyzetes eltérések) összegére lesz szükségünk. A legegyszerűbb és legáttekinthetőbb az alábbi táblázatos formában leírni a részeredményeket:</p>
+<p>A korrelációs együttható kiszámításához először a két változó átlagát
+kell kiszámítani a számtani átlag szokásos képletével:<br />
+A kormány iránti bizalom átlaga 57, a parlament iránti bizalom átlaga
+pedig 59. Látható, hogy a korrelációs együttható kiszámításához szükség
+van az egyes x és y értékeknek az átlagtól való eltérésére. Ezeket az
+eltéréseket egyrészt szoroznunk kell egymással (a számláló
+kiszámításához), illetve külön-külön négyzetre kell emelni (a
+nevezőhöz). Utóbbi háromnak (szorzat, egyik és másik négyzetes
+eltérések) összegére lesz szükségünk. A legegyszerűbb és
+legáttekinthetőbb az alábbi táblázatos formában leírni a
+részeredményeket:</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:corr.ex1.table">
 <col><col><col><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Sorszám</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$x_i$$</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$y_i$$</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$x_i-\overline{x}$$</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$y_i-\overline{y}$$</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$(x_i-\overline{x})(y_i-\overline{y})$$</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$(x_i-\overline{x})^2$$</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 1pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">$$(y_i-\overline{y})^2$$</th></tr>
@@ -540,11 +616,20 @@ A kormány iránti bizalom átlaga 57, a parlament iránti bizalom átlaga pedig
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(255, 193, 37); font-weight: bold;">$$\overline{x}= 57 $$</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(255, 193, 37); font-weight: bold;">$$\overline{y}= 59 $$</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(255, 193, 37); font-weight: bold;">$$\sum: 4590 $$</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(255, 193, 37); font-weight: bold;">$$\sum: 6920 $$</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 1pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; background-color: rgb(255, 193, 37); font-weight: bold;">$$\sum: 5530 $$</td></tr>
 </table>
 
-<p>Amire érdemes odafigyelni: a két eltérés szorzata pozitív vagy negatív szám is lehet: két pozitív vagy két negatív szám szorzata pozitív, egy pozitív és egy negatív szám szorzata viszont negatív lesz, mint azt láthatják pl. a 8., 9., stb. válaszadók esetében. A négyzetes eltérések viszont minden esetben pozitívak.<br />
-Fokozottan figyeljenek oda az átlag kiszámítására, mert ezen áll vagy bukik az összes további számítás!</p>
-<p>Miután megvannak a szükséges összegek, már csak be kell helyettesíteni a korrelációs együttható képletébe:<br />
-<span class="math display">\[r = \frac{\sum(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum(x_i-\overline{x})^2\times\sum(y_i-\overline{y})^2}}=\frac{4590}{\sqrt{6920\times5530}}=0,742\]</span></p>
-<p>A két változó között tehát a mintában viszonylag erős, pozitív korreláció van, vagyis akik jobban bíznak a kormányban, azok jellemzően a parlamentben is jobban bíznak, és fordítva.</p>
+<p>Amire érdemes odafigyelni: a két eltérés szorzata pozitív vagy
+negatív szám is lehet: két pozitív vagy két negatív szám szorzata
+pozitív, egy pozitív és egy negatív szám szorzata viszont negatív lesz,
+mint azt láthatják pl. a 8., 9., stb. válaszadók esetében. A négyzetes
+eltérések viszont minden esetben pozitívak.<br />
+Fokozottan figyeljenek oda az átlag kiszámítására, mert ezen áll vagy
+bukik az összes további számítás!</p>
+<p>Miután megvannak a szükséges összegek, már csak be kell
+helyettesíteni a korrelációs együttható képletébe:<br />
+<span class="math display">\[r =
+\frac{\sum(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum(x_i-\overline{x})^2\times\sum(y_i-\overline{y})^2}}=\frac{4590}{\sqrt{6920\times5530}}=0,742\]</span></p>
+<p>A két változó között tehát a mintában viszonylag erős, pozitív
+korreláció van, vagyis akik jobban bíznak a kormányban, azok jellemzően
+a parlamentben is jobban bíznak, és fordítva.</p>
 </div>
 </div>
 
@@ -559,7 +644,7 @@ Fokozottan figyeljenek oda az átlag kiszámítására, mert ezen áll vagy buki
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -577,7 +662,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -586,6 +671,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

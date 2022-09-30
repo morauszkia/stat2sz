@@ -13,16 +13,28 @@
 
 <title>Regresszió I. (alapfogalmak)</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -33,37 +45,23 @@
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
 
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -73,10 +71,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -93,40 +87,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 66px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h2 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h3 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h4 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h5 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h6 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -154,7 +124,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -166,7 +136,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -176,11 +146,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -192,7 +179,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -324,7 +310,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -335,10 +321,10 @@ div.tocify {
 
 
 
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -354,7 +340,7 @@ div.tocify {
   <a href="ismetles.html">Ismétlés</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Khi-négyzet próbák
      
     <span class="caret"></span>
@@ -372,7 +358,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Korreláció
      
     <span class="caret"></span>
@@ -390,7 +376,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Regresszió
      
     <span class="caret"></span>
@@ -413,12 +399,6 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
-    <span class="fa fa-folder"></span>
-     
-  </a>
-</li>
-<li>
   <a href="mailto:morauszki.andras@gmail.com">
     <span class="fa fa-envelope"></span>
      
@@ -429,7 +409,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -447,42 +427,101 @@ div.tocify {
 </style>
 <div id="korreláció-és-regresszió" class="section level2">
 <h2>Korreláció és regresszió</h2>
-<p><br><br> Most teszünk egy kis kitérőt: míg eddig hipotézisvizsgálati módszereket néztünk (t-próba és társai, χ²-próbák, korreláció), addig most egy modellezést fogunk megnézni, vagyis nem egyszerűen arra leszünk kíváncsiak, hogy összefügg-e két változó, hanem arra, hogy az egyik (vagy néhány) változó ismeretében milyen modellel tudjuk megbecsülni egy függő változó értékét.<br />
-A korrelációnál már beszéltünk arról, hogy ha két változó lineárisan összefügg, akkor a két változó kapcsolatát ábrázoló pontfelhő jellemzően többé-kevésbé (minél erősebb az összefüggés, annál inkább) illeszkedik egy egyeneshez.<br />
-Emlékeztetőül álljon itt ismét az ott bemutatott ábra a férfiak és nők, illetve szüleik magassága közötti összefüggésről:</p>
+<p><br><br> Most teszünk egy kis kitérőt: míg eddig hipotézisvizsgálati
+módszereket néztünk (t-próba és társai, χ²-próbák, korreláció), addig
+most egy modellezést fogunk megnézni, vagyis nem egyszerűen arra leszünk
+kíváncsiak, hogy összefügg-e két változó, hanem arra, hogy az egyik
+(vagy néhány) változó ismeretében milyen modellel tudjuk megbecsülni egy
+függő változó értékét.<br />
+A korrelációnál már beszéltünk arról, hogy ha két változó lineárisan
+összefügg, akkor a két változó kapcsolatát ábrázoló pontfelhő jellemzően
+többé-kevésbé (minél erősebb az összefüggés, annál inkább) illeszkedik
+egy egyeneshez.<br />
+Emlékeztetőül álljon itt ismét az ott bemutatott ábra a férfiak és nők,
+illetve szüleik magassága közötti összefüggésről:</p>
+<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
+## &quot;none&quot;)` instead.</code></pre>
 <p><img src="regresszio_files/figure-html/Galton-1.png" width="672" /></p>
-<p>Látható, hogy mindkét ábrán a szaggatott egyenes viszonylag jól jellemzi a két változó közötti kapcsolatot. Ugyan a pontok nagy része nem az egyenesen fekszik, de viszonylag egyenlően oszlanak meg az egyenesek két oldalán. A lineáris regresszió, akárcsak a Pearson-féle korrelációs együttható akkor használható jól, ha két változó között feltételezhetően ilyen lineáris kapcsolat van. Most viszont nem azt nézzük, hogy van-e kapcsolat a populációban is, és hogy az milyen erős, hanem ezeknek az egyeneseknek a képletét fogjuk keresni.</p>
-<p>A regresszió és a korreláció sok tekintetben hasonló (a kiszámítás menetében is az lesz), sok tekintetben viszont más:<br />
-- A korrelációnál arra voltunk kíváncsiak, összefügg-e két változó, és ha igen, milyen irányú és erősségű az összefüggés. - A regressziónál egy modellt fogunk kapni, amely ezt a kapcsolatot minél jobban leírja. A kapott modell arra is alkalmas lesz, hogy valakinél előrejelezzük, milyen értéket vesz fel egy változón, a modellbe bevont magyarázó változók ismeretében. <br></p>
+<p>Látható, hogy mindkét ábrán a szaggatott egyenes viszonylag jól
+jellemzi a két változó közötti kapcsolatot. Ugyan a pontok nagy része
+nem az egyenesen fekszik, de viszonylag egyenlően oszlanak meg az
+egyenesek két oldalán. A lineáris regresszió, akárcsak a Pearson-féle
+korrelációs együttható akkor használható jól, ha két változó között
+feltételezhetően ilyen lineáris kapcsolat van. Most viszont nem azt
+nézzük, hogy van-e kapcsolat a populációban is, és hogy az milyen erős,
+hanem ezeknek az egyeneseknek a képletét fogjuk keresni.</p>
+<p>A regresszió és a korreláció sok tekintetben hasonló (a kiszámítás
+menetében is az lesz), sok tekintetben viszont más:<br />
+- A korrelációnál arra voltunk kíváncsiak, összefügg-e két változó, és
+ha igen, milyen irányú és erősségű az összefüggés. - A regressziónál egy
+modellt fogunk kapni, amely ezt a kapcsolatot minél jobban leírja. A
+kapott modell arra is alkalmas lesz, hogy valakinél előrejelezzük,
+milyen értéket vesz fel egy változón, a modellbe bevont magyarázó
+változók ismeretében. <br></p>
 <ul>
-<li>A korreláció nem feltétlenül jelent oksági kapcsolatot, együttjárást jelent. Szimmetrikus mutató, x és y változó, illetve y és x változó között ugyanakkora a korreláció, a két változó közül nem kell kijelölni egy függő és egy független változót.</li>
-<li>A regressziónál lesz egy függő változó, amelyet a független változó(k) segítségével próbálunk becsülni. Nem szimmetrikus: az x alapján y-ra felállított regressziós modell nem azonos az y alapján x-re felállított modellel.</li>
+<li>A korreláció nem feltétlenül jelent oksági kapcsolatot, együttjárást
+jelent. Szimmetrikus mutató, x és y változó, illetve y és x változó
+között ugyanakkora a korreláció, a két változó közül nem kell kijelölni
+egy függő és egy független változót.</li>
+<li>A regressziónál lesz egy függő változó, amelyet a független
+változó(k) segítségével próbálunk becsülni. Nem szimmetrikus: az x
+alapján y-ra felállított regressziós modell nem azonos az y alapján x-re
+felállított modellel.</li>
 </ul>
 </div>
 <div id="a-használt-változók" class="section level2">
 <h2>A használt változók</h2>
 <p><br><br />
-A lineáris regresszió függő változója csak intervallum- vagy arányskála mérési szintű lehet. (Nominális és ordinális változókra ehhez hasonló módszerek, pl. a logisztikus regresszió használható.)<br />
+A lineáris regresszió függő változója csak intervallum- vagy arányskála
+mérési szintű lehet. (Nominális és ordinális változókra ehhez hasonló
+módszerek, pl. a logisztikus regresszió használható.)<br />
 Független változó lehet</p>
 <ul>
 <li>intervallum- vagy arányskála mérési szintű változó</li>
-<li>kétértékű (bináris / dummy) változó (pl. férfi-nő, igen-nem, stb.) - ezeket érdemes 0-1 értékekre kódolni.</li>
-<li>esetleg ordinális változó is, ha lineáris kapcsolatban van a függő változóval</li>
+<li>kétértékű (bináris / dummy) változó (pl. férfi-nő, igen-nem, stb.) -
+ezeket érdemes 0-1 értékekre kódolni.</li>
+<li>esetleg ordinális változó is, ha lineáris kapcsolatban van a függő
+változóval</li>
 </ul>
 <p><br></p>
 </div>
 <div id="a-becslő-egyenes" class="section level2">
 <h2>A becslő egyenes</h2>
 <p><br></p>
-<p>Az egyenesek, lineáris függvények képlete a következőképpen néz ki: <span class="math inline">\(y = a*x +b\)</span>.<br />
+<p>Az egyenesek, lineáris függvények képlete a következőképpen néz ki:
+<span class="math inline">\(y = a*x +b\)</span>.<br />
 Mi a regresszió esetében ezt kicsit másképp fogjuk írni:<br />
 <span class="math display">\[y = b_0 + b_1*x\]</span></p>
-<p>Vagyis <em>a</em> helyett <span class="math inline">\(b_1\)</span>, <em>b</em> helyett pedig <span class="math inline">\(b_0\)</span> szerepel a képletben. Ez majd főleg akkor lesz hasznosabb jelölés, ha több független változót is bevonunk a modellbe, mert ekkor majd ezek a <span class="math inline">\(b_2\)</span>, <span class="math inline">\(b_3\)</span>, ... <span class="math inline">\(b_i\)</span> paramétereket kapják.<br />
+<p>Vagyis <em>a</em> helyett <span class="math inline">\(b_1\)</span>,
+<em>b</em> helyett pedig <span class="math inline">\(b_0\)</span>
+szerepel a képletben. Ez majd főleg akkor lesz hasznosabb jelölés, ha
+több független változót is bevonunk a modellbe, mert ekkor majd ezek a
+<span class="math inline">\(b_2\)</span>, <span
+class="math inline">\(b_3\)</span>, … <span
+class="math inline">\(b_i\)</span> paramétereket kapják.<br />
 Nézzük meg, mit jelentenek az egyes paraméterek:</p>
 <ul>
-<li><span class="math inline">\(b_0\)</span>: Ha <em>x</em> helyébe 0-t helyettesítünk, <span class="math inline">\(y = b_0 + b_1*0 = b_0\)</span> értéket vesz fel. Vagyis <span class="math inline">\(b_0\)</span> jelöli, hol metszi az egyenes az <em>y</em> tengelyt. Ez történhet az x tengely alatt (alább: kék egyenes) vagy fölött (piros egyenes) is.<br />
+<li><span class="math inline">\(b_0\)</span>: Ha <em>x</em> helyébe 0-t
+helyettesítünk, <span class="math inline">\(y = b_0 + b_1*0 =
+b_0\)</span> értéket vesz fel. Vagyis <span
+class="math inline">\(b_0\)</span> jelöli, hol metszi az egyenes az
+<em>y</em> tengelyt. Ez történhet az x tengely alatt (alább: kék
+egyenes) vagy fölött (piros egyenes) is.<br />
 </li>
-<li><span class="math inline">\(b_1\)</span>: Ahhoz, hogy meglássuk, mit jelent a <span class="math inline">\(b_1\)</span> paraméter, helyettesítsünk <span class="math inline">\(x+1\)</span>-et <span class="math inline">\(x\)</span> helyébe, és nézzük meg, mennyit változik <span class="math inline">\(y\)</span> értéke: <span class="math inline">\(y_2 = b_0 + b_1*(x+1)=b_0+b_1*x+b_1\)</span>. Ha ebből kivonjuk az <span class="math inline">\(y_1 = b_0 + b_1*x\)</span>-et, akkor a különbség: <span class="math inline">\(y_2-y_1=b_0+b_1*x+b_1-(b_0+b_1*x)=b_1\)</span>-et kapunk, vagyis ha <span class="math inline">\(x\)</span> értéke egy egységnyit változik, akkor <span class="math inline">\(y\)</span> értéke <span class="math inline">\(b_1\)</span>-nyit változik. Ez az egyenes meredeksége. Ez lehet pozitív (kék egyenes) vagy negatív (piros egyenes).<br />
+<li><span class="math inline">\(b_1\)</span>: Ahhoz, hogy meglássuk, mit
+jelent a <span class="math inline">\(b_1\)</span> paraméter,
+helyettesítsünk <span class="math inline">\(x+1\)</span>-et <span
+class="math inline">\(x\)</span> helyébe, és nézzük meg, mennyit
+változik <span class="math inline">\(y\)</span> értéke: <span
+class="math inline">\(y_2 = b_0 + b_1*(x+1)=b_0+b_1*x+b_1\)</span>. Ha
+ebből kivonjuk az <span class="math inline">\(y_1 = b_0 +
+b_1*x\)</span>-et, akkor a különbség: <span
+class="math inline">\(y_2-y_1=b_0+b_1*x+b_1-(b_0+b_1*x)=b_1\)</span>-et
+kapunk, vagyis ha <span class="math inline">\(x\)</span> értéke egy
+egységnyit változik, akkor <span class="math inline">\(y\)</span> értéke
+<span class="math inline">\(b_1\)</span>-nyit változik. Ez az egyenes
+meredeksége. Ez lehet pozitív (kék egyenes) vagy negatív (piros
+egyenes).<br />
 Ezt a két paramétert kell becsülni.</li>
 </ul>
 <p><img src="regresszio_files/figure-html/parameters-1.png" width="1152" /></p>
@@ -490,8 +529,14 @@ Ezt a két paramétert kell becsülni.</li>
 <div id="példa" class="section level2">
 <h2>Példa</h2>
 <p><br></p>
-<p>Tegyük fel, hogy egy online kurzus résztvevőivel két tesztet oldatnak meg. Egy belépőtesztet, amely a kurzus előtti tudásukat méri fel, és egy kilépő tesztet, amely a kurzus során megszerzett tudást. Állítsunk fel egy modellt a második teszt eredményének becslésére az első teszt eredménye alapján! Az alábbi táblázat tartalmazza a résztvevők 15 fős reprezentatív mintájának eredményeit, a grafikon pedig mindezeket grafikusan jeleníti meg.</p>
-<p><table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example">
+<p>Tegyük fel, hogy egy online kurzus résztvevőivel két tesztet oldatnak
+meg. Egy belépőtesztet, amely a kurzus előtti tudásukat méri fel, és egy
+kilépő tesztet, amely a kurzus során megszerzett tudást. Állítsunk fel
+egy modellt a második teszt eredményének becslésére az első teszt
+eredménye alapján! Az alábbi táblázat tartalmazza a résztvevők 15 fős
+reprezentatív mintájának eredményeit, a grafikon pedig mindezeket
+grafikusan jeleníti meg.</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example">
 <col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">Sorszám</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">2.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">5.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">7.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">8.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">9.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">12.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14.</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">15.</td></tr>
 <tr>
@@ -499,11 +544,56 @@ Ezt a két paramétert kell becsülni.</li>
 <tr>
 <td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">2. teszt</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">24</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">29</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">17</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">22</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">11</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">13</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">10</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">21</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">18</td></tr>
 </table>
-<img src="regresszio_files/figure-html/example-1.png" width="672" /></p>
-<p>Látszik, hogy a pontok nem teljesen véletlenszerűen helyezkednek el, hanem a magasabb x értékekhez (több pont az első teszten) magasabb y értékek (több pont a második teszten), míg az alacsonyabb x értékekhez jellemzően alacsonyabb y értékek tartoznak. Feltételezhető tehát, hogy van valamilyen pozitív kapcsolat a két változó között. Ezt korrelációval vizsgáltuk. A célunk most az, hogy egy olyan modellt állítsunk fel, amellyel az első teszt eredményéből meg tudjuk becsülni a második teszt eredményét. Az ábra alapján feltételezhető, hogy a két eredmény közötti kapcsolat jól jellemezhető egy egyenessel, ezért (egyváltozós) lineáris regressziót fogunk alkalmazni. <br> A modellünk az alábbi egyenes lesz: <img src="regresszio_files/figure-html/regline-1.png" width="672" /> <br> A regressziós egyenes pontjai adják meg, hogy egy-egy x értékre milyen becslést adunk (zöld pontok). Vagyis az egyenes pontjainak x koordinátája a független változó értékét jelöli, az y koordináta pedig az ehhez az értékhez tartozó becslést. A regressziós egyenes paramétereit úgy adjuk meg, hogy minimalizáljuk az egyenesen lévő pontok (a becslések) és a tényleges értékek (kék pontok) közötti y változóban mért (függőleges) eltérések négyzetösszegét (a piros négyzetek területének összegét). Ez, hogy nem az eltérések abszolút értékével, hanem a négyzetösszegével dolgozunk, nem újdonság, ez történt a szórás, a χ² próbák és a korreláció becslése esetében is, és lesz még rá példa a jövőben is.</p>
-<p><img src="regresszio_files/figure-html/reg.model-1.png" width="672" /> <br> A regressziós modell ezeknek a négyzetösszegeknek a minimalizálására törekszik. Ezért hívják angolul OLS (<strong>O</strong>rdinary <strong>L</strong>east <strong>S</strong>quares) regressionnek is. <a href="https://seeing-theory.brown.edu/regression-analysis/index.html#section1">Ezen az oldalon</a> megnézhetik, hogyan követi az egyenes a pontok változását, hogy minimalizálja a négyzetek területösszegét. Ha itt az I-es quartettet választják, akkor olyan ponthalmazt kapnak, amelyre jól alkalmazható a lineáris regresszió. Az egérrel át tudják helyezni az egyes pontokat. Ha már itt járnak, figyeljék meg azt is, hogy a vízszintesen két végen lévő pontok fel-le mozgatása jobban befolyásolja az eredményt, mint a középtájt lévő pontoké. Ezeknek a pontoknak nagyobb a hatóerejük (<em>leverage</em>).<br />
-A II-IV. quartettek pedig olyan eseteket mutatnak, amikor a kapcsolat nem lineáris (II), amikor egy kilógó érték &quot;rondít bele&quot; az egyébként tökéletesen lineáris kapcsolatban (III), illetve amikor egy kirívó eset kivételével nincs is kapcsolat a két változó között (IV).<br />
-Kitérő: Ezek egyébként Francis Anscombe statisztikus <a href="https://en.wikipedia.org/wiki/Anscombe%27s_quartet">példái</a> (1973), amelyeken azt illusztrálta, hogy maguk a regresszió mutatói akkor is lehetnek (szinte) azonosak, ha egyébként a változók közötti kapcsolat nagyon eltérő. Ezért nem szabad vaktában regressziót használni, hanem például egy pontdiagrammal érdemes meggyőződni róla, hogy a kapcsolat valóban lineáris, illetve az esetleges kilógó értékeket is érdemes elemzés előtt megvizsgálni. Kitérő vége.<br />
+
+<p><img src="regresszio_files/figure-html/example-1.png" width="672" /></p>
+<p>Látszik, hogy a pontok nem teljesen véletlenszerűen helyezkednek el,
+hanem a magasabb x értékekhez (több pont az első teszten) magasabb y
+értékek (több pont a második teszten), míg az alacsonyabb x értékekhez
+jellemzően alacsonyabb y értékek tartoznak. Feltételezhető tehát, hogy
+van valamilyen pozitív kapcsolat a két változó között. Ezt korrelációval
+vizsgáltuk. A célunk most az, hogy egy olyan modellt állítsunk fel,
+amellyel az első teszt eredményéből meg tudjuk becsülni a második teszt
+eredményét. Az ábra alapján feltételezhető, hogy a két eredmény közötti
+kapcsolat jól jellemezhető egy egyenessel, ezért (egyváltozós) lineáris
+regressziót fogunk alkalmazni. <br> A modellünk az alábbi egyenes lesz:
+<img src="regresszio_files/figure-html/regline-1.png" width="672" />
+<br> A regressziós egyenes pontjai adják meg, hogy egy-egy x értékre
+milyen becslést adunk (zöld pontok). Vagyis az egyenes pontjainak x
+koordinátája a független változó értékét jelöli, az y koordináta pedig
+az ehhez az értékhez tartozó becslést. A regressziós egyenes
+paramétereit úgy adjuk meg, hogy minimalizáljuk az egyenesen lévő pontok
+(a becslések) és a tényleges értékek (kék pontok) közötti y változóban
+mért (függőleges) eltérések négyzetösszegét (a piros négyzetek
+területének összegét). Ez, hogy nem az eltérések abszolút értékével,
+hanem a négyzetösszegével dolgozunk, nem újdonság, ez történt a szórás,
+a χ² próbák és a korreláció becslése esetében is, és lesz még rá példa a
+jövőben is.</p>
+<p><img src="regresszio_files/figure-html/reg.model-1.png" width="672" />
+<br> A regressziós modell ezeknek a négyzetösszegeknek a
+minimalizálására törekszik. Ezért hívják angolul OLS
+(<strong>O</strong>rdinary <strong>L</strong>east
+<strong>S</strong>quares) regressionnek is. <a
+href="https://seeing-theory.brown.edu/regression-analysis/index.html#section1">Ezen
+az oldalon</a> megnézhetik, hogyan követi az egyenes a pontok
+változását, hogy minimalizálja a négyzetek területösszegét. Ha itt az
+I-es quartettet választják, akkor olyan ponthalmazt kapnak, amelyre jól
+alkalmazható a lineáris regresszió. Az egérrel át tudják helyezni az
+egyes pontokat. Ha már itt járnak, figyeljék meg azt is, hogy a
+vízszintesen két végen lévő pontok fel-le mozgatása jobban befolyásolja
+az eredményt, mint a középtájt lévő pontoké. Ezeknek a pontoknak nagyobb
+a hatóerejük (<em>leverage</em>).<br />
+A II-IV. quartettek pedig olyan eseteket mutatnak, amikor a kapcsolat
+nem lineáris (II), amikor egy kilógó érték “rondít bele” az egyébként
+tökéletesen lineáris kapcsolatban (III), illetve amikor egy kirívó eset
+kivételével nincs is kapcsolat a két változó között (IV).<br />
+Kitérő: Ezek egyébként Francis Anscombe statisztikus <a
+href="https://en.wikipedia.org/wiki/Anscombe%27s_quartet">példái</a>
+(1973), amelyeken azt illusztrálta, hogy maguk a regresszió mutatói
+akkor is lehetnek (szinte) azonosak, ha egyébként a változók közötti
+kapcsolat nagyon eltérő. Ezért nem szabad vaktában regressziót
+használni, hanem például egy pontdiagrammal érdemes meggyőződni róla,
+hogy a kapcsolat valóban lineáris, illetve az esetleges kilógó értékeket
+is érdemes elemzés előtt megvizsgálni. Kitérő vége.<br />
 <br></p>
 </div>
 <div id="jelölések-alapfogalmak" class="section level2">
@@ -511,17 +601,40 @@ Kitérő: Ezek egyébként Francis Anscombe statisztikus <a href="https://en.wik
 <p><br></p>
 <p>Nézzünk néhány fontos jelölést:</p>
 <ul>
-<li><span class="math inline">\(x_i\)</span> jelöli majd, hogy az i. válaszadó (általánosabban, hiszen nem csak emberekről lehet szó, megfigyelési egység) milyen értéket vesz fel az x változón (példában: hány pontot szerzett az első teszten)</li>
-<li><span class="math inline">\(y_i\)</span> fogja mindig jelölni az i. megfigyelési egység tényleges y értékét (a példában: hány pontot kapott a második teszten).<br />
-</li>
-<li><p><span class="math inline">\(\hat{y}_i\)</span> fogja jelölni az i. megfigyelési egységre adott <strong>becslést</strong> (a példában: hány pontra számíthat valaki a modell alapján, aki az első teszten <span class="math inline">\(x_i\)</span> pontot szerzett)<br />
+<li><p><span class="math inline">\(x_i\)</span> jelöli majd, hogy az i.
+válaszadó (általánosabban, hiszen nem csak emberekről lehet szó,
+megfigyelési egység) milyen értéket vesz fel az x változón (példában:
+hány pontot szerzett az első teszten)</p></li>
+<li><p><span class="math inline">\(y_i\)</span> fogja mindig jelölni az
+i. megfigyelési egység tényleges y értékét (a példában: hány pontot
+kapott a második teszten).<br />
+</p></li>
+<li><p><span class="math inline">\(\hat{y}_i\)</span> fogja jelölni az
+i. megfigyelési egységre adott <strong>becslést</strong> (a példában:
+hány pontra számíthat valaki a modell alapján, aki az első teszten <span
+class="math inline">\(x_i\)</span> pontot szerzett)<br />
 <span class="math display">\[\hat{y}_i=b_0+b_1*x_i\]</span></p></li>
-<li>A fentiekből kikövetkeztethető, hogy <span class="math inline">\(b_0\)</span> a regressziós becslésnél azt fogja jelenteni, <em>várhatóan</em> milyen y értéket vesz fel valaki/valami (mennyi lesz a becslés ebben az esetben), ha az x változón 0 az értéke (a példában: hány pontra számíthat valaki a második teszten, ha az elsőn 0 pontot szerzett).</li>
-<li><span class="math inline">\(b_1\)</span> pedig azt fogja jelölni, mekkora <em>várható változást</em> eredményez y-ban, ha x változó értéke 1 egységnyit változik (a példában: ha valaki az első tesztre egy ponttal többet kapott, mint valaki más, mennyivel számíthat több/kevesebb pontra a második teszten)</li>
-<li><span class="math inline">\(e_i\)</span> jelöli a <strong>hibatagokat</strong>/<strong>reziduumokat</strong>, vagyis, hogy mekkora a különbség a tényleges y érték (<span class="math inline">\(y_i\)</span>) és a becslés (<span class="math inline">\(\hat{y}_i\)</span>) között. Ezek között pozitív és negatív értékek is lesznek. Várható értékük 0. Kiszámításuk:<br />
+<li><p>A fentiekből kikövetkeztethető, hogy <span
+class="math inline">\(b_0\)</span> a regressziós becslésnél azt fogja
+jelenteni, <em>várhatóan</em> milyen y értéket vesz fel valaki/valami
+(mennyi lesz a becslés ebben az esetben), ha az x változón 0 az értéke
+(a példában: hány pontra számíthat valaki a második teszten, ha az elsőn
+0 pontot szerzett).</p></li>
+<li><p><span class="math inline">\(b_1\)</span> pedig azt fogja jelölni,
+mekkora <em>várható változást</em> eredményez y-ban, ha x változó értéke
+1 egységnyit változik (a példában: ha valaki az első tesztre egy ponttal
+többet kapott, mint valaki más, mennyivel számíthat több/kevesebb pontra
+a második teszten)</p></li>
+<li><p><span class="math inline">\(e_i\)</span> jelöli a
+<strong>hibatagokat</strong>/<strong>reziduumokat</strong>, vagyis, hogy
+mekkora a különbség a tényleges y érték (<span
+class="math inline">\(y_i\)</span>) és a becslés (<span
+class="math inline">\(\hat{y}_i\)</span>) között. Ezek között pozitív és
+negatív értékek is lesznek. Várható értékük 0. Kiszámításuk:<br />
 <span class="math display">\[e_i = y_i - \hat{y}_i\]</span><br />
-</li>
-<li><p>Ebből <span class="math inline">\(y_i\)</span> felírható úgy, hogy:<br />
+</p></li>
+<li><p>Ebből <span class="math inline">\(y_i\)</span> felírható úgy,
+hogy:<br />
 <span class="math display">\[\begin{aligned}
 y_i &amp;= \hat{y}_i + e_i \\
 y_i &amp;= b_0 + b_1*x_i + e_i
@@ -529,18 +642,56 @@ y_i &amp;= b_0 + b_1*x_i + e_i
 </ul>
 <p>Nézzünk néhány alapfogalmat:</p>
 <ul>
-<li>Az y változó más-más értékeket vesz fel az egyes megfigyelési egységek esetében, tehát van valamekkora szórása. Az egyes kitöltők nem ugyanannyi pontot kaptak a kilépő teszten. Ha ugyanannyit kaptak volna, azon nincs mit elemezni. Ennek a szórásnak a négyzetét nevezzük <strong>varianciának</strong>. A regresszióval az a célunk, hogy ennek a varianciának minél nagyobb részét megmagyarázzuk. Tegyük fel, hogy erre csak az első teszt eredményét szeretnénk felhasználni. Arra vagyunk kíváncsiak, hogy a kilépéskor mért különbségek mekkora része olyan, amit magukkal hoztak a résztvevők (már az első teszten is különböztek). A gyakorlatban a variancia helyett az eltérések négyzetösszegével fogunk dolgozni.</li>
-<li>A <strong>teljes négyzetösszeg</strong> számszerűsíti, mennyire térnek el egymástól a megfigyelési egységek az y változó tekintetében:<br />
-<span class="math display">\[SST = \sum_{i=1}^{N}{\left(y_i-\overline{y}\right)^2}\]</span><br />
-</li>
-<li><p>Ez a teljes négyzetösszeg a regressziós elemzés révén két részre bonható: van az eltéréseknek egy része, amit meg tudunk magyarázni: nevezzük <strong>regressziós négyzetösszegnek</strong>. Ezt számszerűsíti a becsléseknek az y átlagától való eltérése (az y átlaga egyben a becslések átlaga is):<br />
-<span class="math display">\[SSR = \sum_{i=1}^{N}{\left(\hat{y}_i-\overline{y}\right)^2}\]</span></p></li>
-<li><p>A másik rész pedig az, amit nem tudunk megmagyarázni. Ezt számszerűsíti a becsült értékeknek a tényleges értékektől való eltéréseinek négyzetösszege:<br />
-<span class="math display">\[SSH = \sum_{i=1}^{N}{\left(y_i-\hat{y}_i\right)^2}=\sum_{i=1}^{N}{e_i^2}\]</span></p></li>
-<li><p>A teljes négyzetösszeg a regressziós és a reziduális (hiba-) négyzetösszegnek az összege:<br />
+<li><p>Az y változó más-más értékeket vesz fel az egyes megfigyelési
+egységek esetében, tehát van valamekkora szórása. Az egyes kitöltők nem
+ugyanannyi pontot kaptak a kilépő teszten. Ha ugyanannyit kaptak volna,
+azon nincs mit elemezni. Ennek a szórásnak a négyzetét nevezzük
+<strong>varianciának</strong>. A regresszióval az a célunk, hogy ennek a
+varianciának minél nagyobb részét megmagyarázzuk. Tegyük fel, hogy erre
+csak az első teszt eredményét szeretnénk felhasználni. Arra vagyunk
+kíváncsiak, hogy a kilépéskor mért különbségek mekkora része olyan, amit
+magukkal hoztak a résztvevők (már az első teszten is különböztek). A
+gyakorlatban a variancia helyett az eltérések négyzetösszegével fogunk
+dolgozni.</p></li>
+<li><p>A <strong>teljes négyzetösszeg</strong> számszerűsíti, mennyire
+térnek el egymástól a megfigyelési egységek az y változó
+tekintetében:<br />
+<span class="math display">\[SST =
+\sum_{i=1}^{N}{\left(y_i-\overline{y}\right)^2}\]</span><br />
+</p></li>
+<li><p>Ez a teljes négyzetösszeg a regressziós elemzés révén két részre
+bonható: van az eltéréseknek egy része, amit meg tudunk magyarázni:
+nevezzük <strong>regressziós négyzetösszegnek</strong>. Ezt
+számszerűsíti a becsléseknek az y átlagától való eltérése (az y átlaga
+egyben a becslések átlaga is):<br />
+<span class="math display">\[SSR =
+\sum_{i=1}^{N}{\left(\hat{y}_i-\overline{y}\right)^2}\]</span></p></li>
+<li><p>A másik rész pedig az, amit nem tudunk megmagyarázni. Ezt
+számszerűsíti a becsült értékeknek a tényleges értékektől való
+eltéréseinek négyzetösszege:<br />
+<span class="math display">\[SSH =
+\sum_{i=1}^{N}{\left(y_i-\hat{y}_i\right)^2}=\sum_{i=1}^{N}{e_i^2}\]</span></p></li>
+<li><p>A teljes négyzetösszeg a regressziós és a reziduális (hiba-)
+négyzetösszegnek az összege:<br />
 <span class="math display">\[SST = SSR + SSH\]</span></p></li>
-<li><p>A megmagyarázott résznek az arányát a teljes négyzetösszeghez képest nevezzük <strong>determinációs együtthatónak</strong>, amely a <strong>modell illeszkedését</strong> méri. Azt fejezi ki, hogy a független változó(k) segítsétével a függő változó varianciájának hány százalékát sikerült megmagyarázni. Ez a mutató 0 és 1 (másképpen 0% és 100%) közötti értékeket vehet fel. 0-t vesz fel, ha a két változó teljesen független, ezért mindenkit az <span class="math inline">\(\overline{y}\)</span> átlaggal becsülünk. Ekkor az <span class="math inline">\(\overline{y}\)</span>-tól való eltérések egyenlők a hibatagokkal, tehát SST = SSH. 1-et akkor vesz fel, ha minden pont a regressziós egyenesen fekszik. Ekkor a hibatagok értéke 0, hiszen a becslések és a tényleges értékek egybeesnek. Ilyenkor SST = SSR. Általában a két végkpont közötti <span class="math inline">\(R^2\)</span> értékeket kapunk. Az <span class="math inline">\(R^2\)</span> értékét az előző egyenlőség miatt kétféleképpen is kiszámíthatjuk:<br />
-<span class="math display">\[R^2=\frac{SSR}{SST}=1-\frac{SSH}{SST}\]</span><br />
+<li><p>A megmagyarázott résznek az arányát a teljes négyzetösszeghez
+képest nevezzük <strong>determinációs együtthatónak</strong>, amely a
+<strong>modell illeszkedését</strong> méri. Azt fejezi ki, hogy a
+független változó(k) segítsétével a függő változó varianciájának hány
+százalékát sikerült megmagyarázni. Ez a mutató 0 és 1 (másképpen 0% és
+100%) közötti értékeket vehet fel. 0-t vesz fel, ha a két változó
+teljesen független, ezért mindenkit az <span
+class="math inline">\(\overline{y}\)</span> átlaggal becsülünk. Ekkor az
+<span class="math inline">\(\overline{y}\)</span>-tól való eltérések
+egyenlők a hibatagokkal, tehát SST = SSH. 1-et akkor vesz fel, ha minden
+pont a regressziós egyenesen fekszik. Ekkor a hibatagok értéke 0, hiszen
+a becslések és a tényleges értékek egybeesnek. Ilyenkor SST = SSR.
+Általában a két végkpont közötti <span
+class="math inline">\(R^2\)</span> értékeket kapunk. Az <span
+class="math inline">\(R^2\)</span> értékét az előző egyenlőség miatt
+kétféleképpen is kiszámíthatjuk:<br />
+<span
+class="math display">\[R^2=\frac{SSR}{SST}=1-\frac{SSH}{SST}\]</span><br />
 <br></p></li>
 </ul>
 </div>
@@ -556,7 +707,7 @@ y_i &amp;= b_0 + b_1*x_i + e_i
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -574,7 +725,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -583,6 +734,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

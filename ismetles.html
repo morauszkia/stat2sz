@@ -13,16 +13,25 @@
 
 <title>Ismétlés: hipotézisvizsgálat</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -33,37 +42,23 @@
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
 
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -73,10 +68,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -93,40 +84,16 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 66px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h2 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h3 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h4 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h5 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
-.section h6 {
-  padding-top: 71px;
-  margin-top: -71px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -154,7 +121,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -166,7 +133,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -176,11 +143,28 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.parent().addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -192,7 +176,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -245,75 +228,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-.tocify-subheader {
-  display: inline;
-}
-.tocify-subheader .tocify-item {
-  font-size: 0.95em;
-}
-
-</style>
-
-
 
 </head>
 
@@ -323,22 +237,12 @@ div.tocify {
 <div class="container-fluid main-container">
 
 
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
-
-
-<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -354,7 +258,7 @@ div.tocify {
   <a href="ismetles.html">Ismétlés</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Khi-négyzet próbák
      
     <span class="caret"></span>
@@ -372,7 +276,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Korreláció
      
     <span class="caret"></span>
@@ -390,7 +294,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Regresszió
      
     <span class="caret"></span>
@@ -413,12 +317,6 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://www.dropbox.com/sh/lj9myqdwung90jj/AAAjYo5YDh7h5gINDpW77kjta?dl=0">
-    <span class="fa fa-folder"></span>
-     
-  </a>
-</li>
-<li>
   <a href="mailto:morauszki.andras@gmail.com">
     <span class="fa fa-envelope"></span>
      
@@ -429,7 +327,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -439,70 +337,162 @@ div.tocify {
 
 
 <p><br><br></p>
-<p>Tegyük fel, hogy a bergengóc férfiak és nők várható jövedelme közötti különbséget vizsgáljuk. A kutatási kérdésünk, hogy egyáltalán van-e különbség a bergengóc társadalomban a férfiak és nők várható jövedelme között.</p>
-<p>Tegyük fel, hogy arra számítunk, hogy van különbség. Ez lesz a hipotézisünk, amelyet vizsgálni szeretnénk.</p>
-<p>Veszünk egy reprezentatív mintát a bergengóc társadalomból. Ebben 30 férfi van, és átlagos jövedelmük 300 fabatka, a szórás 40 fabatka. A mintában 40 nő van, akik átlagosan 270 fabatkát keresnek és 35 fabatka a szórás.</p>
-<p>A mintában tehát különbözik a férfiak és nők jövedelmének átlaga (és szórása is), de eléggé különbözik-e ahhoz, hogy ez azt valószínűsítse, hogy a populációban is különbözik a férfiak és nők jövedelmének várható értéke? Előfordulhat-e az, hogy a populációban nem különbözik, de mi épp egy olyan mintát vettünk, amelyben ekkora a különbség. Mennyi annak a valószínűsége, hogy egyenlő várható értékek esetén ekkora vagy ennél nagyobb különbséget lássunk a mintában?</p>
-<p>Ennek eldöntéséhez hipotézisvizsgálatot kell elvégezni, amely megmutatja, mekkora ennek valószínűsége, ha egyébként a populációban egyformák a várható értékek. Ha ez a valószínűség nagyon kicsi, akkor bátran feltételezzük, hogy a populációban nem egyformák a várható értékek. Ha ez a valószínűség nem elég kicsi, inkább elfogadjuk, hogy ez akár a mintavételből is adódhatott.</p>
-<p>Az első lépés, hogy megfogalmazzuk a hipotéziseinket: Elsősorban egy <strong>nullhipotézist</strong>: ez arról szól, hogy <em>nincs itt semmi látnivaló</em>, vagyis konkrét helyzetekre lefordítva:</p>
+<p>Tegyük fel, hogy a bergengóc férfiak és nők várható jövedelme közötti
+különbséget vizsgáljuk. A kutatási kérdésünk, hogy egyáltalán van-e
+különbség a bergengóc társadalomban a férfiak és nők várható jövedelme
+között.</p>
+<p>Tegyük fel, hogy arra számítunk, hogy van különbség. Ez lesz a
+hipotézisünk, amelyet vizsgálni szeretnénk.</p>
+<p>Veszünk egy reprezentatív mintát a bergengóc társadalomból. Ebben 30
+férfi van, és átlagos jövedelmük 300 fabatka, a szórás 40 fabatka. A
+mintában 40 nő van, akik átlagosan 270 fabatkát keresnek és 35 fabatka a
+szórás.</p>
+<p>A mintában tehát különbözik a férfiak és nők jövedelmének átlaga (és
+szórása is), de eléggé különbözik-e ahhoz, hogy ez azt valószínűsítse,
+hogy a populációban is különbözik a férfiak és nők jövedelmének várható
+értéke? Előfordulhat-e az, hogy a populációban nem különbözik, de mi épp
+egy olyan mintát vettünk, amelyben ekkora a különbség. Mennyi annak a
+valószínűsége, hogy egyenlő várható értékek esetén ekkora vagy ennél
+nagyobb különbséget lássunk a mintában?</p>
+<p>Ennek eldöntéséhez hipotézisvizsgálatot kell elvégezni, amely
+megmutatja, mekkora ennek valószínűsége, ha egyébként a populációban
+egyformák a várható értékek. Ha ez a valószínűség nagyon kicsi, akkor
+bátran feltételezzük, hogy a populációban nem egyformák a várható
+értékek. Ha ez a valószínűség nem elég kicsi, inkább elfogadjuk, hogy ez
+akár a mintavételből is adódhatott.</p>
+<p>Az első lépés, hogy megfogalmazzuk a hipotéziseinket: Elsősorban egy
+<strong>nullhipotézist</strong>: ez arról szól, hogy <em>nincs itt semmi
+látnivaló</em>, vagyis konkrét helyzetekre lefordítva:</p>
 <ul>
-<li>a populációban nincs különbség a várható értékek között, ezek egyeznek (többféleképpen is megfogalmazható ugyanaz)</li>
-<li>a populációban nincs különbés a szórások között (hisz erre is kíváncsiak lehetünk)</li>
-<li>a populációban a változó eloszlása megfelel valamilyen eloszlásnak/eloszláscsaládnak, pl. normális eloszlású (ilyennel is fogunk foglalkozni)</li>
-<li>a két populációban a változó eloszlása azonos (szintén lesz róla szó)</li>
-<li>a populációban a két változó független egymástól, az összefüggésük erőssége nulla (erről meg főleg sokat lesz szó)</li>
+<li>a populációban nincs különbség a várható értékek között, ezek
+egyeznek (többféleképpen is megfogalmazható ugyanaz)</li>
+<li>a populációban nincs különbés a szórások között (hisz erre is
+kíváncsiak lehetünk)</li>
+<li>a populációban a változó eloszlása megfelel valamilyen
+eloszlásnak/eloszláscsaládnak, pl. normális eloszlású (ilyennel is
+fogunk foglalkozni)</li>
+<li>a két populációban a változó eloszlása azonos (szintén lesz róla
+szó)</li>
+<li>a populációban a két változó független egymástól, az összefüggésük
+erőssége nulla (erről meg főleg sokat lesz szó)</li>
 </ul>
 <p>Két dolog fontos a nullhipotézissel kapcsolatban:</p>
 <ol style="list-style-type: decimal">
-<li>Mindig <strong>a populációra vonatkozik</strong>, hiszen a minta csak eszköz, hogy a populációra vonatkozó következtetéseket vonhassunk le</li>
-<li>Mindig arról szól, hogy valami (különbség, összefüggés erőssége) nulla.</li>
+<li>Mindig <strong>a populációra vonatkozik</strong>, hiszen a minta
+csak eszköz, hogy a populációra vonatkozó következtetéseket vonhassunk
+le</li>
+<li>Mindig arról szól, hogy valami (különbség, összefüggés erőssége)
+nulla.</li>
 </ol>
-<p>Az <strong>ellenhipotézis</strong> (másképp: <strong>alternatív</strong> hipotézis) pedig valami olyan hipotézis, amely a nullhipotézissel kölcsönösen kizáró viszonyban van, vagyis egyszerre csak egyikük lehet igaz (olyan viszont adott esetben lehet, hogy egyik sem az - egyoldali próbák esetén). Általában ez az, amit feltételezünk, és a hipotézisvizsgálat arra vonatkozik, elég okunk van-e rá, hogy feltételezzük, ez a hipotézis igaz. A fenti példában ez lehet:</p>
+<p>Az <strong>ellenhipotézis</strong> (másképp:
+<strong>alternatív</strong> hipotézis) pedig valami olyan hipotézis,
+amely a nullhipotézissel kölcsönösen kizáró viszonyban van, vagyis
+egyszerre csak egyikük lehet igaz (olyan viszont adott esetben lehet,
+hogy egyik sem az - egyoldali próbák esetén). Általában ez az, amit
+feltételezünk, és a hipotézisvizsgálat arra vonatkozik, elég okunk van-e
+rá, hogy feltételezzük, ez a hipotézis igaz. A fenti példában ez
+lehet:</p>
 <ul>
 <li>A bergengóc férfiak és nők várható jövedelme különbözik</li>
 <li>A bergengóc férfiak várható jövedelme nagyobb, mint a nőké</li>
 <li>A bergengóc férfiak várható jövedelme kisebb, mint a nőké</li>
 </ul>
-<p>Ezek közül az első kétoldali próbát eredményez, a második és harmadik egyoldali próbát jelent. Jól figyeljék meg, hogy az első a nullhipotézis komplementere, de a másik kettő nem, csak egymást kölcsönösen kizárók (vagy egyenlő, vagy nagyobb / vagy egyenlő, vagy kisebb), de lehetnek olyan esetek, hogy sem a nullhipotézis, sem az ellenhipotézis nem igaz. Az órákon mi kétoldali próbákat végeztünk, ebben a félévben viszont lesznek (és a múlt félévben az F-próba volt ilyen), amelyek csak egyoldaliak lehetnek, vagy amelyeket egyoldaliként szoktunk végezni (pl. az egyszerűség kedvéért - ld. F-próba határértékeinek kikeresése)</p>
-<p>Miután megvannak a hipotézisek, kiválasztjuk és elvégezzük a megfelelő próbát, amely eredményeképpen kapunk egy számot. Ezek a próbák úgy vannak megalkotva, hogy igaz nullhipotézis esetén meghatározott eloszlást követnek. Ez a próba <strong>nulleloszlása</strong>. Mázli, hogy sokszor a próbák a nulleloszlás nevét viselik (t-próba, F-próba, stb.). Sajnos nem mindig, úgyhogy azért a memóriánknak is van módja dolgozni (vagy van mit kikeresni a képletgyűjteményből)</p>
+<p>Ezek közül az első kétoldali próbát eredményez, a második és harmadik
+egyoldali próbát jelent. Jól figyeljék meg, hogy az első a nullhipotézis
+komplementere, de a másik kettő nem, csak egymást kölcsönösen kizárók
+(vagy egyenlő, vagy nagyobb / vagy egyenlő, vagy kisebb), de lehetnek
+olyan esetek, hogy sem a nullhipotézis, sem az ellenhipotézis nem igaz.
+Az órákon mi kétoldali próbákat végeztünk, ebben a félévben viszont
+lesznek (és a múlt félévben az F-próba volt ilyen), amelyek csak
+egyoldaliak lehetnek, vagy amelyeket egyoldaliként szoktunk végezni (pl.
+az egyszerűség kedvéért - ld. F-próba határértékeinek kikeresése)</p>
+<p>Miután megvannak a hipotézisek, kiválasztjuk és elvégezzük a
+megfelelő próbát, amely eredményeképpen kapunk egy számot. Ezek a próbák
+úgy vannak megalkotva, hogy igaz nullhipotézis esetén meghatározott
+eloszlást követnek. Ez a próba <strong>nulleloszlása</strong>. Mázli,
+hogy sokszor a próbák a nulleloszlás nevét viselik (t-próba, F-próba,
+stb.). Sajnos nem mindig, úgyhogy azért a memóriánknak is van módja
+dolgozni (vagy van mit kikeresni a képletgyűjteményből)</p>
 <p>A próba eredményével kétféle dolgot szoktunk kezdeni:</p>
 <ul>
-<li>Statisztika órákon jobb híján azt csináltuk, hogy meghatároztunk egy még elfogadható szignifikanciaszintet (pl. α = 5%), és ehhez kerestük ki azokat a határértékeket, amelyek közé (elfogadási tartomány) a próba értéke (igaz nullhipotézis esetén) 1 - α valószínűséggel (a példában 95%) beleesik. Pl. standard normális eloszlás és kétoldali próba esetén ez volt a ±1,96. Ebben az esetben, ha a próba eredménye ezeken a határokon kívül esik (elutasítási tartomány), elvetjük a nullhipotézist, ezek között (elfogadási tartomány) megtartjuk. Ez a gyakorlat nem jó, csak jobb híján követjük a statisztika órákon, ezért jó, hogy vannak statisztikai programjaink, amelyek pontos szignifikanciaszintet adnak. A félév során majd igyekszem jelezni (már múlt félévben is igyekeztem), mi a jobb gyakorlat.</li>
-<li>Statisztiai programok ennél jobbat is tudnak: a kapott tesztértékhez (és ha kétoldali a próba, akkor ennek tükörképzéhez) kiszámítják az ez(ek)en kívül eső területet a nulleloszlás sűrűségfüggvénye alatt, vagyis annak a valószínűségét, hogy igaz nullhipotézis esetén (amit nem győzök eleget hangsúlyozni, remélem, feltűnt) ilyen, vagy ennél jelentősebb eltérést mutató tesztértéket kapjunk. Pl. ha igaz a nullhipotézis, mennyi a valószínűsége, hogy olyan mintát veszünk, amelyből a próba értéke ±2,31-nél jobban különbözik 0-tól? Ebben az esetben, ha ez a valószínűség (ez a szignifikanciaszint) kellően kicsi (pl. kisebb 5%-nál, de ez csak konvenció, nem kőbe vésett valami), elvetjük a nullhipotézist, hiszen a tényleges mintánk nem túl kompatibilis vele.</li>
+<li>Statisztika órákon jobb híján azt csináltuk, hogy meghatároztunk egy
+még elfogadható szignifikanciaszintet (pl. α = 5%), és ehhez kerestük ki
+azokat a határértékeket, amelyek közé (elfogadási tartomány) a próba
+értéke (igaz nullhipotézis esetén) 1 - α valószínűséggel (a példában
+95%) beleesik. Pl. standard normális eloszlás és kétoldali próba esetén
+ez volt a ±1,96. Ebben az esetben, ha a próba eredménye ezeken a
+határokon kívül esik (elutasítási tartomány), elvetjük a nullhipotézist,
+ezek között (elfogadási tartomány) megtartjuk. Ez a gyakorlat nem jó,
+csak jobb híján követjük a statisztika órákon, ezért jó, hogy vannak
+statisztikai programjaink, amelyek pontos szignifikanciaszintet adnak. A
+félév során majd igyekszem jelezni (már múlt félévben is igyekeztem), mi
+a jobb gyakorlat.</li>
+<li>Statisztiai programok ennél jobbat is tudnak: a kapott tesztértékhez
+(és ha kétoldali a próba, akkor ennek tükörképzéhez) kiszámítják az
+ez(ek)en kívül eső területet a nulleloszlás sűrűségfüggvénye alatt,
+vagyis annak a valószínűségét, hogy igaz nullhipotézis esetén (amit nem
+győzök eleget hangsúlyozni, remélem, feltűnt) ilyen, vagy ennél
+jelentősebb eltérést mutató tesztértéket kapjunk. Pl. ha igaz a
+nullhipotézis, mennyi a valószínűsége, hogy olyan mintát veszünk,
+amelyből a próba értéke ±2,31-nél jobban különbözik 0-tól? Ebben az
+esetben, ha ez a valószínűség (ez a szignifikanciaszint) kellően kicsi
+(pl. kisebb 5%-nál, de ez csak konvenció, nem kőbe vésett valami),
+elvetjük a nullhipotézist, hiszen a tényleges mintánk nem túl
+kompatibilis vele.</li>
 </ul>
-<p>A <strong>szignifikanciaszint</strong> az a feltételes valószínűség, hogy ha a nullhipotézis igaz, az adott teszteredménynek megfelelő vagy annál extrémebb, (a 0-nál) nagyobb eltérést mutató tesztértéket kapjunk.</p>
-<p>Akárhogy is, mindig legyenek tudatában, hogy a döntés, amelyet meghozunk, még nem biztos, hogy helyes. Az, hogy megtartjuk a nullhipotézist, nem jelenti, hogy nincs összefüggés két dolog között. A nullhipotézist sose bizonyítjuk, csak megtartjuk. Az, hogy elvetjük a nullhipotézist, szintén nem jelenti, hogy mérget vehetnénk rá, hogy van összefüggés két dolog között, csak annyit, hogy a mi konkrét mintánk nagyon valószínűtlen lenne, ha igaz lenne a nullhipotézis. Minél kisebb a szig. szint, értelemszerűen annál biztosabbak lehetünk a dolgunkban, de sose teljesen bizonyosak.</p>
+<p>A <strong>szignifikanciaszint</strong> az a feltételes valószínűség,
+hogy ha a nullhipotézis igaz, az adott teszteredménynek megfelelő vagy
+annál extrémebb, (a 0-nál) nagyobb eltérést mutató tesztértéket
+kapjunk.</p>
+<p>Akárhogy is, mindig legyenek tudatában, hogy a döntés, amelyet
+meghozunk, még nem biztos, hogy helyes. Az, hogy megtartjuk a
+nullhipotézist, nem jelenti, hogy nincs összefüggés két dolog között. A
+nullhipotézist sose bizonyítjuk, csak megtartjuk. Az, hogy elvetjük a
+nullhipotézist, szintén nem jelenti, hogy mérget vehetnénk rá, hogy van
+összefüggés két dolog között, csak annyit, hogy a mi konkrét mintánk
+nagyon valószínűtlen lenne, ha igaz lenne a nullhipotézis. Minél kisebb
+a szig. szint, értelemszerűen annál biztosabbak lehetünk a dolgunkban,
+de sose teljesen bizonyosak.</p>
 <p>Kétféle hibát tudunk elkövetni:</p>
 <ul>
-<li><strong>Elsőfajú hiba:</strong> Elvetni egy igaz nullhipotézist (hamis pozitív teszt)</li>
-<li><strong>Másodfajú hiba:</strong> Megtartani egy hamis nullhipotézist (hamis negatív teszt)</li>
+<li><strong>Elsőfajú hiba:</strong> Elvetni egy igaz nullhipotézist
+(hamis pozitív teszt)</li>
+<li><strong>Másodfajú hiba:</strong> Megtartani egy hamis nullhipotézist
+(hamis negatív teszt)</li>
 </ul>
-<p>Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint esetén vetjük el a nullhipotézist, a másodikat pedig azzal, hogy igyekszünk jól venni és kellően nagy mintát, ezután pedig a lehető legjobb próbát elvégezni, amelynek a feltételei teljesülnek. A próba ereje annak a valószínűsége, hogy feltételezve, hogy a nullhipotézis nem igaz, ezt a próba elvégzése után elvetjük.</p>
-<p>És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi különbség. A szignifikanciaszintet mindig a hatás, összefüggés, különbség becsült mértékével, erősségével együtt kell értelmezni. Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős is. <br></p>
-<div id="kulcsfogalmak" class="section level2">
-<h2>KULCSFOGALMAK</h2>
-<p><br></p>
+<p>Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint
+esetén vetjük el a nullhipotézist, a másodikat pedig azzal, hogy
+igyekszünk jól venni és kellően nagy mintát, ezután pedig a lehető
+legjobb próbát elvégezni, amelynek a feltételei teljesülnek. A próba
+ereje annak a valószínűsége, hogy feltételezve, hogy a nullhipotézis nem
+igaz, ezt a próba elvégzése után elvetjük.</p>
+<p>És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami
+statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi
+különbség. A szignifikanciaszintet mindig a hatás, összefüggés,
+különbség becsült mértékével, erősségével együtt kell értelmezni.<br />
+<em>Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján
+dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is
+statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős
+is.</em> <br></p>
+<div id="ellenőrző-kérdések" class="section level2">
+<h2>Ellenőrző kérdések</h2>
 <ul>
-<li>Nullhipotézis</li>
-<li>Ellenhipotézis</li>
-<li>Szignifikanciaszint</li>
-<li>Elfogadási tartomány</li>
-<li>Elutasítási tartomány</li>
-<li>Statisztikai szignifikancia</li>
-<li>Elsőfajú hiba</li>
-<li>Másodfajú hiba</li>
-<li>Próba ereje</li>
-<li>Nulleloszlás</li>
+<li>Mi a nullhipotézis? Általában miről szól?</li>
+<li>Mi az ellenhipotézis? Milyen viszonyban áll a nullhipotézissel?</li>
+<li>Mit jelent a szignifikanciaszint? Általában milyen
+szignifikanciaszintet tűzünk ki?</li>
+<li>Mit jelent az elfogadási és az elutasítási tartomány?</li>
+<li>Mit jelent, és mit NEM jelent, hogy egy összefüggés vagy különbség
+statisztikailag szignifikáns? És mit jelent, ha nem az?</li>
+<li>Mi az elsőfajú és másodfajú hiba? Mit tehetünk ezek csökkentéséért?
+Mi a próba ereje, és hogyan növelhetjük?</li>
+<li>Mit értünk egy próba nulleloszlása alatt? Mire tudjuk
+használni?</li>
 </ul>
-<!-- ## Gyakorlási lehetőség:   -->
-<!-- A fentiek elsajátítását az alábbi linken ellenőrizhetik néhány gyakorlatiasabb példán: -->
-<!-- [KVÍZ]() -->
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -510,7 +500,7 @@ div.tocify {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -528,39 +518,13 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
