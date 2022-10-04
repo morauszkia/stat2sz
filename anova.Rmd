@@ -19,13 +19,6 @@ library(kableExtra)
 ```
 <br><br>  
 
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
-
 A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVA-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet.
 <br><br>  
 

@@ -36,8 +36,10 @@ Témakörönként egy házi feladatot fognak kapni. Ezek nem kötelezőek, de ja
 
 **Kommunikáció módja:**  
 Megbeszéljük, de előreláthatólag az e-mail / MS Teams / sli.do / megosztott Google Drive mappa valamilyen kombinációja.
+<br><br>  
 
 ## Értékelés módja:  
+<br>
 A félév során ezúttal is két zárthelyi lesz. Hacsak nem változik a félév rendje:  
 
 1. ZH: 2022. október 26. az 1-2. témakörből (kereszttábla + korreláció)

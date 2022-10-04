@@ -17,16 +17,8 @@ library(huxtable)
 library(questionr)
 ```
 <br><br>  
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
+Nézzünk egy másik példát!  
 
-## Folytatás, újabb példával
-  
-<br>
 Tegyük fel, hogy  megkérdeztünk 200 személyt, milyen szinten beszélnek angolul és franciául. A két változó együttes eloszlását mutatja az alábbi táblázat:
 
 ```{r example.2} 
@@ -48,14 +40,22 @@ data %>%
   set_caption("Tapasztalati kereszttábla (megfigyelt esetszámok)")
 ```
 
-A kérdés értelemszerűen: összefügg-e a populációban, amelyből a mintát vettük, az angol és a francia nyelv ismerete, és ha igen, hogyan?
+A kérdés értelemszerűen: összefügg-e a populációban az angol és a francia nyelv ismerete, és ha igen, hogyan és mennyire erősen?
 
 A nullhipotézisünk ismét az, hogy nem függ össze: a két nyelv ismerete független egymástól
-A javasolt ellenhipotézis, hogy a két nyelv ismerete összefügg egymással.
+Az ellenhipotézis, hogy a két nyelv ismerete összefügg egymással.
+<br><br>
 
+## Hipotézisvizsgálat
+
+<br>
 Először vizsgáljuk meg a hipotézist (nem kell feltétlenül abban a sorrendben haladni, mint az előző példánál), végezzük el a &chi;&sup2; tesztet! Ehhez először az elméleti kereszttáblát kell kiszámítani:
 
 $$e_{ij}=\frac{m_{i*}\times m_{*j}}{N}$$
+:::: {class="fluid-row"}
+
+::: {class="col-md-2"}
+
 pl.  
 
 $e_{11}=\frac{50\times100}{200}=25$  
@@ -63,6 +63,10 @@ $e_{12}=\frac{50\times40}{200}=10$
 $e_{13}=\frac{50\times60}{200}=15$  
 $e_{21}=\frac{80\times100}{200}=40$  
 stb.  
+
+:::
+
+::: {class="col-md-8"}
 
 ```{r, expected}
 test <- data %>%
@@ -79,12 +83,23 @@ test$expected %>%
   set_caption("Elméleti kereszttábla (várt esetszámok)")
 ```
 
-Ezek után kiszámíthatjuk a &chi;&sup2; teszt eredményét:
-$$\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}=\frac{\left(30-25\right)^2}{25}+
-\frac{\left(10-10\right)^2}{10}+\frac{\left(10-15\right)^2}{15}+\frac{\left(30-40\right)^2}{40}+...=9,571$$
+:::
 
-A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó egymástól független, $df = (s-1)\times(o-1)=(3-1)\times(3-1)=4$ szabadságfokú &chi;&sup2; eloszlást követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a $\chi^2_{0,95;4}=9,49$ határérték felel meg.
+::::
+
+Ezek után kiszámíthatjuk a &chi;&sup2; teszt eredményét:
+$$\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}= \\ =\frac{\left(30-25\right)^2}{25}+
+\frac{\left(10-10\right)^2}{10}+ \\ +\frac{\left(10-15\right)^2}{15}+\frac{\left(30-40\right)^2}{40}+...= \\ =9,571$$
+
+A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó egymástól független, $df = (s-1)\times(o-1)=(3-1)\times(3-1)=4$ szabadságfokú &chi;&sup2; eloszlást követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a $\chi^2_{0,95;4}=9,49$ határérték felel meg.  
+
 Mivel a tesztérték (9,571) nagyobb ennél a határértéknél, igaz nullhipotézis esetén kevesebb, mint 5% annak a valószínűsége, hogy ilyen, vagy ennél nagyobb eltérést kapjunk. Ezért elvetjük a nullhipotézist, és az ellenhipotézist fogadjuk el, vagyis a két nyelv ismerete a populációban is összefügg.
+
+<br><br>
+
+## Hogyan függ össze
+
+<br>
 
 Ezek után még meg kell válaszolni azt a kérdést, hogy milyen erősen, és hogyan függ össze: hiszen egyaránt elképzelhető, hogy aki angolul valamennyire beszél, az nagyobb valószínűséggel beszéljen franciául (pl. ha az egyik nyelv ismerete megkönnyíti a másik nyelv megtanulását), és az, hogy aki angolul valamennyire beszél, az franciául kisebb valószínűséggel beszéljen (pl. ha a két nyelv egymás alternatívája). Ahhoz, hogy megvizsgáljuk, hogy a vizsgált populációban mi a helyzet, meg kell nézni a százalékos megoszlásokat. Mivel nincs egyértelmű független vagy függő változó, ezért bármelyiket (vagy akár mindkettőt is) nézhetjük.
 
@@ -122,12 +137,22 @@ data %>%
 
 Ebből kicsit más kép rajzolódik ki, de azért nem annyira: Az angolul jól tudás azok körében a legvalószínűbb, akik nem tudnak franciául, második legmagasabb viszont azok között, akik jól tudnak franciául. Itt is tehát látszik a két nyelv egymást erősítő volta (a franciául jól tudók nagyobb valószínűséggel tudnak jól angolul, akik franciául nem beszélnek, nagyobb valószínűséggel nem beszélnek angolul sem), de egymás helyettesítése is (azok tudnak legnagyobb valószínűséggel jól angolul, akik franciául nem tudnak).
 
-Nézzük, milyen erős az összefüggés:
+<br><br>
+
+## Kapcsolat erőssége
+
+<br>
+
+### Cramer-féle V  
+
 Mivel 3x3-as kereszttábláról van szó (mindkét dimenzió > 2), ezért a &phi; nem megfelelő mutató. Ehelyett a Cramer-féle V-t használhatjuk:
-$$Cramer V = \sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}=\sqrt{\frac{9,571}{200\times(3-1)}}=0,155$$
+$$Cramer V = \sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}= \\ =\sqrt{\frac{9,571}{200\times(3-1)}}=0,155$$
 Eszerint tehát egy gyenge összefüggés van a két nyelv ismerete között, hiszen a [0;1] skálán egyértelműen a 0 végponthoz közeli értéket kaptunk.
 
-Használható a lambda is:
+### Lambda
+
+Használható a lambda is:  
+
 Nézzük először, hogy hogyan csökkenti a hibák számát, ha tudjuk valakiről, mennyire beszél angolul:
 Jelöljük ezt $\lambda_{francia|angol}$-lal:
 
@@ -139,7 +164,8 @@ Ez összesen 20+50+30 = 100 hiba
 3. Vagyis a hibák száma 0%-kal csökkent: 
 $$\lambda_{francia|angol}=\frac{100-100}{100}=0\%$$
 
-Nézzük a másik lambdát:
+Nézzük a másik lambdát:  
+
 1. A legtöbben alapfokon beszélnek angolul: 80 jól és 50+70=120 rosszul besorolt személy
 2. A franciául nem beszélők legtöbbje (40-en) jól beszélnek angolul: 30+30 hiba
 A franciál alapfokon beszélőket az "angol alap"-ba soroljuk: 10+10 hiba
@@ -152,16 +178,19 @@ A két lambda is gyenge kapcsolatot mutat. Az egyik lambda ráadásul 0 volt. En
 
 <br>  
 
-## Gamma kiszámítása
+### Gamma
   
 <br>
-Ebben az esetben, mivel két ordinális változóról van szó, a gamma mutató is kiszámítható.
-Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent, hogy két személy (általánosabban két megfigyelési egység) konkordáns vagy diszkordáns párt alkot.
-Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét vizsgált szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy franciául, nem érdekelnek minket.
-A többi esetben konkordánsnak tekintünk egy párt, ha mindkét szempontból ugyanolyan a viszony: pl. aki jobban tud angolul, az tud jobban franciául is.
-Diszkordánsnak tekintjük azokat a párokat, ahol az angolul jobban tudó kevésbé tud franciául.
+Ebben az esetben, mivel két ordinális változóról van szó, a gamma mutató is kiszámítható.  
 
-Most nézzük meg, hogy a mintában kik kikkel alkotnak konkordáns párokat:
+Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent, hogy két személy (általánosabban két megfigyelési egység) konkordáns vagy diszkordáns párt alkot.  
+
+- Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét vizsgált szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy franciául, nem érdekelnek minket.
+- A többi esetben **konkordánsnak** tekintünk egy párt, ha mindkét szempontból **ugyanolyan a viszony**: pl. aki jobban tud angolul, az tud jobban franciául is.
+- **Diszkordánsnak** tekintjük azokat a párokat, ahol az angolul jobban tudó kevésbé tud franciául.
+
+Most nézzük meg, hogy a mintában kik kikkel alkotnak konkordáns párokat:  
+
 Kezdjük a bal felső sarokkal: 30 főt találunk ott. Ők konkordáns párokat alkotnak azokkal, akik náluk jobban beszélnek angolul (2. és 3. sor), és egyúttal jobban beszélnek franciául is (2. és 3. oszlop)
 
 ```{r concordant.1}
@@ -181,7 +210,8 @@ tab_obs %>%
   set_markdown_contents(1, 1, "")
 ```
 
-Hány konkordáns párt jelent ez? 
+Hány konkordáns párt jelent ez?  
+
 Nézzük először a 2. sor 2. oszlopában lévő cellával: a 30 személy a 20 személlyel $30\times 20=600$ konkordáns párt alkot. A 2. sor 3. oszloppal $30\times 30 = 900$ párt alkotnak, stb.
 Ez összesen: $30\times (20+30+10+20)=2400$ konkordáns pár
 
@@ -200,6 +230,7 @@ tab_obs %>%
 ```
 
 Ez összesen $10\times (30+20) = 500$ további konkordáns párt jelent.  
+
 Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot konkordáns párt, hiszen mindenki legalább olyan jól beszél angolul, mint ők, de mindenki legfeljebb annyira beszél jól franciául, vagyis nincsenek olyanok, akik mindkét nyelvből jobbak lennének (olyanok sem, akik mindkét nyelvből gyengébbek). Léphetünk a második sorra.  
 ```{r concordant.3}
 tab_obs %>%
@@ -212,7 +243,8 @@ tab_obs %>%
   set_background_color(4, 3:4, "tomato1") %>%
   set_markdown_contents(1, 1, "")
 ```
-Ez további $30\times (10+20)=900$ konkordáns pár.
+Ez további $30\times (10+20)=900$ konkordáns pár.  
+
 Végül a 2. sor 2. oszlopában található 20 személy a jobb alsó sarokban lévő 20 személlyel 400 konkordáns párt alkot. Felvethető, hogy ők konkordáns párokat alkotnak az 1. sor 1. oszlopában lévő 30 válaszadóval is, hiszen ezek franciául és angolul is alacsonyabb szinten (egyáltalán nem) beszélnek. Ezeket a párokat viszont már számoltuk egyszer, és ugyanez igaz a többi hasonló esetre is.
 ```{r concordant.4}
 tab_obs %>%
@@ -278,7 +310,8 @@ tab_obs %>%
   set_markdown_contents(1, 1, "")
 ```
 
-A diszkordáns párok száma:
+A diszkordáns párok száma:  
+
 $10\times (30+20+40+10)=1000$ <br>
 $10\times (30+40)=700$ <br>
 $30\times (40+10)=1500$ <br>
@@ -286,9 +319,10 @@ $20\times 40 = 800$ <br>
 Összesen: $1000+700+1500+800=4000$  <br>
 
 A Gamma képlete a következő:
-$$\gamma = \frac{konkordáns párok száma - diszkordáns párok száma}{konkordáns párok száma + diszkordáns párok száma}$$
+$$\gamma = \frac{pár_{konkordáns} - pár_{diszkordáns}}{pár_{konkordáns} + pár_{diszkordáns}}$$
 $$\gamma = \frac{4200-4000}{4200+4000}=\frac{200}{8200}=0,024$$
-Eszerint tehát a gamma is megerősíti, amit a többi mutató is jelzett: az asszociáció meglehetősen gyengécske. A gamma viszont azt is megmutatja, hogy alapvetően pozitív a kapcsolat a két változó között: a gamma 0-nál nagyobb és kisebb értéket is felvehet. Pozitív értéket akkor vesz fel, ha a konkordáns párokból van több, negatív értéket pedig akkor, ha a diszkordáns párokból. Ez elég világosan látszik a képletből. Vagyis, ha a gamma értéke pozitív, akkor jellemzőbb, hogy aki az egyik változón magasabb értéket ér el, az a másikon is. Ha pedig negatív az értéke, akkor az jellemzőbb, hogy aki egyik változón magasabb értéket ér el, az a másikon alacsonyabb. A gamma értelmezéséhez tehát tudni kell, mit jelentenek az alacsonyabb/magasabb értékek a két változó esetében.
+Eszerint tehát a gamma is megerősíti, amit a többi mutató is jelzett: az asszociáció meglehetősen gyengécske. A gamma viszont azt is megmutatja, hogy alapvetően pozitív a kapcsolat a két változó között: a gamma 0-nál nagyobb és kisebb értéket is felvehet. Pozitív értéket akkor vesz fel, ha a konkordáns párokból van több, negatív értéket pedig akkor, ha a diszkordáns párokból. Ez elég világosan látszik a képletből. Vagyis, ha a gamma értéke pozitív, akkor jellemzőbb, hogy aki az egyik változón magasabb értéket ér el, az a másikon is. Ha pedig negatív az értéke, akkor az jellemzőbb, hogy aki egyik változón magasabb értéket ér el, az a másikon alacsonyabb. A gamma értelmezéséhez tehát tudni kell, mit jelentenek az alacsonyabb/magasabb értékek a két változó esetében.  
+
 Ebben az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél angolul, azok várhatóan franciául is jobban beszélnek. De ez az összefüggés gyenge.  
 
 <br>  
@@ -335,6 +369,6 @@ table(data$angol, data$francia) %>%
 Kereszttábla-elemzés esetén a következő kérdések vetődnek fel:  
 
 1. Van-e szignifikáns összefüggés a két változó között? - Ehhez &chi;&sup2; próbát számolunk  
-2. Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs mérőszámok (&phi; Cramer-féle V, &lambda; és &gamma;)
+2. Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs mérőszámok (&phi;, Cramer-féle V, &lambda; és &gamma;)
 3. Hogyan függ össze a két változó? - Ezt a sor/oszlopszázalékok alapján tudjuk kielemezni
 4. Mely cellák esetében tér el szignifikánsan a megfigyelt és a függetlenség esetén várható esetszám? - Ezt pedig a korrigált standardizált reziduálisok adják meg

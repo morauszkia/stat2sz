@@ -1,7 +1,8 @@
 name: "statistics_2"
 output_dir: "."
 output:
-  html_document
+  html_document:
+    css: main.css
 navbar:
   title: "Statisztika 2. szeminárium"
   left:

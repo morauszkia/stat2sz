@@ -63,6 +63,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="main.css" type="text/css" />
 
 
 
@@ -418,18 +419,11 @@ div.tocify {
 </div>
 
 
-<br><br><br />
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
-<div id="folytatás-újabb-példával" class="section level2">
-<h2>Folytatás, újabb példával</h2>
-<p><br> Tegyük fel, hogy megkérdeztünk 200 személyt, milyen szinten
-beszélnek angolul és franciául. A két változó együttes eloszlását
-mutatja az alábbi táblázat:</p>
+<p><br><br><br />
+Nézzünk egy másik példát!</p>
+<p>Tegyük fel, hogy megkérdeztünk 200 személyt, milyen szinten beszélnek
+angolul és franciául. A két változó együttes eloszlását mutatja az
+alábbi táblázat:</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:example.2">
 <caption style="caption-side: top; text-align: center;">Tapasztalati kereszttábla (megfigyelt esetszámok)</caption><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
@@ -443,17 +437,20 @@ mutatja az alábbi táblázat:</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">200</td></tr>
 </table>
 
-<p>A kérdés értelemszerűen: összefügg-e a populációban, amelyből a
-mintát vettük, az angol és a francia nyelv ismerete, és ha igen,
-hogyan?</p>
+<p>A kérdés értelemszerűen: összefügg-e a populációban az angol és a
+francia nyelv ismerete, és ha igen, hogyan és mennyire erősen?</p>
 <p>A nullhipotézisünk ismét az, hogy nem függ össze: a két nyelv
-ismerete független egymástól A javasolt ellenhipotézis, hogy a két nyelv
-ismerete összefügg egymással.</p>
-<p>Először vizsgáljuk meg a hipotézist (nem kell feltétlenül abban a
-sorrendben haladni, mint az előző példánál), végezzük el a χ² tesztet!
+ismerete független egymástól Az ellenhipotézis, hogy a két nyelv
+ismerete összefügg egymással. <br><br></p>
+<div id="hipotézisvizsgálat" class="section level2">
+<h2>Hipotézisvizsgálat</h2>
+<p><br> Először vizsgáljuk meg a hipotézist (nem kell feltétlenül abban
+a sorrendben haladni, mint az előző példánál), végezzük el a χ² tesztet!
 Ehhez először az elméleti kereszttáblát kell kiszámítani:</p>
 <p><span class="math display">\[e_{ij}=\frac{m_{i*}\times
-m_{*j}}{N}\]</span> pl.</p>
+m_{*j}}{N}\]</span> :::: {class=“fluid-row”}</p>
+<div class="col-md-2">
+<p>pl.</p>
 <p><span
 class="math inline">\(e_{11}=\frac{50\times100}{200}=25\)</span><br />
 <span
@@ -463,6 +460,8 @@ class="math inline">\(e_{13}=\frac{50\times60}{200}=15\)</span><br />
 <span
 class="math inline">\(e_{21}=\frac{80\times100}{200}=40\)</span><br />
 stb.</p>
+</div>
+<div class="col-md-8">
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected">
 <caption style="caption-side: top; text-align: center;">Elméleti kereszttábla (várt esetszámok)</caption><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
@@ -476,19 +475,30 @@ stb.</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">200</td></tr>
 </table>
 
+</div>
+<p>::::</p>
 <p>Ezek után kiszámíthatjuk a χ² teszt eredményét: <span
-class="math display">\[\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}=\frac{\left(30-25\right)^2}{25}+
-\frac{\left(10-10\right)^2}{10}+\frac{\left(10-15\right)^2}{15}+\frac{\left(30-40\right)^2}{40}+...=9,571\]</span></p>
+class="math display">\[\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}=
+\\ =\frac{\left(30-25\right)^2}{25}+
+\frac{\left(10-10\right)^2}{10}+ \\
++\frac{\left(10-15\right)^2}{15}+\frac{\left(30-40\right)^2}{40}+...= \\
+=9,571\]</span></p>
 <p>A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó
 egymástól független, <span class="math inline">\(df =
 (s-1)\times(o-1)=(3-1)\times(3-1)=4\)</span> szabadságfokú χ² eloszlást
 követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a
 <span class="math inline">\(\chi^2_{0,95;4}=9,49\)</span> határérték
-felel meg. Mivel a tesztérték (9,571) nagyobb ennél a határértéknél,
-igaz nullhipotézis esetén kevesebb, mint 5% annak a valószínűsége, hogy
+felel meg.</p>
+<p>Mivel a tesztérték (9,571) nagyobb ennél a határértéknél, igaz
+nullhipotézis esetén kevesebb, mint 5% annak a valószínűsége, hogy
 ilyen, vagy ennél nagyobb eltérést kapjunk. Ezért elvetjük a
 nullhipotézist, és az ellenhipotézist fogadjuk el, vagyis a két nyelv
 ismerete a populációban is összefügg.</p>
+<p><br><br></p>
+</div>
+<div id="hogyan-függ-össze" class="section level2">
+<h2>Hogyan függ össze</h2>
+<p><br></p>
 <p>Ezek után még meg kell válaszolni azt a kérdést, hogy milyen erősen,
 és hogyan függ össze: hiszen egyaránt elképzelhető, hogy aki angolul
 valamennyire beszél, az nagyobb valószínűséggel beszéljen franciául (pl.
@@ -504,13 +514,13 @@ is) nézhetjük.</p>
 <col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol nem</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol nem</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">60.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">20.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol alap</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">37,5%</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">37,5%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol alap</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">37.5%</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">37.5%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">57,1%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14,3%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28,6%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">57.1%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">14.3%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">28.6%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">50,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">20,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">30,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">50.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">20.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">30.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td></tr>
 </table>
 
 <p>A sorzázalékolt táblából látszik, hogy a helyzet kicsit komplexebb,
@@ -533,13 +543,13 @@ kedvéért nézzük meg:</p>
 <col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol nem</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16,7%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">25,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol nem</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">16.7%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">25.0%</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol alap</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol alap</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">40.0%</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33,3%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">35,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">25.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">33.3%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">35.0%</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100,0%</td></tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">100.0%</td></tr>
 </table>
 
 <p>Ebből kicsit más kép rajzolódik ki, de azért nem annyira: Az angolul
@@ -550,16 +560,27 @@ tudók nagyobb valószínűséggel tudnak jól angolul, akik franciául nem
 beszélnek, nagyobb valószínűséggel nem beszélnek angolul sem), de egymás
 helyettesítése is (azok tudnak legnagyobb valószínűséggel jól angolul,
 akik franciául nem tudnak).</p>
-<p>Nézzük, milyen erős az összefüggés: Mivel 3x3-as kereszttábláról van
-szó (mindkét dimenzió &gt; 2), ezért a φ nem megfelelő mutató. Ehelyett
-a Cramer-féle V-t használhatjuk: <span class="math display">\[Cramer V =
-\sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}=\sqrt{\frac{9,571}{200\times(3-1)}}=0,155\]</span>
-Eszerint tehát egy gyenge összefüggés van a két nyelv ismerete között,
-hiszen a [0;1] skálán egyértelműen a 0 végponthoz közeli értéket
-kaptunk.</p>
-<p>Használható a lambda is: Nézzük először, hogy hogyan csökkenti a
-hibák számát, ha tudjuk valakiről, mennyire beszél angolul: Jelöljük ezt
-<span class="math inline">\(\lambda_{francia|angol}\)</span>-lal:</p>
+<p><br><br></p>
+</div>
+<div id="kapcsolat-erőssége" class="section level2">
+<h2>Kapcsolat erőssége</h2>
+<p><br></p>
+<div id="cramer-féle-v" class="section level3">
+<h3>Cramer-féle V</h3>
+<p>Mivel 3x3-as kereszttábláról van szó (mindkét dimenzió &gt; 2), ezért
+a φ nem megfelelő mutató. Ehelyett a Cramer-féle V-t használhatjuk:
+<span class="math display">\[Cramer V =
+\sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}= \\
+=\sqrt{\frac{9,571}{200\times(3-1)}}=0,155\]</span> Eszerint tehát egy
+gyenge összefüggés van a két nyelv ismerete között, hiszen a [0;1]
+skálán egyértelműen a 0 végponthoz közeli értéket kaptunk.</p>
+</div>
+<div id="lambda" class="section level3">
+<h3>Lambda</h3>
+<p>Használható a lambda is:</p>
+<p>Nézzük először, hogy hogyan csökkenti a hibák számát, ha tudjuk
+valakiről, mennyire beszél angolul: Jelöljük ezt <span
+class="math inline">\(\lambda_{francia|angol}\)</span>-lal:</p>
 <ol style="list-style-type: decimal">
 <li>A legtöbben nem beszélnek franciául, ezért mindenkit ebbe a
 csoportba sorolunk: 100 helyes és 100 helytelen besorolás</li>
@@ -571,37 +592,46 @@ hiba</li>
 <li>Vagyis a hibák száma 0%-kal csökkent: <span
 class="math display">\[\lambda_{francia|angol}=\frac{100-100}{100}=0\%\]</span></li>
 </ol>
-<p>Nézzük a másik lambdát: 1. A legtöbben alapfokon beszélnek angolul:
-80 jól és 50+70=120 rosszul besorolt személy 2. A franciául nem beszélők
-legtöbbje (40-en) jól beszélnek angolul: 30+30 hiba A franciál alapfokon
-beszélőket az “angol alap”-ba soroljuk: 10+10 hiba A franciául jól
-beszélőket az “angol alap”-ba soroljuk: 10+20 hiba Összesen: 60+20+30 =
-110 hiba 3. A hibák száma kb. 8,3%-kal csökkent: <span
-class="math display">\[\lambda_{angol|francia}=\frac{120-110}{120}=0,083=8,3\%\]</span></p>
+<p>Nézzük a másik lambdát:</p>
+<ol style="list-style-type: decimal">
+<li>A legtöbben alapfokon beszélnek angolul: 80 jól és 50+70=120 rosszul
+besorolt személy</li>
+<li>A franciául nem beszélők legtöbbje (40-en) jól beszélnek angolul:
+30+30 hiba A franciál alapfokon beszélőket az “angol alap”-ba soroljuk:
+10+10 hiba A franciául jól beszélőket az “angol alap”-ba soroljuk: 10+20
+hiba Összesen: 60+20+30 = 110 hiba</li>
+<li>A hibák száma kb. 8,3%-kal csökkent: <span
+class="math display">\[\lambda_{angol|francia}=\frac{120-110}{120}=0,083=8,3\%\]</span></li>
+</ol>
 <p>A két lambda is gyenge kapcsolatot mutat. Az egyik lambda ráadásul 0
 volt. Ennek oka, hogy minden csoportban azok aránya volt a legmagasabb
 (egy esetben holtversenyben), akik nem beszélnek franciául. Ezzel sajnos
 a lambda nem tud mit kezdeni.</p>
 <p><br></p>
 </div>
-<div id="gamma-kiszámítása" class="section level2">
-<h2>Gamma kiszámítása</h2>
+<div id="gamma" class="section level3">
+<h3>Gamma</h3>
 <p><br> Ebben az esetben, mivel két ordinális változóról van szó, a
-gamma mutató is kiszámítható. Ahhoz, hogy megértsük a gamma logikáját
-meg kell nézni, mit jelent, hogy két személy (általánosabban két
-megfigyelési egység) konkordáns vagy diszkordáns párt alkot. Csak azok a
-párok érdekelnek minket, amelyekben a két tag mindkét vizsgált
-szempontból (angol és francia tudás) egyértelműen rangsorolható. Tehát
-azok a párok, amelyekben a két tag egyformán jól beszél angolul vagy
-franciául, nem érdekelnek minket. A többi esetben konkordánsnak
-tekintünk egy párt, ha mindkét szempontból ugyanolyan a viszony: pl. aki
-jobban tud angolul, az tud jobban franciául is. Diszkordánsnak tekintjük
-azokat a párokat, ahol az angolul jobban tudó kevésbé tud franciául.</p>
+gamma mutató is kiszámítható.</p>
+<p>Ahhoz, hogy megértsük a gamma logikáját meg kell nézni, mit jelent,
+hogy két személy (általánosabban két megfigyelési egység) konkordáns
+vagy diszkordáns párt alkot.</p>
+<ul>
+<li>Csak azok a párok érdekelnek minket, amelyekben a két tag mindkét
+vizsgált szempontból (angol és francia tudás) egyértelműen
+rangsorolható. Tehát azok a párok, amelyekben a két tag egyformán jól
+beszél angolul vagy franciául, nem érdekelnek minket.</li>
+<li>A többi esetben <strong>konkordánsnak</strong> tekintünk egy párt,
+ha mindkét szempontból <strong>ugyanolyan a viszony</strong>: pl. aki
+jobban tud angolul, az tud jobban franciául is.</li>
+<li><strong>Diszkordánsnak</strong> tekintjük azokat a párokat, ahol az
+angolul jobban tudó kevésbé tud franciául.</li>
+</ul>
 <p>Most nézzük meg, hogy a mintában kik kikkel alkotnak konkordáns
-párokat: Kezdjük a bal felső sarokkal: 30 főt találunk ott. Ők
-konkordáns párokat alkotnak azokkal, akik náluk jobban beszélnek angolul
-(2. és 3. sor), és egyúttal jobban beszélnek franciául is (2. és 3.
-oszlop)</p>
+párokat:</p>
+<p>Kezdjük a bal felső sarokkal: 30 főt találunk ott. Ők konkordáns
+párokat alkotnak azokkal, akik náluk jobban beszélnek angolul (2. és 3.
+sor), és egyúttal jobban beszélnek franciául is (2. és 3. oszlop)</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:concordant.1">
 <col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">összesen</th></tr>
@@ -615,13 +645,13 @@ oszlop)</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">100</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">200</td></tr>
 </table>
 
-<p>Hány konkordáns párt jelent ez? Nézzük először a 2. sor 2. oszlopában
-lévő cellával: a 30 személy a 20 személlyel <span
-class="math inline">\(30\times 20=600\)</span> konkordáns párt alkot. A
-2. sor 3. oszloppal <span class="math inline">\(30\times 30 =
-900\)</span> párt alkotnak, stb. Ez összesen: <span
-class="math inline">\(30\times (20+30+10+20)=2400\)</span> konkordáns
-pár</p>
+<p>Hány konkordáns párt jelent ez?</p>
+<p>Nézzük először a 2. sor 2. oszlopában lévő cellával: a 30 személy a
+20 személlyel <span class="math inline">\(30\times 20=600\)</span>
+konkordáns párt alkot. A 2. sor 3. oszloppal <span
+class="math inline">\(30\times 30 = 900\)</span> párt alkotnak, stb. Ez
+összesen: <span class="math inline">\(30\times
+(20+30+10+20)=2400\)</span> konkordáns pár</p>
 <p>Lépjünk egyet jobbra az első sorban: az 1. sor 2. oszlopában lévő 10
 személy további konkordáns pártokat alkot a 3. oszlop 2. és 3. sorában
 lévő cellákkal.</p>
@@ -639,8 +669,8 @@ lévő cellákkal.</p>
 </table>
 
 <p>Ez összesen <span class="math inline">\(10\times (30+20) =
-500\)</span> további konkordáns párt jelent.<br />
-Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot
+500\)</span> további konkordáns párt jelent.</p>
+<p>Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot
 konkordáns párt, hiszen mindenki legalább olyan jól beszél angolul, mint
 ők, de mindenki legfeljebb annyira beszél jól franciául, vagyis
 nincsenek olyanok, akik mindkét nyelvből jobbak lennének (olyanok sem,
@@ -659,9 +689,10 @@ akik mindkét nyelvből gyengébbek). Léphetünk a második sorra.</p>
 </table>
 
 <p>Ez további <span class="math inline">\(30\times (10+20)=900\)</span>
-konkordáns pár. Végül a 2. sor 2. oszlopában található 20 személy a jobb
-alsó sarokban lévő 20 személlyel 400 konkordáns párt alkot. Felvethető,
-hogy ők konkordáns párokat alkotnak az 1. sor 1. oszlopában lévő 30
+konkordáns pár.</p>
+<p>Végül a 2. sor 2. oszlopában található 20 személy a jobb alsó
+sarokban lévő 20 személlyel 400 konkordáns párt alkot. Felvethető, hogy
+ők konkordáns párokat alkotnak az 1. sor 1. oszlopában lévő 30
 válaszadóval is, hiszen ezek franciául és angolul is alacsonyabb szinten
 (egyáltalán nem) beszélnek. Ezeket a párokat viszont már számoltuk
 egyszer, és ugyanez igaz a többi hasonló esetre is.</p>
@@ -738,16 +769,15 @@ párokat.</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">100</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">200</td></tr>
 </table>
 
-<p>A diszkordáns párok száma: <span class="math inline">\(10\times
-(30+20+40+10)=1000\)</span> <br> <span class="math inline">\(10\times
-(30+40)=700\)</span> <br> <span class="math inline">\(30\times
-(40+10)=1500\)</span> <br> <span class="math inline">\(20\times 40 =
-800\)</span> <br> Összesen: <span
+<p>A diszkordáns párok száma:</p>
+<p><span class="math inline">\(10\times (30+20+40+10)=1000\)</span> <br>
+<span class="math inline">\(10\times (30+40)=700\)</span> <br> <span
+class="math inline">\(30\times (40+10)=1500\)</span> <br> <span
+class="math inline">\(20\times 40 = 800\)</span> <br> Összesen: <span
 class="math inline">\(1000+700+1500+800=4000\)</span> <br></p>
 <p>A Gamma képlete a következő: <span class="math display">\[\gamma =
-\frac{konkordáns párok száma - diszkordáns párok száma}{konkordáns párok
-száma + diszkordáns párok száma}\]</span> <span
-class="math display">\[\gamma =
+\frac{pár_{konkordáns} - pár_{diszkordáns}}{pár_{konkordáns} +
+pár_{diszkordáns}}\]</span> <span class="math display">\[\gamma =
 \frac{4200-4000}{4200+4000}=\frac{200}{8200}=0,024\]</span> Eszerint
 tehát a gamma is megerősíti, amit a többi mutató is jelzett: az
 asszociáció meglehetősen gyengécske. A gamma viszont azt is megmutatja,
@@ -759,11 +789,12 @@ a gamma értéke pozitív, akkor jellemzőbb, hogy aki az egyik változón
 magasabb értéket ér el, az a másikon is. Ha pedig negatív az értéke,
 akkor az jellemzőbb, hogy aki egyik változón magasabb értéket ér el, az
 a másikon alacsonyabb. A gamma értelmezéséhez tehát tudni kell, mit
-jelentenek az alacsonyabb/magasabb értékek a két változó esetében. Ebben
-az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél angolul,
-azok várhatóan franciául is jobban beszélnek. De ez az összefüggés
-gyenge.</p>
+jelentenek az alacsonyabb/magasabb értékek a két változó esetében.</p>
+<p>Ebben az esetben azt mondhatjuk, hogy akik jobban beszélnek valakinél
+angolul, azok várhatóan franciául is jobban beszélnek. De ez az
+összefüggés gyenge.</p>
 <p><br></p>
+</div>
 </div>
 <div id="reziduálisok" class="section level2">
 <h2>Reziduálisok</h2>
@@ -802,11 +833,11 @@ cella esetében az eltérés nem szignifikáns.</p>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"><p>Adjusted std. residuals</p>
 </th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th></tr>
 <tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol nem</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1,63</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1,78</td></tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol nem</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.63</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.78</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol alap</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2,89</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1,44</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1,89</td></tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol alap</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-2.89</td><td style="vertical-align: top; text-align: right; white-space: normal; padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.44</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.89</td></tr>
 <tr>
-<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1,48</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1,48</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0,32</td></tr>
+<td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">angol jól</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">1.48</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-1.48</td><td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.32</td></tr>
 </table>
 
 <p><br></p>
@@ -820,7 +851,7 @@ fel:</p>
 próbát számolunk<br />
 </li>
 <li>Ha van összefüggés, milyen erős? - Erre szolgálnak az asszociációs
-mérőszámok (φ Cramer-féle V, λ és γ)</li>
+mérőszámok (φ, Cramer-féle V, λ és γ)</li>
 <li>Hogyan függ össze a két változó? - Ezt a sor/oszlopszázalékok
 alapján tudjuk kielemezni</li>
 <li>Mely cellák esetében tér el szignifikánsan a megfigyelt és a
