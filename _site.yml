@@ -16,7 +16,7 @@ navbar:
           href: kereszttabla.html
         - text: "Függetlenségvizsgálat 2."
           href: kereszttabla2.html
-        - text: "Illeszkedésvizsgálat"
+        - text: "Egyéb khi-négyzet próbák"
           href: illeszkedes.html
     - text: "Korreláció"
       menu:

@@ -11,7 +11,7 @@
 
 
 
-<title>Illeszkedésvizsgálat</title>
+<title>Egyéb khi-négyzet próbák</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -354,7 +354,7 @@ div.tocify {
       <a href="kereszttabla2.html">Függetlenségvizsgálat 2.</a>
     </li>
     <li>
-      <a href="illeszkedes.html">Illeszkedésvizsgálat</a>
+      <a href="illeszkedes.html">Egyéb khi-négyzet próbák</a>
     </li>
   </ul>
 </li>
@@ -414,32 +414,41 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Illeszkedésvizsgálat</h1>
+<h1 class="title toc-ignore">Egyéb khi-négyzet próbák</h1>
 
 </div>
 
 
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
-<p><br><br></p>
+<p><br><br> A függetlenségvizsgálaton kívül még két másik esetben is
+olyan próbát használunk, amely nulleloszlása χ². Ezek az illeszkedés- és
+a homogenitásvizsgálat.</p>
+<p><br></p>
+<div id="illeszkedésvizsgálat" class="section level2">
+<h2>Illeszkedésvizsgálat</h2>
+<p><br></p>
 <p>Időnként azt kell megvizsgálnunk, hogy egy minta származhat-e egy
-bizonyos elméleti valószínűségeloszlásból. Ha ez utóbbinak a paraméterei
-is adottak, akkor <strong>tiszta illeszkedésvizsgálatról</strong> van
-szó. Ha a kérdés arra vonatkozik, hogy a minta feltételezhetően
-valamilyen <em>típusú</em> eloszlásból származik-e, amelynek
-paramétereit is a mintából becsüljük, akkor pedig <strong>becsléses
+bizonyos elméleti valószínűségeloszlásból. Másképpen: a mintában látható
+változóeloszlás illeszkedik-e valamilyen elméleti
+valószínűségeloszláshoz.</p>
+<p>Ha ez utóbbinak a paraméterei is adottak, akkor <strong>tiszta
+illeszkedésvizsgálatról</strong> van szó. Ilyen lehet (bár ezt a kérdést
+pont nem χ² próbával válaszoljuk meg), hogy például 100-as várható
+értékű és 10-es szórású normális eloszlást követ-e a változó.</p>
+<p>Ha a kérdés arra vonatkozik, hogy a minta feltételezhetően valamilyen
+<em>típusú</em> eloszlásból származik-e, amelynek paramétereit is a
+mintából becsüljük, akkor pedig <strong>becsléses
 illeszkedésvizsgálatról</strong> van szó. Ez utóbbi jellemzőbb,
 leggyakoribb formája pedig a <em>normalitásvizsálat</em>, vagyis, hogy a
-minta illeszkedik-e a normális eloszláshoz.</p>
+minta illeszkedik-e a normális eloszláshoz, de nem mi adjuk meg, hogy
+milyen paraméterű, hanem a mintából becsüljük a várható értéket és
+szórást is.</p>
 <p>Illeszkedésvizsgálat diszkrét és folytonos változók esetében is
-végezhető, de mi csak a diszkrét esetet nézzük meg.<br />
-<br><br></p>
-<div id="példa" class="section level2">
-<h2>Példa</h2>
+végezhető, de mi csak a diszkrét esetet nézzük meg. Folytonos esetben,
+mint amilyenek a fenti példák, más próbákat, pl. Shapiro-Wilk,
+Kolmogorov-Smirnov, stb. tesztet végezhetünk.</p>
+<p><br></p>
+<div id="példa-kockadobás" class="section level3">
+<h3>Példa: kockadobás</h3>
 <p>Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla,
 hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük
 kell a szabályos dobókockával való dobás valószínűségeloszlásához.<br />
@@ -467,13 +476,15 @@ ki:</p>
 <p>Ezek a megfigyelések, jelöljük ezeket <span
 class="math inline">\(m_i\)</span>-vel! Most még szükségünk van az
 elméleti értékekre: hány 1-es, 2-es, stb. lett volna a 60 dobás között,
-ha <em>teljes mértékben</em> a valószínűségeloszlásnak megfelelően
-alakulnak a dobások. Ebben az esetben minden érték valószínűsége <span
-class="math inline">\(P(\xi = x_i) = \frac{1}{6}\)</span>. Vagyis minden
-dobásból 10-nek kellett volna lennie. Általánosan: <span
-class="math display">\[e_i = N*p_i\]</span> Ebben <span
-class="math inline">\(p_i\)</span> egyszerűsítve jelöli az egyes értékek
-valószínűségét.</p>
+ha <em>teljes mértékben</em> az elméleti valószínűségeloszlásnak
+megfelelően alakulnak a dobások. Ebben az esetben minden érték
+valószínűsége <span class="math inline">\(P(\xi = x_i) =
+\frac{1}{6}\)</span>. Vagyis minden dobásból 10-nek kellett volna
+lennie. Általánosan: <span class="math display">\[e_i = N*p_i\]</span>
+Ebben <span class="math inline">\(p_i\)</span> egyszerűsítve jelöli az
+egyes értékek valószínűségét: pl. <span
+class="math inline">\(p_1=\frac{1}{6}\)</span> az 1-es
+valószínűsége.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:dice.complete">
 <col><col><col><tr>
 <th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Dobott szám</p>
@@ -503,31 +514,114 @@ esetén végzett függetlenségvizsgálaté, a különbség csak annyi, hogy
 illeszkedésvizsgálatnál csak egy index-szel kell dolgoznunk. A fenti
 táblázatra a próba értéke:<br />
 <span class="math display">\[\chi^{2}=
-\frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6\]</span></p>
+\frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+ \\
++\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6\]</span></p>
 <p>A próba igaz nullhipotézis (illeszkedés) esetén <span
 class="math inline">\(df=k-1\)</span> szabadságfokú χ² eloszlást követ,
-ahol k a változó lehetésges értékeinek a száma, vagyis a fenti esetben
+ahol k a változó lehetséges értékeinek a száma, vagyis a fenti esetben
 <span class="math inline">\(df = 6 - 1 = 5\)</span>. Ehhez 5%
 szignifikanciaszint esetén a 11,1 határérték tartozik, vagyis 5%-os
 szignifikanciaszint mellett megtartjuk a nullhipotézist, nem
-állíthatjuk, hogy a dobások megoszlása nem illeszkedne a várt
+állíthatjuk, hogy a dobások megoszlása nem illeszkedik a várt
 eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az
-ellenkezőjét - szabályosnak tekintjük.</p>
+ellenkezőjét - szabályosnak tekintjük. Ezért is a kettős tagadás: nem
+állítjuk határozottan, hogy illeszkedik, de a megfigyeléseink alapján
+azt sem állíthatjuk, hogy nem illeszkedik.</p>
 <p><br></p>
+</div>
+<div id="példa-népszámlálás" class="section level3">
+<h3>Példa: népszámlálás</h3>
+<p>Az elméleti eloszlás származhat más forrásból is: ilyen lehet egy
+népszámlálás. Arra vagyunk kíváncsiak, hogy a mintánkban egy változó
+eloszlása illeszkedik-e a népszámlálásban látott eloszláshoz, amely az
+egész populáció adatait veszi alapul, tehát vehető elméletinek. Ha ebből
+a populációból vettük a mintát, akkor a megoszlásnak nagy
+valószínűséggel illeszkednie kell a teljes populációhoz.</p>
+<p>Vegyük a felekezeti eloszlást. A kérdésünk, hogy feltételezhetjük-e,
+hogy a mintánk eloszlása illeszkedik a sokasági eloszláshoz (a legutóbbi
+népszámlálást alapul véve).</p>
+<p>Tegyük fel, hogy az alábbi mintát kaptuk:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:census">
+<col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Felekezet</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<del>i</del>)</p>
+</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Római katolikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">490</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Református</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">140</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Evangélikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Egyéb</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Felekezeten kívüli</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">260</td></tr>
+</table>
+
+<p>Az elméleti értékeket az alábbi sokasági eloszlás (<span
+class="math inline">\(p_i\)</span>) alapján tudjuk kiszámítani az <span
+class="math inline">\(e_i = N*p_i\)</span> képlettel.</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:census.complete">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Dobott szám</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<del>i</del>)</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>p<del>i</del></p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>e<del>i</del></p>
+</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Római katolikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">490</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.51</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">510</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Református</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">140</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.16</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">160</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Evangélikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Egyéb</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.05</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Felekezeten kívüli</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">260</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">250</td></tr>
+</table>
+
+<p>A próba értéke:<br />
+<span
+class="math display">\[\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+\\
++ \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}=
+15,02\]</span><br />
+<span class="math display">\[df = k-1 = 5-1=4\]</span> <span
+class="math display">\[\chi^2_{0.95;4}=9,49\]</span></p>
+<p><strong>Döntés:</strong> 5%-os szignifikanciaszint mellett elvetjük a
+nullhipotézist, a minta felekezeti eloszlása nem illeszkedik a populáció
+eloszlásához. Ennek oka lehet, hogy egy másik populációból származik,
+vagy valami torzította a mintavételt. Elméletileg az sem kizárt, csak
+nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb
+mértékben eltérő minta.</p>
+<p><br></p>
+</div>
+<div id="illeszkedés-folytonos-változók" class="section level3">
+<h3>Illeszkedés: folytonos változók</h3>
 <p>Ugyanígy bármilyen diszkrét valószíűségi eloszlást követő változó
 illeszkedése vizsgálható. Folytonos változók esetén egy lehetőség, hogy
 a változó értékeit intervallumokra bontjuk, és az egyes intervallumokhoz
 rendeljük a megfelelő valószínűségeket. Pl. Normális eloszlás esetén az
 átlag ± egy szórásnyi intervallumba esik az értékek harmada, stb. (Előző
 félévben néztük, hogyan tudunk a normális eloszláson adott valószínűségű
-intervallumokat lehatárolni.) Folytonos változók esetén rendelkezésre
-állnak más próbák, mint például a <em>Kolmogorov-Smirnov</em> és az
-<em>Anderson-Darling</em> próba, amellyel vizsgálható a változó
-illeszkedése bármilyen, adott paraméterekkel rendelkező valószínűségi
-eloszláshoz (beleértve a kiemelt jelentőségű normális eloszlást),
-illetve további tesztek, mint a <em>Lilliefors</em>,
-<em>Shapiro-Wilk</em>, amellyel vizsgálható hogy a változó normális
-eloszlást követ-e.</p>
+intervallumokat lehatárolni.)</p>
+<p>De folytonos változók esetén rendelkezésre állnak más próbák is, mint
+például a <em>Kolmogorov-Smirnov</em> és az <em>Anderson-Darling</em>
+próba, amellyel vizsgálható a változó illeszkedése bármilyen, adott
+paraméterekkel rendelkező valószínűségi eloszláshoz (beleértve a kiemelt
+jelentőségű normális eloszlást), illetve további tesztek, mint a
+<em>Lilliefors</em>, <em>Shapiro-Wilk</em>, amellyel vizsgálható hogy a
+változó normális eloszlást követ-e.</p>
+<p><br></p>
+</div>
+</div>
+<div id="homogenitásvizsgálat" class="section level2">
+<h2>Homogenitásvizsgálat</h2>
+<p><br></p>
+<p>Homogenitásvizsgálattal azt vizsgáljuk, két minta származhat-e
+ugyanolyan valószínűségeloszlású populációból. Ez lehet ugyanaz a
+populáció: azt vizsgáljuk, származhat-e a két minta ugyanabból a
+populációból, de vonatkozhat arra is, hogy lehet-e egy változónak
+ugyanaz az eloszlása két független populációban.</p>
 </div>
 
 

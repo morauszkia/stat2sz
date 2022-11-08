@@ -354,7 +354,7 @@ div.tocify {
       <a href="kereszttabla2.html">Függetlenségvizsgálat 2.</a>
     </li>
     <li>
-      <a href="illeszkedes.html">Illeszkedésvizsgálat</a>
+      <a href="illeszkedes.html">Egyéb khi-négyzet próbák</a>
     </li>
   </ul>
 </li>
@@ -447,21 +447,22 @@ ismerete összefügg egymással. <br><br></p>
 <p><br> Először vizsgáljuk meg a hipotézist (nem kell feltétlenül abban
 a sorrendben haladni, mint az előző példánál), végezzük el a χ² tesztet!
 Ehhez először az elméleti kereszttáblát kell kiszámítani:</p>
-<p><span class="math display">\[e_{ij}=\frac{m_{i*}\times
-m_{*j}}{N}\]</span> :::: {class=“fluid-row”}</p>
+<p><span class="math display">\[e_{ij}=\frac{m_{i*}\ast
+m_{*j}}{N}\]</span></p>
+<div class="fluid-row">
 <div class="col-md-2">
 <p>pl.</p>
 <p><span
-class="math inline">\(e_{11}=\frac{50\times100}{200}=25\)</span><br />
+class="math inline">\(e_{11}=\frac{50\ast100}{200}=25\)</span><br />
 <span
-class="math inline">\(e_{12}=\frac{50\times40}{200}=10\)</span><br />
+class="math inline">\(e_{12}=\frac{50\ast40}{200}=10\)</span><br />
 <span
-class="math inline">\(e_{13}=\frac{50\times60}{200}=15\)</span><br />
+class="math inline">\(e_{13}=\frac{50\ast60}{200}=15\)</span><br />
 <span
-class="math inline">\(e_{21}=\frac{80\times100}{200}=40\)</span><br />
+class="math inline">\(e_{21}=\frac{80\ast100}{200}=40\)</span><br />
 stb.</p>
 </div>
-<div class="col-md-8">
+<div class="col-md-10">
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:expected">
 <caption style="caption-side: top; text-align: center;">Elméleti kereszttábla (várt esetszámok)</caption><col><col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;"></th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia nem</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia alap</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">francia jól</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: bold;">összesen</th></tr>
@@ -476,7 +477,7 @@ stb.</p>
 </table>
 
 </div>
-<p>::::</p>
+</div>
 <p>Ezek után kiszámíthatjuk a χ² teszt eredményét: <span
 class="math display">\[\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}=
 \\ =\frac{\left(30-25\right)^2}{25}+
@@ -485,7 +486,7 @@ class="math display">\[\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{
 =9,571\]</span></p>
 <p>A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó
 egymástól független, <span class="math inline">\(df =
-(s-1)\times(o-1)=(3-1)\times(3-1)=4\)</span> szabadságfokú χ² eloszlást
+(s-1)\ast(o-1)=(3-1)\ast(3-1)=4\)</span> szabadságfokú χ² eloszlást
 követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a
 <span class="math inline">\(\chi^2_{0,95;4}=9,49\)</span> határérték
 felel meg.</p>
@@ -570,8 +571,8 @@ akik franciául nem tudnak).</p>
 <p>Mivel 3x3-as kereszttábláról van szó (mindkét dimenzió &gt; 2), ezért
 a φ nem megfelelő mutató. Ehelyett a Cramer-féle V-t használhatjuk:
 <span class="math display">\[Cramer V =
-\sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}= \\
-=\sqrt{\frac{9,571}{200\times(3-1)}}=0,155\]</span> Eszerint tehát egy
+\sqrt{\frac{\chi^2}{N\ast\left(min\left(s;o\right)-1\right)}}= \\
+=\sqrt{\frac{9,571}{200\ast(3-1)}}=0,155\]</span> Eszerint tehát egy
 gyenge összefüggés van a két nyelv ismerete között, hiszen a [0;1]
 skálán egyértelműen a 0 végponthoz közeli értéket kaptunk.</p>
 </div>
@@ -647,11 +648,11 @@ sor), és egyúttal jobban beszélnek franciául is (2. és 3. oszlop)</p>
 
 <p>Hány konkordáns párt jelent ez?</p>
 <p>Nézzük először a 2. sor 2. oszlopában lévő cellával: a 30 személy a
-20 személlyel <span class="math inline">\(30\times 20=600\)</span>
+20 személlyel <span class="math inline">\(30\ast 20=600\)</span>
 konkordáns párt alkot. A 2. sor 3. oszloppal <span
-class="math inline">\(30\times 30 = 900\)</span> párt alkotnak, stb. Ez
-összesen: <span class="math inline">\(30\times
-(20+30+10+20)=2400\)</span> konkordáns pár</p>
+class="math inline">\(30\ast 30 = 900\)</span> párt alkotnak, stb. Ez
+összesen: <span class="math inline">\(30\ast (20+30+10+20)=2400\)</span>
+konkordáns pár</p>
 <p>Lépjünk egyet jobbra az első sorban: az 1. sor 2. oszlopában lévő 10
 személy további konkordáns pártokat alkot a 3. oszlop 2. és 3. sorában
 lévő cellákkal.</p>
@@ -668,8 +669,8 @@ lévő cellákkal.</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">100</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">200</td></tr>
 </table>
 
-<p>Ez összesen <span class="math inline">\(10\times (30+20) =
-500\)</span> további konkordáns párt jelent.</p>
+<p>Ez összesen <span class="math inline">\(10\ast (30+20) = 500\)</span>
+további konkordáns párt jelent.</p>
 <p>Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot
 konkordáns párt, hiszen mindenki legalább olyan jól beszél angolul, mint
 ők, de mindenki legfeljebb annyira beszél jól franciául, vagyis
@@ -688,7 +689,7 @@ akik mindkét nyelvből gyengébbek). Léphetünk a második sorra.</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">összesen</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">100</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0pt 0pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">60</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0.4pt;    padding: 4pt 4pt 4pt 4pt; font-weight: bold;">200</td></tr>
 </table>
 
-<p>Ez további <span class="math inline">\(30\times (10+20)=900\)</span>
+<p>Ez további <span class="math inline">\(30\ast (10+20)=900\)</span>
 konkordáns pár.</p>
 <p>Végül a 2. sor 2. oszlopában található 20 személy a jobb alsó
 sarokban lévő 20 személlyel 400 konkordáns párt alkot. Felvethető, hogy
@@ -770,10 +771,10 @@ párokat.</p>
 </table>
 
 <p>A diszkordáns párok száma:</p>
-<p><span class="math inline">\(10\times (30+20+40+10)=1000\)</span> <br>
-<span class="math inline">\(10\times (30+40)=700\)</span> <br> <span
-class="math inline">\(30\times (40+10)=1500\)</span> <br> <span
-class="math inline">\(20\times 40 = 800\)</span> <br> Összesen: <span
+<p><span class="math inline">\(10\ast (30+20+40+10)=1000\)</span> <br>
+<span class="math inline">\(10\ast (30+40)=700\)</span> <br> <span
+class="math inline">\(30\ast (40+10)=1500\)</span> <br> <span
+class="math inline">\(20\ast 40 = 800\)</span> <br> Összesen: <span
 class="math inline">\(1000+700+1500+800=4000\)</span> <br></p>
 <p>A Gamma képlete a következő: <span class="math display">\[\gamma =
 \frac{pár_{konkordáns} - pár_{diszkordáns}}{pár_{konkordáns} +
@@ -815,14 +816,14 @@ következők:</p>
 
 <p>Hogy lássuk, mely eltérések szignifikánsak, számítsuk ki a korrigált
 (<em>adjusted</em>) standardizált reziduálisokat:<br />
-<span class="math inline">\(r_{11}^{(a)}=\frac{30-25}{\sqrt{25\times
-\left(1-\frac{50}{200}\right)\times\left(1-\frac{100}{200}\right)}}=1,63\)</span><br />
-<span class="math inline">\(r_{12}^{(a)}=\frac{10-10}{\sqrt{10\times
-\left(1-\frac{50}{200}\right)\times\left(1-\frac{40}{200}\right)}}=0\)</span><br />
-<span class="math inline">\(r_{13}^{(a)}=\frac{10-15}{\sqrt{15\times
-\left(1-\frac{50}{200}\right)\times\left(1-\frac{60}{200}\right)}}=-1,78\)</span><br />
-<span class="math inline">\(r_{21}^{(a)}=\frac{30-40}{\sqrt{40\times
-\left(1-\frac{80}{200}\right)\times\left(1-\frac{100}{200}\right)}}=0\)</span><br />
+<span class="math inline">\(r_{11}^{(a)}=\frac{30-25}{\sqrt{25\ast
+\left(1-\frac{50}{200}\right)\ast\left(1-\frac{100}{200}\right)}}=1,63\)</span><br />
+<span class="math inline">\(r_{12}^{(a)}=\frac{10-10}{\sqrt{10\ast
+\left(1-\frac{50}{200}\right)\ast\left(1-\frac{40}{200}\right)}}=0\)</span><br />
+<span class="math inline">\(r_{13}^{(a)}=\frac{10-15}{\sqrt{15\ast
+\left(1-\frac{50}{200}\right)\ast\left(1-\frac{60}{200}\right)}}=-1,78\)</span><br />
+<span class="math inline">\(r_{21}^{(a)}=\frac{30-40}{\sqrt{40\ast
+\left(1-\frac{80}{200}\right)\ast\left(1-\frac{100}{200}\right)}}=0\)</span><br />
 stb.</p>
 <p>Kiszámítva ezeket látható, hogy egyetlen olyan cella van, amelyben az
 eltérés szignifikáns, mégpedig angolul alapszinten és franciául nem
