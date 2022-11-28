@@ -1,5 +1,5 @@
 ---
-title: "ANOVA alapjai"
+title: "Egyszempontos ANOVA alapjai"
 output: 
   html_document:
     toc: true
@@ -19,16 +19,16 @@ library(kableExtra)
 ```
 <br><br>  
 
-A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVA-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgált, a t-próba (és társai) hipotéziseire emlékeztet.
+A félév utolsó témája az egyszempontos ANOVA. A betűszó az ANalysis of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontos varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és többszempontos is, amely több független változó hatását, és akár azok interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVA-t írok mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet vizsgál, a t-próba (és társai) hipotéziseire emlékeztet.
 <br><br>  
 
 ## Várható értékre vonatkozó próbák
 <br>  
 
-A t-próba, Welch-próba, illetve nemparaméteres megfelelőjük, a Mann-Whitney-próba arra szolgált, hogy megvizsgáljuk, két populációban (vagy egy populáció két szegmensében: pl. férfiak és nők, akik választottak és akik nem, stb.) eltér-e egy intervallum- vagy arányskála mérési szintű változó középértéke. A t-próba és a Welch-próba a várható érték (átlag), a Mann-Whitney-próba pedig a medián eltérését vizsgálta. 
+A t-próba, Welch-próba, illetve nemparaméteres megfelelőjük, a Mann-Whitney-próba arra szolgált, hogy megvizsgáljuk, két független populációban (vagy egy populáció két független szegmensében: pl. férfiak és nők, akik választottak és akik nem, stb.) eltér-e egy intervallum- vagy arányskála mérési szintű változó középértéke. A t-próba és a Welch-próba a várható érték (átlag), a Mann-Whitney-próba pedig a medián eltérését vizsgálta. 
 <br>  
 
-Vannak helyzetek, amikor kettőnél több populációban (egy populáció kettőnél több csoportjában) szeretnénk megvizsgálni valaminek az átlagát. Pl. felekezetenként vizsgáljuk az egyházak iránti bizalmat, és vannak a katolikusok, reformátusok, evangélikusok, egyéb protestáns felekezetek, egyéb keresztény felekezetek, nem keresztény felekezetek, felekezeten kívüliek, stb. 
+Vannak helyzetek, amikor kettőnél több populációban (egy populáció kettőnél több csoportjában) szeretnénk megvizsgálni valaminek az átlagát. Pl. felekezetenként vizsgáljuk az egyházak iránti bizalmat, és vannak a katolikusok, reformátusok, evangélikusok, egyéb protestáns felekezetek, egyéb keresztény felekezetek, nem keresztény felekezetek, felekezeten kívüliek, ateisták stb. 
 <br>  
 
 Ha ilyen esetekben t-próbákat használnánk, a következő problémával kellene számolni: még ha igaz is a nullhipotézis, mely szerint nincs különbség a várható értékek között, akkor is 5% annak a valószínűsége, hogy szignifikáns próbát kapunk a mintavételből adódóan. Tegyük fel, hogy egyik páronkénti különbség sem valós. Ebben az esetben minden próba esetében 0,95 annak a valószínűsége, hogy helyesen döntünk: megtartjuk a $H_0: \mu_1=\mu_2$ nullhipotézist.  
@@ -52,20 +52,22 @@ table <- data.frame(groups,
 table
 ```  
   
-Láthatják, hogy a csoportok számának növekedésével gyors ütemben csökken annak a valószínűsége, hogy jól döntünk, és nő annak a valószínűsége, hogy kapunk legalább egy tévesen szignifikáns eredményt.  
-<br>
-A páronkénti t-próbák helyett ezért az egyutas ANOVA-t használjuk. Ez a következő nullhipotézist vizsgálja:
+Láthatják, hogy a csoportok számának növekedésével gyors ütemben csökken annak a valószínűsége, hogy jól döntünk, és nő annak a valószínűsége, hogy kapunk legalább egy tévesen szignifikáns eredményt. A páronkénti t-próbák helyett ezért az egyutas ANOVA-t használjuk.  
+  
+
+Ez a következő nullhipotézist vizsgálja:
 $$H_0: \mu_1=\mu_2=...=\mu_k$$
-Vagyis: a változó várható értéke mindegyik populációban/csoportban egyenlő.
+Vagyis: a változó várható értéke mindegyik populációban/csoportban egyenlő.  
+
 Az ellenhipotézis a következőképpen írható fel:  
 $$H_1: \neg(\mu_1=\mu_2=...=\mu_k)$$
-Vagyis: nem igaz, hogy az összes várható érték egyenlő. De az nem szükséges, hogy egyik egyenlőség se teljesüljön.   
+Vagyis: nem igaz, hogy az összes várható érték egyenlő. Másképpen: legalább az egyik páronkénti különbség szignifikáns. **De az nem szükséges, hogy egyik egyenlőség se teljesüljön.**   
 <br><br>  
 
 ## Az ANOVA feltételei
 <br>  
 
-Az ANOVA-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képzünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.  
+Az ANOVA-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A független változó nominális vagy ordinális, amely szerint csoportokat képezünk. A függő változó intervallum- vagy arányskála mérési szintű. Ennek várható értékét vizsgáljuk az egyes csoportokban.  
   
 
 pl. több országban vizsgáljuk az átlagos jövedelmet, több különböző szakon vizsgáljuk az egyetemmel való elégedettséget, stb.  
@@ -78,64 +80,72 @@ Az ANOVA alkalmazásának további feltétele, hogy
 - a függő változó szórása minden csoportban azonosnak tekinthető (szóráshomogenitás)
 - az egyes csoportok mintaelemszámai hasonlók
   
-Az első feltétel teljesülését normalitásvizsgálattal (pl. Kolmogorov-Smirnov, Shapiro-Wilk, stb.), a második feltétel teljesülését pedig ún. Levene-próbával vizsgálhatjuk. Ezeket nem nézzük meg, a megfelelő statisztikai programokkal ezek elvégezhetők.
+Az első feltétel teljesülését normalitásvizsgálattal (pl. Kolmogorov-Smirnov, Shapiro-Wilk, stb.), a második feltétel teljesülését pedig ún. Levene-próbával vizsgálhatjuk. Ezeket nem nézzük meg, a megfelelő statisztikai programokkal ezek elvégezhetők.  
+
+*Megj: A Levene-próba a gyakorlatban a csoportátlagoktól való abszolút eltérésekre ($|x_{ij}-\bar{x_i}|$) elvégzett ANOVA.*
 
 <br><br>  
 
-## Az egyszempontú ANOVA logikája
+## Az ANOVA logikája
 <br>  
 
-Mint írtam, az egyszempontú ANOVA logikája ugyanaz, mint a regresszióé, úgyhogy nézzük, annak mi volt a logikája.
-Vegyük azt a példát, hogy a vizsga eredményét becsüljük a felkészülésre fordított idő alapján. A hallgatók vizsgaeredményei különböznek. Ezeket a különbségeket igyekszünk magyarázni a felkészülési idővel. A különbségek teljes mértékét mértük az SST-vel.  
+Az egyszempontos ANOVA logikája ugyanaz, mint a regresszióé:  
+
+Vegyük azt a példát, hogy a vizsga eredményét becsüljük a felkészülésre fordított idő alapján. A hallgatók vizsgaeredményei különböznek. Ezeket a különbségeket igyekszünk magyarázni a felkészülési idővel. A különbségek teljes mértékét mértük az **SST**-vel.  
   
 
-A hallgatók vizsgaeredményeinek különbségeit bizonyos mértékben a felkészülésre fordított idő különbségei magyarázzák: aki többet készült, várhatóan nem ugyanannyi pontra számíthat, mint aki kevesebbet készült. Ez a különbségeknek az a része, amit a modellel meg tudunk magyarázni. Ezt jelöltük SSR-rel.  
+A hallgatók vizsgaeredményeinek különbségeit bizonyos mértékben a felkészülésre fordított idő különbségei magyarázzák: aki többet készült, várhatóan nem ugyanannyi pontra számíthat, mint aki kevesebbet készült. Ez a különbségeknek az a része, amit a modellel meg tudunk magyarázni. Ezt jelöltük **SSR**-rel.  
   
 
 Ezen túl viszont azoknak az eredménye is különbözik valamennyire, akik ugyanannyit készültek. Ebben számos oknak lehet szerepe: az egyiknek eleve jobban megy a tantárgy, jobb napja volt, a tanár részrehajló, segítőkészebb volt a szomszédja, szerencséje volt, és jobban tippelt, stb.
-Ez utóbbi a különbségeknek az a része, amit nem tudunk megmagyarázni. Ezt jelöltük SSH-val.  
+Ez utóbbi a különbségeknek az a része, amit nem tudunk megmagyarázni. Ezt jelöltük **SSH**-val. 
+
+A megmagyarázott és megmagyarázatlan rész együtt adja a különbségek teljes mértékét: $SST = SSR + SSH$
 
 <br>  
 
 Az ANOVA-nál ugyanez a logika, csak más típusúak a változók. Tegyük fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik más-más csoportot írtak, más-más eredményt értek-e el.  
 
-Lesz a különbségeknek egy része, amely azzal magyarázható, hogy két ember nem ugyanazt a csoportot írta. Ezek a csoportok közötti különbségek - SSK-val fogjuk jelölni (K mint Külső vagy csoportok Közötti eltérések négyzetösszege).  
+Lesz a különbségeknek egy része, amely azzal magyarázható, hogy két ember nem ugyanazt a csoportot írta. Ezek a csoportok közötti különbségek - **SSK**-val fogjuk jelölni (K mint Külső vagy csoportok Közötti eltérések négyzetösszege).  
 
-De biztos vannak különbségek az egyes csoportokon belül is: ez a különbségeknek az a része, amit nem tudunk azzal megmagyarázni, hogy két személy más-más csoportot írt volna. Ezeket más okok magyarázzák. Ezeket a különbségeket jelöli majd az SSB (B mint Belső vagy csoporton Belüli különbségek négyzetösszege).  
-A kettő összege ebben az esetben is kiadja a teljes négyzetösszeget: SST-t.  
-
-<br>  
-Az ANOVA azt vizsgálja majd, kellően nagyok-e a csoportok közötti különbségek a csoportokon belüli különbségekhez képest ahhoz, hogy elvessük a nullhipotézist.  
+De biztos vannak különbségek az egyes csoportokon belül is: ez a különbségeknek az a része, amit nem tudunk azzal megmagyarázni, hogy két személy más-más csoportot írt volna. Ezeket más okok magyarázzák. Ezeket a különbségeket jelöli majd az **SSB** (B mint Belső vagy csoporton Belüli különbségek négyzetösszege).  
+A kettő összege ebben az esetben is kiadja a teljes négyzetösszeget: $SST = SSK + SSB$.  
 
 <br>  
-Érdemes megnézni <a href="https://seeing-theory.brown.edu/regression-analysis/index.html#section3" target="_blank">ezt az oldalt</a>, ahol találnak olyan példa adatokat, amelyek között vannak, amelyekre szignifikáns, és olyanok, amelyekre nem szignifikáns az ANOVA. Az adatokat meg is változtathatják, a pontok áthúzásával, és megnézhetik, hogyan változik az ANOVA eredménye attól függően, hogyan állnak a pontok. Ha a csoportokon belül jobban szórónak a pontok, és ha a csoportátlagok közelebb kerülnek egymáshoz, akkor csökken az ANOVA (F-próba) értéke. Egy ponton túl a szignifikanciaszint is észrevehető mértékben megnő.
+Az ANOVA azt vizsgálja majd, kellően nagyok-e a csoportok közötti különbségek (SSK) a csoportokon belüli különbségekhez (SSB) képest ahhoz, hogy elvessük a nullhipotézist.  
+
+<br>  
+Érdemes megnézni <a href="https://seeing-theory.brown.edu/regression-analysis/index.html#section3" target="_blank">ezt az oldalt</a>, ahol találnak olyan példa adatokat, amelyek között vannak, amelyekre szignifikáns, és olyanok, amelyekre nem szignifikáns az ANOVA. Az adatokat meg is változtathatják, a pontok mozgatásával, és megnézhetik, hogyan változik az ANOVA eredménye attól függően, hogyan állnak a pontok. Ha a csoportokon belül jobban szórónak a pontok, és ha a csoportátlagok közelebb kerülnek egymáshoz, akkor csökken az ANOVA (F-próba) értéke. Egy ponton túl a szignifikanciaszint is észrevehető mértékben megnő.
 <br><br>  
 
 ## Az ANOVA kiszámítása
 <br>  
 
 Az ANOVA kiszámításához a fenti SSB és SSK értékekre van szükségünk.  
-Az SSB-t, a csoporton belüli eltérések négyzetösszegét úgy kapjuk, hogy minden egyes csoportban, minden egyes megfigyelési egységre kiszámítjuk az adott csoport átlagától (ez egyben az adott személyre adott becslésünk) való eltérést, és ezeket az eltéréseket négyzetre emelve összeadjuk:
+Az SSB-t, a csoporton belüli eltérések négyzetösszegét úgy kapjuk, hogy minden egyes csoportban, minden egyes megfigyelési egységre kiszámítjuk az adott csoport átlagától (ez egyben az adott személyre adott becslésünk) való eltérést, és ezeket az eltéréseket négyzetre emelve összeadjuk:  
+
 $$\textit{SSB} = \sum_{i=1}^{K}\sum_{j=1}^{N_i}\left(x_{ij}-\bar{x}_i\right)^2$$  
 A fenti képletben $K$ a csoportok száma, $i$ jelöli, melyik csoportról van épp szó, $N_i$ az adott csoport elemszáma, $x_{ij}$ az i. csoport j. tagjának értéke, az $\bar{x}_i$ pedig az i. csoport átlaga.  
+  
+
 Az SSK-t, a csoportok közötti eltérések négyzetösszegét úgy kapjuk, hogy minden megfigyelési egység esetében az adott csoport átlagával (az adott megfigyelési egységre adott becslésünkkel) számolunk, és így kiszámítjuk az eltérést a minta összátlagához (másképp: a főátlaghoz) képest, és ezeknek az eltéréseknek vesszük a négyzetösszegét:
-$$\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2$$  
+$$\textit{SSK}=\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2$$  
 A fenti képletben $\bar{\bar{x}}$ jelöli a főátlagot, ami egyszerűen az $x$ változó átlaga a minta egészében.  
 <br>  
 
-### Az ANOVA kiszámítása leíró statisztikákból
+### Kiszámítás leíró statisztikákból
 <br>  
 A fenti számítás nagy minták esetén elég sok számolással járna, ezért a szemináriumon nem közvetlenül az egyes megfigyelési egységek $x$ értékeiből indulunk ki, hanem a csoportokra vonatkozó statisztikai mutatókból: az $\bar{x}_i$ csoportátlagból és az $s_i^*$ szórásból.  
 Az SSB kiszámításához a csoportokon belüli négyzetes eltérések összegét kell tudnunk kiszámítani, ami a szórásból megkapható. Az i. csoporton belüli szórás képlete: 
 $$s_i^*=\sqrt{\frac{\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}}{N_i-1}}$$  
 Az egyenletet négyzetre emelve, majd $(N_i-1)$-gyel szorozva kapjuk:
-$$\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}$$  
+$$\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)\ast s_i^{*2}$$  
 Ha ezt minden csoportra kiszámítjuk, és összeadjuk, megkapjuk az SSB-t:
-$$\textit{SSB}=\sum_{i=1}^{K}{\left(N_i-1\right)*s_i^{*2}}$$  
+$$\textit{SSB}=\sum_{i=1}^{K}{\left(N_i-1\right)\ast s_i^{*2}}$$  
 Az SSK kiszámításához a főátlag (az egész minta átlaga) kiszámítása szükséges. Ezt a csoportátlagok súlyozott átlagaként kapjuk meg:
-$$\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}$$
+$$\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}$$
 Ezután már csak be kell helyettesíteni az SSK képletébe:
-$$\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2$$
+$$\textit{SSK}=\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2$$
 Az ANOVA maga egy F-próba, amely hasonlít a regressziónál nézett F-próbára:  
 
 - A számláló a megmagyarázott rész (ott SSR, itt SSK) osztva a szabadságfokával (ott r, itt K-1)
@@ -143,8 +153,8 @@ Az ANOVA maga egy F-próba, amely hasonlít a regressziónál nézett F-próbár
 - Az F-próba ennek a kettőnek a hányadosa  
 
 Jelöljük $\textit{VAR}_K$-val (máshol $MS_K$ jelöléssel is találkozhatnak) a számlálóban szereplő törtet, $\textit{VAR}_B$-vel (vagy $MS_B$) pedig a nevezőben szereplőt:
-$$\textit{VAR}_K=\frac{\textit{SSK}}{K-1}=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}$$
-$$\textit{VAR}_B=\frac{\textit{SSB}}{N-K}=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}$$
+$$\textit{VAR}_K=\frac{\textit{SSK}}{K-1}=\frac{\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}$$
+$$\textit{VAR}_B=\frac{\textit{SSB}}{N-K}=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast s_i^{*2}}}{N-K}$$
 $$F=\frac{\textit{VAR}_K}{\textit{VAR}_B}$$
 Ez a próba igaz nullhipotézis esetén $F(K-1; N-K)$ eloszlást követ, vagyis $df_1=K-1$ és $df_2=N-K$. Ha a próba értéke nagyobb a megfelelő határértéknél, akkor a próba szignifikáns különbséget mutat, a $H_0: \mu_1=\mu_2=...=\mu_k$ nullhipotézist elvetjük.  
 Ha a próba értéke kisebb a határértéknél, akkor megtartjuk a nullhipotézist.
@@ -206,14 +216,14 @@ Egyszerűen mindent kiszámítunk szép sorban, ahogy a képletgyűjteményben i
 
 $$
 \begin{align}
-\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{`r paste(ns, "*", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}=\frac{`r paste(ns, "\ast", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
 \\
-\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
-      &=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round(2), "\\right)^2", collapse = " + ")`}
+\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
+      &=\frac{`r paste0(ns, " \ast \\left(", means, " - ", main.mean %>% round(2), "\\right)^2", collapse = " + ")`}
       {`r k`-1}= \\
-      &=\frac{`r paste0(ns, " * ", ob, (means-main.mean) %>% round(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+      &=\frac{`r paste0(ns, " \ast ", ob, (means-main.mean) %>% round(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
 \\
-\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right) \ast", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
       &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
 \\
 F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
@@ -246,7 +256,7 @@ Ha az ANOVA eredménye szignifikáns különbségeket jelez, meg kell vizsgálnu
 Nézzük meg, hogyan működik a Scheffé-próba. Ha az interneten keresnek, sokféle változatával találkoznak, mi egyet nézünk meg ezek közül. Ennek előnye, hogy a kapott eredményeket ugyanúgy kell értelmezni, mint az F-próba eredményét, ráadásul a határérték is ugyanaz marad.  
   
 A Scheffé-féle post-hoc próba képlete:
-$$F_{ij}=\frac{\left(\bar{x}_i-\bar{x}_j\right)^2}{\textit{VAR}_B*(K-1)*\left(\frac{1}{N_i}+\frac{1}{N_j}\right)}$$
+$$F_{ij}=\frac{\left(\bar{x}_i-\bar{x}_j\right)^2}{\textit{VAR}_B\ast(K-1)\ast\left(\frac{1}{N_i}+\frac{1}{N_j}\right)}$$
   
 A számlálóban a két vizsgált csoport átlaga különbségének négyzete szerepel, a nevezőben pedig az ANOVA próbához kiszámított $\textit{VAR}_B$ értéke, szorozva a csoportok száma mínusz 1-gyel, illetve a két vizsgált csoport mintanagysága reciprokának összegével.  
 <br>  
@@ -260,7 +270,7 @@ for (i in 1:(nrow(data)-1)) {
             divide_by(varb*(k-1)*(1/ns[i]+1/ns[j]))
     cat(paste0(rownames(data)[i], " és ", rownames(data)[j]), ":")
     eq <- paste0("$$F_{", i, j, "} = \\frac{\\left(", means[i], "-", means[j], "\\right)^2}{",
-                  varb,"*(", k, "-1)*\\left(\\frac{1}{", ns[i], "}+\\frac{1}{", ns[j],"}\\right)}=\\frac{", 
+                  varb,"\\ast(", k, "-1)\\ast\\left(\\frac{1}{", ns[i], "}+\\frac{1}{", ns[j],"}\\right)}=\\frac{", 
                   (means[i]-means[j])**2 ,"}{", varb %>% multiply_by(k-1) %>% multiply_by(1/ns[i]+1/ns[j]) %>% 
                   round(2), "}=", test %>% round(2))
     if (test > qf(0.95, df1, df2)) {
@@ -283,8 +293,8 @@ $$\eta^2=\frac{\textit{SSK}}{\textit{SST}}=\frac{\textit{SSK}}{\textit{SSK}+\tex
 Ha esetleg korábban nem jegyeztük fel az $\textit{SSK}$-t és $\textit{SSB}$-t, akkor azok "visszafejthetők" a $\textit{VAR}_K$ és $\textit{VAR}_B$ értékekből:
 $$
 \begin{aligned}
-\textit{SSK} &= \textit{VAR}_K*(K-1) \\
-\textit{SSB} &= \textit{VAR}_B*(N-K)
+\textit{SSK} &= \textit{VAR}_K\ast(K-1) \\
+\textit{SSB} &= \textit{VAR}_B\ast(N-K)
 \end{aligned}
 $$
   

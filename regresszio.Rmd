@@ -21,12 +21,6 @@ library(patchwork)
 ```
 <br><br>  
 
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
 
 ## Korreláció és regresszió  
 <br><br>
@@ -34,7 +28,7 @@ Most teszünk egy kis kitérőt: míg eddig hipotézisvizsgálati módszereket n
 A korrelációnál már beszéltünk arról, hogy ha két változó lineárisan összefügg, akkor a két változó kapcsolatát ábrázoló pontfelhő jellemzően többé-kevésbé (minél erősebb az összefüggés, annál inkább) illeszkedik egy egyeneshez.  
 Emlékeztetőül álljon itt ismét az ott bemutatott ábra a férfiak és nők, illetve szüleik magassága közötti összefüggésről:  
 
-```{r Galton, fig.height = 8, message = FALSE}
+```{r Galton, fig.height = 8, message = FALSE, warning=FALSE}
 data(GaltonFamilies)
 GaltonFamilies <- GaltonFamilies %>% mutate(
   father = father * 2.54,
@@ -56,7 +50,8 @@ galton.plot + geom_point(alpha = 0.3) +
 
 Látható, hogy mindkét ábrán a szaggatott egyenes viszonylag jól jellemzi a két változó közötti kapcsolatot. Ugyan a pontok nagy része nem az egyenesen fekszik, de viszonylag egyenlően oszlanak meg az egyenesek két oldalán. A lineáris regresszió, akárcsak a Pearson-féle korrelációs együttható akkor használható jól, ha két változó között feltételezhetően ilyen lineáris kapcsolat van. Most viszont nem azt nézzük, hogy van-e kapcsolat a populációban is, és hogy az milyen erős, hanem ezeknek az egyeneseknek a képletét fogjuk keresni.  
   
-A regresszió és a korreláció sok tekintetben hasonló (a kiszámítás menetében is az lesz), sok tekintetben viszont más:  
+A regresszió és a korreláció sok tekintetben hasonló (a kiszámítás menetében is az lesz), sok tekintetben viszont más:   
+
 - A korrelációnál arra voltunk kíváncsiak, összefügg-e két változó, és ha igen, milyen irányú és erősségű az összefüggés.
 - A regressziónál egy modellt fogunk kapni, amely ezt a kapcsolatot minél jobban leírja. A kapott modell arra is alkalmas lesz, hogy valakinél előrejelezzük, milyen értéket vesz fel egy változón, a modellbe bevont magyarázó változók ismeretében.
 <br>  
@@ -64,6 +59,7 @@ A regresszió és a korreláció sok tekintetben hasonló (a kiszámítás menet
 - A korreláció nem feltétlenül jelent oksági kapcsolatot, együttjárást jelent. Szimmetrikus mutató, x és y változó, illetve y és x változó között ugyanakkora a korreláció, a két változó közül nem kell kijelölni egy függő és egy független változót.
 - A regressziónál lesz egy függő változó, amelyet a független változó(k) segítségével próbálunk becsülni. Nem szimmetrikus: az x alapján y-ra felállított regressziós modell nem azonos az y alapján x-re felállított modellel.  
   
+
 ## A használt változók  
 
 <br>  
@@ -89,6 +85,8 @@ Nézzük meg, mit jelentenek az egyes paraméterek:
 
 - $b_0$: Ha *x* helyébe 0-t helyettesítünk, $y = b_0 + b_1*0 = b_0$ értéket vesz fel. Vagyis $b_0$ jelöli, hol metszi az egyenes az *y* tengelyt. Ez történhet az x tengely alatt (alább: kék egyenes) vagy fölött (piros egyenes) is.  
 - $b_1$: Ahhoz, hogy meglássuk, mit jelent a $b_1$ paraméter, helyettesítsünk $x+1$-et $x$ helyébe, és nézzük meg, mennyit változik $y$ értéke: $y_2 = b_0 + b_1*(x+1)=b_0+b_1*x+b_1$. Ha ebből kivonjuk az $y_1 = b_0 + b_1*x$-et, akkor a különbség: $y_2-y_1=b_0+b_1*x+b_1-(b_0+b_1*x)=b_1$-et kapunk, vagyis ha $x$ értéke egy egységnyit változik, akkor $y$ értéke $b_1$-nyit változik. Ez az egyenes meredeksége. Ez lehet pozitív (kék egyenes) vagy negatív (piros egyenes).  
+  
+
 Ezt a két paramétert kell becsülni.  
 
 ```{r parameters, message = FALSE, warning = FALSE, fig.width=12, fig.height = 3}

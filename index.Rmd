@@ -40,10 +40,10 @@ Megbeszéljük, de előreláthatólag az e-mail / MS Teams / sli.do / megosztott
 
 ## Értékelés módja:  
 <br>
-A félév során ezúttal is két zárthelyi lesz. Hacsak nem változik a félév rendje:  
+A félév során ezúttal is két zárthelyi lesz. A félév rendjének változása következtében **a második ZH az eredeti tervnél korábban lesz megtartva**:  
 
 1. ZH: 2022. október 26. az 1-2. témakörből (kereszttábla + korreláció)
-2. ZH: 2022. december 14. a 3-4. témakörből (regresszió + ANOVA)
+2. ZH: 2022. december 7. a 3-4. témakörből (regresszió + ANOVA)
 
 A ZH-khoz minden kapott segédeszközt (képletgyűjtemény, eloszlástáblák, órai jegyzetek, házi feladatok megoldásai, stb.) használhatnak. Ezek közül képletgyűjteményt (A5 méretben) és eloszlástáblákat kapnak tőlem.  
 

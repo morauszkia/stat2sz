@@ -217,11 +217,11 @@ Ha a két változó **független egymástól**, akkor arra számítunk, hogy a f
 
 Ahhoz, hogy megállapítsuk, a mintában megfigyelt eltérés tulajdonítható-e a mintavételnek, vagy ilyen jelentős eltérésnek kicsi a valószínűsége függetlenség esetén, szükségünk van valamire, amihez viszonyíthatunk. Ez az **elméleti kereszttábla**. SPSS-ben ezek az *expected count* értékek (várt gyakoriság).
 
-Tudjuk, hogy független események esetében az együttes bekövetkezés valószínűsége egyenlő a két esemény valószínűségének a szorzatával ($P(A*B)=P(A)\times P(B)$). Az elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak a belső cellákat számoljuk újra, feltételezve a függetlenséget.
+Tudjuk, hogy független események esetében az együttes bekövetkezés valószínűsége egyenlő a két esemény valószínűségének a szorzatával ($P(A\ast B)=P(A)\ast P(B)$). Az elméleti kereszttáblát úgy számítjuk ki, hogy a mintanagyságot, illetve a marginálisokat (a két változó eloszlását külön-külön) meghagyjuk, csak a belső cellákat számoljuk újra, feltételezve a függetlenséget.
 
 Annak a valószínűségét, hogy a válaszadó férfi vegyük $P(F) = \frac{45}{100}=45\%$-nak, annak a valószínűségét, hogy tetszett nekik a film pedig $P(T)=\frac{60}{100}=60\%$-nak.  
 
-Tudjuk, hogy függetlenség esetén $P(F*T) = P(F) \times P(T)=0,45 \times 0,6 = 0,27 = 27\%$  
+Tudjuk, hogy függetlenség esetén $P(F\ast T) = P(F) \ast P(T)=0,45 \ast 0,6 = 0,27 = 27\%$  
 
 Ahhoz, hogy kiszámítsuk, hány olyan férfinak kellett volna lennie a mintában, akinek tetszett a film, ezt a valószínűséget be kell szorozni a minta nagyságával.  
 
@@ -229,11 +229,11 @@ Ezeket az értékeket fogjuk e~i,j~-vel jelölni ("e" mint *expected* vagy *elm�
 
 A férfiak esetében tehát így kaptuk az eredményt (az eredeti valószínűségeket is visszavezetve, szétírva):
 
-$P(F*T)\times 100 = P(F)\times P(T) \times 100 =\frac{45}{100} \times \frac{60}{100} \times 100 = \frac{45\times60}{100}$
+$P(F \ast T)\ast 100 = P(F)\ast P(T) \ast 100 =\frac{45}{100} \ast \frac{60}{100} \ast 100 = \frac{45\ast60}{100}$
 
 Vagyis, ha megnézik, a megfelelő érték megkapható úgy, hogy a sormarginálist (45) szorozzuk az oszlopmarginálissal (60) és osztjuk a mintanagysággal (100)
 
-$$e_{ij}=\frac{m_{i*}\times m_{*j}}{N}$$
+$$e_{ij}=\frac{m_{i*}\ast m_{*j}}{N}$$
 
 A vizsgált kereszttábla négy cellájára ez: 
 
@@ -241,10 +241,10 @@ A vizsgált kereszttábla négy cellájára ez:
 
 ::: {class="col-md-2"}
 
-$e_{11}=\frac{45\times 40}{100}=18$  
-$e_{12}=\frac{45\times 60}{100}=27$  
-$e_{21}=\frac{55\times 40}{100}=22$  
-$e_{22}=\frac{55\times 60}{100}=33$  
+$e_{11}=\frac{45\ast 40}{100}=18$  
+$e_{12}=\frac{45\ast 60}{100}=27$  
+$e_{21}=\frac{55\ast 40}{100}=22$  
+$e_{22}=\frac{55\ast 60}{100}=33$  
 
 :::
 
@@ -293,7 +293,7 @@ Az ellenhipotézis, hogy a két változó **nem** független.
 Végezzük el a próbát:
 $$\chi^{2}=\frac{(12-18)^2}{18}+\frac{(33-27)^2}{27}+\frac{(28-22)^2}{22}+\frac{(27-33)^2}{33}=6,06$$
 
-Ha a nullhipotézis igaz, a fenti próba &chi;&sup2; eloszlást követ, amelynek szabadságfoka $df = (s-1)\times(o-1) = (2-1)\times(2-1)= 1$
+Ha a nullhipotézis igaz, a fenti próba &chi;&sup2; eloszlást követ, amelynek szabadságfoka $df = (s-1)\ast(o-1) = (2-1)\ast(2-1)= 1$
 
 <!-- IDE CHI2 ELOSZLÁS ÁBRA -->
 
@@ -344,7 +344,7 @@ Ez alapján a kapcsolat inkább gyenge, hiszen közelebb van a 0 végponthoz.
 Ezt a mutatót a &phi;-ből számoljuk, ha a kereszttábla mindkét dimenziója legalább 3, vagyis sorból és oszlopból is 2-nél több van.  
 
 Képlete:
-$$Cramer V = \sqrt{\frac{\chi^{2}}{N*(min(s;o)-1)}}$$
+$$Cramer V = \sqrt{\frac{\chi^{2}}{N \ast (min(s;o)-1)}}$$
 Vagy, ha már a &phi; értéke ismert:  
 $$Cramer V = \frac{\phi}{\sqrt{min(s;o)-1}}$$
 Ha sorból vagy oszlopból csak kettő van, akkor $min(s;o)-1 = 2-1 = 1$, vagyis nem változik az eredmény.
@@ -478,12 +478,12 @@ Ezek önmagában nem mondják meg, hogy az eltérés jelentős-e. Pl. ha az elt�
 
 A korrigált standardizált reziduálisok (*adjusted standardized residual*) alkalmasak arra, hogy megállapítsuk, az eltérés az adott cella esetében szignifikáns-e. Jelöljük $r_{ij}^{(a)}$-val ezt a reziduálist.  
 
-$$r_{ij}^{(a)}=\frac{m_{ij}-e{ij}}{\sqrt{e_{ij}\times \left(1-\frac{m_{i*}}{N}\right)\times\left(1-\frac{m_{*j}}{N}\right)}}$$  
+$$r_{ij}^{(a)}=\frac{m_{ij}-e{ij}}{\sqrt{e_{ij}\ast \left(1-\frac{m_{i*}}{N}\right)\ast\left(1-\frac{m_{*j}}{N}\right)}}$$  
 
 Pl.  
 
-$r_{11}^{(a)}=\frac{12-18}{\sqrt{18\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{40}{100}\right)}}=-2,46$  
-$r_{12}^{(a)}=\frac{33-27}{\sqrt{27\times \left(1-\frac{45}{100}\right)\times\left(1-\frac{60}{100}\right)}}=2,46$  
+$r_{11}^{(a)}=\frac{12-18}{\sqrt{18\ast \left(1-\frac{45}{100}\right)\ast\left(1-\frac{40}{100}\right)}}=-2,46$  
+$r_{12}^{(a)}=\frac{33-27}{\sqrt{27\ast \left(1-\frac{45}{100}\right)\ast\left(1-\frac{60}{100}\right)}}=2,46$  
 stb.  
 
 ```{r, resid.adj}

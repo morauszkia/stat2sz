@@ -51,22 +51,23 @@ Az ellenhipotézis, hogy a két nyelv ismerete összefügg egymással.
 <br>
 Először vizsgáljuk meg a hipotézist (nem kell feltétlenül abban a sorrendben haladni, mint az előző példánál), végezzük el a &chi;&sup2; tesztet! Ehhez először az elméleti kereszttáblát kell kiszámítani:
 
-$$e_{ij}=\frac{m_{i*}\times m_{*j}}{N}$$
+$$e_{ij}=\frac{m_{i*}\ast m_{*j}}{N}$$  
+
 :::: {class="fluid-row"}
 
 ::: {class="col-md-2"}
 
 pl.  
 
-$e_{11}=\frac{50\times100}{200}=25$  
-$e_{12}=\frac{50\times40}{200}=10$  
-$e_{13}=\frac{50\times60}{200}=15$  
-$e_{21}=\frac{80\times100}{200}=40$  
+$e_{11}=\frac{50\ast100}{200}=25$  
+$e_{12}=\frac{50\ast40}{200}=10$  
+$e_{13}=\frac{50\ast60}{200}=15$  
+$e_{21}=\frac{80\ast100}{200}=40$  
 stb.  
 
 :::
 
-::: {class="col-md-8"}
+::: {class="col-md-10"}
 
 ```{r, expected}
 test <- data %>%
@@ -91,7 +92,7 @@ Ezek után kiszámíthatjuk a &chi;&sup2; teszt eredményét:
 $$\chi^2=\sum_{i=1}^{s}\sum_{j=1}^{o}\frac{\left(m_{ij}-e_{ij}\right)^2}{e_{ij}}= \\ =\frac{\left(30-25\right)^2}{25}+
 \frac{\left(10-10\right)^2}{10}+ \\ +\frac{\left(10-15\right)^2}{15}+\frac{\left(30-40\right)^2}{40}+...= \\ =9,571$$
 
-A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó egymástól független, $df = (s-1)\times(o-1)=(3-1)\times(3-1)=4$ szabadságfokú &chi;&sup2; eloszlást követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a $\chi^2_{0,95;4}=9,49$ határérték felel meg.  
+A fenti próba igaz nullhipotézis esetén, tehát, ha a két változó egymástól független, $df = (s-1)\ast(o-1)=(3-1)\ast(3-1)=4$ szabadságfokú &chi;&sup2; eloszlást követ. Az eloszlás táblázata alapján az 5%-os szignifikanciaszintnek a $\chi^2_{0,95;4}=9,49$ határérték felel meg.  
 
 Mivel a tesztérték (9,571) nagyobb ennél a határértéknél, igaz nullhipotézis esetén kevesebb, mint 5% annak a valószínűsége, hogy ilyen, vagy ennél nagyobb eltérést kapjunk. Ezért elvetjük a nullhipotézist, és az ellenhipotézist fogadjuk el, vagyis a két nyelv ismerete a populációban is összefügg.
 
@@ -146,7 +147,7 @@ Ebből kicsit más kép rajzolódik ki, de azért nem annyira: Az angolul jól t
 ### Cramer-féle V  
 
 Mivel 3x3-as kereszttábláról van szó (mindkét dimenzió > 2), ezért a &phi; nem megfelelő mutató. Ehelyett a Cramer-féle V-t használhatjuk:
-$$Cramer V = \sqrt{\frac{\chi^2}{N\times\left(min\left(s;o\right)-1\right)}}= \\ =\sqrt{\frac{9,571}{200\times(3-1)}}=0,155$$
+$$Cramer V = \sqrt{\frac{\chi^2}{N\ast\left(min\left(s;o\right)-1\right)}}= \\ =\sqrt{\frac{9,571}{200\ast(3-1)}}=0,155$$
 Eszerint tehát egy gyenge összefüggés van a két nyelv ismerete között, hiszen a [0;1] skálán egyértelműen a 0 végponthoz közeli értéket kaptunk.
 
 ### Lambda
@@ -212,8 +213,8 @@ tab_obs %>%
 
 Hány konkordáns párt jelent ez?  
 
-Nézzük először a 2. sor 2. oszlopában lévő cellával: a 30 személy a 20 személlyel $30\times 20=600$ konkordáns párt alkot. A 2. sor 3. oszloppal $30\times 30 = 900$ párt alkotnak, stb.
-Ez összesen: $30\times (20+30+10+20)=2400$ konkordáns pár
+Nézzük először a 2. sor 2. oszlopában lévő cellával: a 30 személy a 20 személlyel $30\ast 20=600$ konkordáns párt alkot. A 2. sor 3. oszloppal $30\ast 30 = 900$ párt alkotnak, stb.
+Ez összesen: $30\ast (20+30+10+20)=2400$ konkordáns pár
 
 Lépjünk egyet jobbra az első sorban: az 1. sor 2. oszlopában lévő 10 személy további konkordáns pártokat alkot a 3. oszlop 2. és 3. sorában lévő cellákkal.
 
@@ -229,7 +230,7 @@ tab_obs %>%
   set_markdown_contents(1, 1, "")
 ```
 
-Ez összesen $10\times (30+20) = 500$ további konkordáns párt jelent.  
+Ez összesen $10\ast (30+20) = 500$ további konkordáns párt jelent.  
 
 Továbblépve, a 3. oszlopban lévő 10 személy senkivel nem alkot konkordáns párt, hiszen mindenki legalább olyan jól beszél angolul, mint ők, de mindenki legfeljebb annyira beszél jól franciául, vagyis nincsenek olyanok, akik mindkét nyelvből jobbak lennének (olyanok sem, akik mindkét nyelvből gyengébbek). Léphetünk a második sorra.  
 ```{r concordant.3}
@@ -243,7 +244,7 @@ tab_obs %>%
   set_background_color(4, 3:4, "tomato1") %>%
   set_markdown_contents(1, 1, "")
 ```
-Ez további $30\times (10+20)=900$ konkordáns pár.  
+Ez további $30\ast (10+20)=900$ konkordáns pár.  
 
 Végül a 2. sor 2. oszlopában található 20 személy a jobb alsó sarokban lévő 20 személlyel 400 konkordáns párt alkot. Felvethető, hogy ők konkordáns párokat alkotnak az 1. sor 1. oszlopában lévő 30 válaszadóval is, hiszen ezek franciául és angolul is alacsonyabb szinten (egyáltalán nem) beszélnek. Ezeket a párokat viszont már számoltuk egyszer, és ugyanez igaz a többi hasonló esetre is.
 ```{r concordant.4}
@@ -312,10 +313,10 @@ tab_obs %>%
 
 A diszkordáns párok száma:  
 
-$10\times (30+20+40+10)=1000$ <br>
-$10\times (30+40)=700$ <br>
-$30\times (40+10)=1500$ <br>
-$20\times 40 = 800$ <br>
+$10\ast (30+20+40+10)=1000$ <br>
+$10\ast (30+40)=700$ <br>
+$30\ast (40+10)=1500$ <br>
+$20\ast 40 = 800$ <br>
 Összesen: $1000+700+1500+800=4000$  <br>
 
 A Gamma képlete a következő:
@@ -342,10 +343,10 @@ table(data$angol, data$francia) %>%
   set_markdown_contents(1, 1, "Raw residuals")
 ```
 Hogy lássuk, mely eltérések szignifikánsak, számítsuk ki a korrigált (*adjusted*) standardizált reziduálisokat:  
-$r_{11}^{(a)}=\frac{30-25}{\sqrt{25\times \left(1-\frac{50}{200}\right)\times\left(1-\frac{100}{200}\right)}}=1,63$  
-$r_{12}^{(a)}=\frac{10-10}{\sqrt{10\times \left(1-\frac{50}{200}\right)\times\left(1-\frac{40}{200}\right)}}=0$  
-$r_{13}^{(a)}=\frac{10-15}{\sqrt{15\times \left(1-\frac{50}{200}\right)\times\left(1-\frac{60}{200}\right)}}=-1,78$  
-$r_{21}^{(a)}=\frac{30-40}{\sqrt{40\times \left(1-\frac{80}{200}\right)\times\left(1-\frac{100}{200}\right)}}=0$  
+$r_{11}^{(a)}=\frac{30-25}{\sqrt{25\ast \left(1-\frac{50}{200}\right)\ast\left(1-\frac{100}{200}\right)}}=1,63$  
+$r_{12}^{(a)}=\frac{10-10}{\sqrt{10\ast \left(1-\frac{50}{200}\right)\ast\left(1-\frac{40}{200}\right)}}=0$  
+$r_{13}^{(a)}=\frac{10-15}{\sqrt{15\ast \left(1-\frac{50}{200}\right)\ast\left(1-\frac{60}{200}\right)}}=-1,78$  
+$r_{21}^{(a)}=\frac{30-40}{\sqrt{40\ast \left(1-\frac{80}{200}\right)\ast\left(1-\frac{100}{200}\right)}}=0$  
 stb.  
 
 

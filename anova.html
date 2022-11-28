@@ -11,7 +11,7 @@
 
 
 
-<title>ANOVA alapjai</title>
+<title>Egyszempontos ANOVA alapjai</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -354,7 +354,7 @@ div.tocify {
       <a href="kereszttabla2.html">Függetlenségvizsgálat 2.</a>
     </li>
     <li>
-      <a href="illeszkedes.html">Illeszkedésvizsgálat</a>
+      <a href="illeszkedes.html">Egyéb khi-négyzet próbák</a>
     </li>
   </ul>
 </li>
@@ -414,37 +414,38 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">ANOVA alapjai</h1>
+<h1 class="title toc-ignore">Egyszempontos ANOVA alapjai</h1>
 
 </div>
 
 
 <p><br><br></p>
-<p>A félév utolsó témája az ANOVA. A betűszó az ANalysis of VAriance-ből
-származik. (Többé-kevésbé) magyarul a tanult módszert egyszempontú
-varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és többszempontos
-is, amely több független változó hatását, és akár azok interakcióját is
-vizsgálja (hasonlóan a többváltozós regresszióhoz) de azzal ezen az órán
-nem foglalkozunk. A továbbiakban a rövidség kedvéért csak ANOVA-t írok
-mindig, de ez ezt az egyszempontos változatot jelenti. A logikája, mint
-látni fogják, olyan, mint a regresszióé, de a hipotézis, amelyet
-vizsgált, a t-próba (és társai) hipotéziseire emlékeztet. <br><br></p>
+<p>A félév utolsó témája az egyszempontos ANOVA. A betűszó az ANalysis
+of VAriance-ből származik. (Többé-kevésbé) magyarul a tanult módszert
+egyszempontos varianciaelemzésnek nevezzük. Ugyan ANOVA-ból van két- és
+többszempontos is, amely több független változó hatását, és akár azok
+interakcióját is vizsgálja (hasonlóan a többváltozós regresszióhoz) de
+azzal ezen az órán nem foglalkozunk. A továbbiakban a rövidség kedvéért
+csak ANOVA-t írok mindig, de ez ezt az egyszempontos változatot jelenti.
+A logikája, mint látni fogják, olyan, mint a regresszióé, de a
+hipotézis, amelyet vizsgál, a t-próba (és társai) hipotéziseire
+emlékeztet. <br><br></p>
 <div id="várható-értékre-vonatkozó-próbák" class="section level2">
 <h2>Várható értékre vonatkozó próbák</h2>
 <p><br></p>
 <p>A t-próba, Welch-próba, illetve nemparaméteres megfelelőjük, a
-Mann-Whitney-próba arra szolgált, hogy megvizsgáljuk, két populációban
-(vagy egy populáció két szegmensében: pl. férfiak és nők, akik
-választottak és akik nem, stb.) eltér-e egy intervallum- vagy arányskála
-mérési szintű változó középértéke. A t-próba és a Welch-próba a várható
-érték (átlag), a Mann-Whitney-próba pedig a medián eltérését vizsgálta.
-<br></p>
+Mann-Whitney-próba arra szolgált, hogy megvizsgáljuk, két független
+populációban (vagy egy populáció két független szegmensében: pl. férfiak
+és nők, akik választottak és akik nem, stb.) eltér-e egy intervallum-
+vagy arányskála mérési szintű változó középértéke. A t-próba és a
+Welch-próba a várható érték (átlag), a Mann-Whitney-próba pedig a medián
+eltérését vizsgálta. <br></p>
 <p>Vannak helyzetek, amikor kettőnél több populációban (egy populáció
 kettőnél több csoportjában) szeretnénk megvizsgálni valaminek az
 átlagát. Pl. felekezetenként vizsgáljuk az egyházak iránti bizalmat, és
 vannak a katolikusok, reformátusok, evangélikusok, egyéb protestáns
 felekezetek, egyéb keresztény felekezetek, nem keresztény felekezetek,
-felekezeten kívüliek, stb. <br></p>
+felekezeten kívüliek, ateisták stb. <br></p>
 <p>Ha ilyen esetekben t-próbákat használnánk, a következő problémával
 kellene számolni: még ha igaz is a nullhipotézis, mely szerint nincs
 különbség a várható értékek között, akkor is 5% annak a valószínűsége,
@@ -486,16 +487,16 @@ minden esetben nem szignifikáns (tehát helyes) eredményt kapunk:</p>
 
 <p>Láthatják, hogy a csoportok számának növekedésével gyors ütemben
 csökken annak a valószínűsége, hogy jól döntünk, és nő annak a
-valószínűsége, hogy kapunk legalább egy tévesen szignifikáns
-eredményt.<br />
-<br> A páronkénti t-próbák helyett ezért az egyutas ANOVA-t használjuk.
-Ez a következő nullhipotézist vizsgálja: <span
+valószínűsége, hogy kapunk legalább egy tévesen szignifikáns eredményt.
+A páronkénti t-próbák helyett ezért az egyutas ANOVA-t használjuk.</p>
+<p>Ez a következő nullhipotézist vizsgálja: <span
 class="math display">\[H_0: \mu_1=\mu_2=...=\mu_k\]</span> Vagyis: a
-változó várható értéke mindegyik populációban/csoportban egyenlő. Az
-ellenhipotézis a következőképpen írható fel:<br />
+változó várható értéke mindegyik populációban/csoportban egyenlő.</p>
+<p>Az ellenhipotézis a következőképpen írható fel:<br />
 <span class="math display">\[H_1: \neg(\mu_1=\mu_2=...=\mu_k)\]</span>
-Vagyis: nem igaz, hogy az összes várható érték egyenlő. De az nem
-szükséges, hogy egyik egyenlőség se teljesüljön.<br />
+Vagyis: nem igaz, hogy az összes várható érték egyenlő. Másképpen:
+legalább az egyik páronkénti különbség szignifikáns. <strong>De az nem
+szükséges, hogy egyik egyenlőség se teljesüljön.</strong><br />
 <br><br></p>
 </div>
 <div id="az-anova-feltételei" class="section level2">
@@ -503,7 +504,7 @@ szükséges, hogy egyik egyenlőség se teljesüljön.<br />
 <p><br></p>
 <p>Az ANOVA-t a fenti típusú hipotézisek vizsgálatára használhatjuk: A
 független változó nominális vagy ordinális, amely szerint csoportokat
-képzünk. A függő változó intervallum- vagy arányskála mérési szintű.
+képezünk. A függő változó intervallum- vagy arányskála mérési szintű.
 Ennek várható értékét vizsgáljuk az egyes csoportokban.</p>
 <p>pl. több országban vizsgáljuk az átlagos jövedelmet, több különböző
 szakon vizsgáljuk az egyetemmel való elégedettséget, stb.</p>
@@ -518,53 +519,60 @@ szakon vizsgáljuk az egyetemmel való elégedettséget, stb.</p>
 Kolmogorov-Smirnov, Shapiro-Wilk, stb.), a második feltétel teljesülését
 pedig ún. Levene-próbával vizsgálhatjuk. Ezeket nem nézzük meg, a
 megfelelő statisztikai programokkal ezek elvégezhetők.</p>
+<p><em>Megj: A Levene-próba a gyakorlatban a csoportátlagoktól való
+abszolút eltérésekre (<span
+class="math inline">\(|x_{ij}-\bar{x_i}|\)</span>) elvégzett
+ANOVA.</em></p>
 <p><br><br></p>
 </div>
-<div id="az-egyszempontú-anova-logikája" class="section level2">
-<h2>Az egyszempontú ANOVA logikája</h2>
+<div id="az-anova-logikája" class="section level2">
+<h2>Az ANOVA logikája</h2>
 <p><br></p>
-<p>Mint írtam, az egyszempontú ANOVA logikája ugyanaz, mint a
-regresszióé, úgyhogy nézzük, annak mi volt a logikája. Vegyük azt a
-példát, hogy a vizsga eredményét becsüljük a felkészülésre fordított idő
-alapján. A hallgatók vizsgaeredményei különböznek. Ezeket a
-különbségeket igyekszünk magyarázni a felkészülési idővel. A különbségek
-teljes mértékét mértük az SST-vel.</p>
+<p>Az egyszempontos ANOVA logikája ugyanaz, mint a regresszióé:</p>
+<p>Vegyük azt a példát, hogy a vizsga eredményét becsüljük a
+felkészülésre fordított idő alapján. A hallgatók vizsgaeredményei
+különböznek. Ezeket a különbségeket igyekszünk magyarázni a felkészülési
+idővel. A különbségek teljes mértékét mértük az
+<strong>SST</strong>-vel.</p>
 <p>A hallgatók vizsgaeredményeinek különbségeit bizonyos mértékben a
 felkészülésre fordított idő különbségei magyarázzák: aki többet készült,
 várhatóan nem ugyanannyi pontra számíthat, mint aki kevesebbet készült.
 Ez a különbségeknek az a része, amit a modellel meg tudunk magyarázni.
-Ezt jelöltük SSR-rel.</p>
+Ezt jelöltük <strong>SSR</strong>-rel.</p>
 <p>Ezen túl viszont azoknak az eredménye is különbözik valamennyire,
 akik ugyanannyit készültek. Ebben számos oknak lehet szerepe: az
 egyiknek eleve jobban megy a tantárgy, jobb napja volt, a tanár
 részrehajló, segítőkészebb volt a szomszédja, szerencséje volt, és
 jobban tippelt, stb. Ez utóbbi a különbségeknek az a része, amit nem
-tudunk megmagyarázni. Ezt jelöltük SSH-val.</p>
+tudunk megmagyarázni. Ezt jelöltük <strong>SSH</strong>-val.</p>
+<p>A megmagyarázott és megmagyarázatlan rész együtt adja a különbségek
+teljes mértékét: <span class="math inline">\(SST = SSR +
+SSH\)</span></p>
 <p><br></p>
 <p>Az ANOVA-nál ugyanez a logika, csak más típusúak a változók. Tegyük
 fel, hogy a vizsgán négy csoport volt (A-D). Megnézzük, hogy akik
 más-más csoportot írtak, más-más eredményt értek-e el.</p>
 <p>Lesz a különbségeknek egy része, amely azzal magyarázható, hogy két
 ember nem ugyanazt a csoportot írta. Ezek a csoportok közötti
-különbségek - SSK-val fogjuk jelölni (K mint Külső vagy csoportok
-Közötti eltérések négyzetösszege).</p>
+különbségek - <strong>SSK</strong>-val fogjuk jelölni (K mint Külső vagy
+csoportok Közötti eltérések négyzetösszege).</p>
 <p>De biztos vannak különbségek az egyes csoportokon belül is: ez a
 különbségeknek az a része, amit nem tudunk azzal megmagyarázni, hogy két
 személy más-más csoportot írt volna. Ezeket más okok magyarázzák. Ezeket
-a különbségeket jelöli majd az SSB (B mint Belső vagy csoporton Belüli
-különbségek négyzetösszege).<br />
+a különbségeket jelöli majd az <strong>SSB</strong> (B mint Belső vagy
+csoporton Belüli különbségek négyzetösszege).<br />
 A kettő összege ebben az esetben is kiadja a teljes négyzetösszeget:
-SST-t.</p>
+<span class="math inline">\(SST = SSK + SSB\)</span>.</p>
 <p><br><br />
 Az ANOVA azt vizsgálja majd, kellően nagyok-e a csoportok közötti
-különbségek a csoportokon belüli különbségekhez képest ahhoz, hogy
-elvessük a nullhipotézist.</p>
+különbségek (SSK) a csoportokon belüli különbségekhez (SSB) képest
+ahhoz, hogy elvessük a nullhipotézist.</p>
 <p><br><br />
 Érdemes megnézni
 <a href="https://seeing-theory.brown.edu/regression-analysis/index.html#section3" target="_blank">ezt
 az oldalt</a>, ahol találnak olyan példa adatokat, amelyek között
 vannak, amelyekre szignifikáns, és olyanok, amelyekre nem szignifikáns
-az ANOVA. Az adatokat meg is változtathatják, a pontok áthúzásával, és
+az ANOVA. Az adatokat meg is változtathatják, a pontok mozgatásával, és
 megnézhetik, hogyan változik az ANOVA eredménye attól függően, hogyan
 állnak a pontok. Ha a csoportokon belül jobban szórónak a pontok, és ha
 a csoportátlagok közelebb kerülnek egymáshoz, akkor csökken az ANOVA
@@ -580,27 +588,27 @@ Az SSB-t, a csoporton belüli eltérések négyzetösszegét úgy kapjuk, hogy
 minden egyes csoportban, minden egyes megfigyelési egységre kiszámítjuk
 az adott csoport átlagától (ez egyben az adott személyre adott
 becslésünk) való eltérést, és ezeket az eltéréseket négyzetre emelve
-összeadjuk: <span class="math display">\[\textit{SSB} =
+összeadjuk:</p>
+<p><span class="math display">\[\textit{SSB} =
 \sum_{i=1}^{K}\sum_{j=1}^{N_i}\left(x_{ij}-\bar{x}_i\right)^2\]</span><br />
 A fenti képletben <span class="math inline">\(K\)</span> a csoportok
 száma, <span class="math inline">\(i\)</span> jelöli, melyik csoportról
 van épp szó, <span class="math inline">\(N_i\)</span> az adott csoport
 elemszáma, <span class="math inline">\(x_{ij}\)</span> az i. csoport j.
 tagjának értéke, az <span class="math inline">\(\bar{x}_i\)</span> pedig
-az i. csoport átlaga.<br />
-Az SSK-t, a csoportok közötti eltérések négyzetösszegét úgy kapjuk, hogy
-minden megfigyelési egység esetében az adott csoport átlagával (az adott
-megfigyelési egységre adott becslésünkkel) számolunk, és így kiszámítjuk
-az eltérést a minta összátlagához (másképp: a főátlaghoz) képest, és
-ezeknek az eltéréseknek vesszük a négyzetösszegét: <span
-class="math display">\[\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2\]</span><br />
+az i. csoport átlaga.</p>
+<p>Az SSK-t, a csoportok közötti eltérések négyzetösszegét úgy kapjuk,
+hogy minden megfigyelési egység esetében az adott csoport átlagával (az
+adott megfigyelési egységre adott becslésünkkel) számolunk, és így
+kiszámítjuk az eltérést a minta összátlagához (másképp: a főátlaghoz)
+képest, és ezeknek az eltéréseknek vesszük a négyzetösszegét: <span
+class="math display">\[\textit{SSK}=\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2\]</span><br />
 A fenti képletben <span class="math inline">\(\bar{\bar{x}}\)</span>
 jelöli a főátlagot, ami egyszerűen az <span
 class="math inline">\(x\)</span> változó átlaga a minta egészében.<br />
 <br></p>
-<div id="az-anova-kiszámítása-leíró-statisztikákból"
-class="section level3">
-<h3>Az ANOVA kiszámítása leíró statisztikákból</h3>
+<div id="kiszámítás-leíró-statisztikákból" class="section level3">
+<h3>Kiszámítás leíró statisztikákból</h3>
 <p><br><br />
 A fenti számítás nagy minták esetén elég sok számolással járna, ezért a
 szemináriumon nem közvetlenül az egyes megfigyelési egységek <span
@@ -614,15 +622,17 @@ belüli szórás képlete: <span
 class="math display">\[s_i^*=\sqrt{\frac{\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}}{N_i-1}}\]</span><br />
 Az egyenletet négyzetre emelve, majd <span
 class="math inline">\((N_i-1)\)</span>-gyel szorozva kapjuk: <span
-class="math display">\[\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)*s_i^{*2}\]</span><br />
+class="math display">\[\sum_{i=1}^{N_i}{\left(x_{ij}-\bar{x}_i\right)^2}=\left(N_i-1\right)\ast
+s_i^{*2}\]</span><br />
 Ha ezt minden csoportra kiszámítjuk, és összeadjuk, megkapjuk az SSB-t:
 <span
-class="math display">\[\textit{SSB}=\sum_{i=1}^{K}{\left(N_i-1\right)*s_i^{*2}}\]</span><br />
+class="math display">\[\textit{SSB}=\sum_{i=1}^{K}{\left(N_i-1\right)\ast
+s_i^{*2}}\]</span><br />
 Az SSK kiszámításához a főátlag (az egész minta átlaga) kiszámítása
 szükséges. Ezt a csoportátlagok súlyozott átlagaként kapjuk meg: <span
-class="math display">\[\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}\]</span>
+class="math display">\[\bar{\bar{x}}=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{\sum_{i=1}^{K}{N_i}}=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}\]</span>
 Ezután már csak be kell helyettesíteni az SSK képletébe: <span
-class="math display">\[\textit{SSK}=\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2\]</span>
+class="math display">\[\textit{SSK}=\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2\]</span>
 Az ANOVA maga egy F-próba, amely hasonlít a regressziónál nézett
 F-próbára:</p>
 <ul>
@@ -637,10 +647,10 @@ szabadságfokával (ott n-r-1, itt N-K)</li>
 találkozhatnak) a számlálóban szereplő törtet, <span
 class="math inline">\(\textit{VAR}_B\)</span>-vel (vagy <span
 class="math inline">\(MS_B\)</span>) pedig a nevezőben szereplőt: <span
-class="math display">\[\textit{VAR}_K=\frac{\textit{SSK}}{K-1}=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}\]</span>
+class="math display">\[\textit{VAR}_K=\frac{\textit{SSK}}{K-1}=\frac{\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}\]</span>
 <span
-class="math display">\[\textit{VAR}_B=\frac{\textit{SSB}}{N-K}=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}\]</span>
-<span
+class="math display">\[\textit{VAR}_B=\frac{\textit{SSB}}{N-K}=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast
+s_i^{*2}}}{N-K}\]</span> <span
 class="math display">\[F=\frac{\textit{VAR}_K}{\textit{VAR}_B}\]</span>
 Ez a próba igaz nullhipotézis esetén <span class="math inline">\(F(K-1;
 N-K)\)</span> eloszlást követ, vagyis <span
@@ -681,25 +691,25 @@ csoportok közötti különbségek a csoportokon belüliekhez képest.</p>
 képletgyűjteményben is szerepel:</p>
 <p><span class="math display">\[
 \begin{align}
-\bar{\bar{x}} &amp;=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{25 *
-170 + 15 * 190 + 12 * 110 + 8 * 100}{25 + 15 + 12 +
+\bar{\bar{x}} &amp;=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}=\frac{25
+st 170 + 15 st 190 + 12 st 110 + 8 st 100}{25 + 15 + 12 +
 8}=\frac{9220}{60}=153,67 \\
 \\
 \textit{VAR}_K
-&amp;=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}=
+&amp;=\frac{\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}=
 \\
-      &amp;=\frac{25 * \left(170 - 153,67\right)^2 + 15 * \left(190 -
-153,67\right)^2 + 12 * \left(110 - 153,67\right)^2 + 8 * \left(100 -
-153,67\right)^2}
+      &amp;=\frac{25 st \left(170 - 153,67\right)^2 + 15 st \left(190
+- 153,67\right)^2 + 12 st \left(110 - 153,67\right)^2 + 8 st \left(100
+- 153,67\right)^2}
       {4-1}= \\
-      &amp;=\frac{25 * 16,33^2 + 15 * 36,33^2 + 12 *
-\left(-43,67\right)^2 + 8 *
+      &amp;=\frac{25 st 16,33^2 + 15 st 36,33^2 + 12 st
+\left(-43,67\right)^2 + 8 st
 \left(-53,67\right)^2}{3}=\frac{72393,33}{3}= 24131,11 \\
 \\
-\textit{VAR}_B
-&amp;=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{\left(25-1\right)*10^2
-+ \left(15-1\right)*12^2 + \left(12-1\right)*11^2 +
-\left(8-1\right)*9^2}{60 - 4}= \\
+\textit{VAR}_B &amp;=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast
+s_i^{*2}}}{N-K}=\frac{\left(25-1\right) st10^2 + \left(15-1\right)
+st12^2 + \left(12-1\right) st11^2 + \left(8-1\right) st9^2}{60 - 4}=
+\\
       &amp;=\frac{6314}{56} = 112,75 \\
 \\
 F &amp;= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{24131,11}{112,75}
@@ -736,7 +746,7 @@ közül. Ennek előnye, hogy a kapott eredményeket ugyanúgy kell
 értelmezni, mint az F-próba eredményét, ráadásul a határérték is ugyanaz
 marad.</p>
 <p>A Scheffé-féle post-hoc próba képlete: <span
-class="math display">\[F_{ij}=\frac{\left(\bar{x}_i-\bar{x}_j\right)^2}{\textit{VAR}_B*(K-1)*\left(\frac{1}{N_i}+\frac{1}{N_j}\right)}\]</span></p>
+class="math display">\[F_{ij}=\frac{\left(\bar{x}_i-\bar{x}_j\right)^2}{\textit{VAR}_B\ast(K-1)\ast\left(\frac{1}{N_i}+\frac{1}{N_j}\right)}\]</span></p>
 <p>A számlálóban a két vizsgált csoport átlaga különbségének négyzete
 szerepel, a nevezőben pedig az ANOVA próbához kiszámított <span
 class="math inline">\(\textit{VAR}_B\)</span> értéke, szorozva a
@@ -747,22 +757,22 @@ mintanagysága reciprokának összegével.<br />
 eredménye szignifikáns volt, és ezért elvetettük a nullhipotézist -
 összesen 6 Scheffé-próbát kell elvégezni.</p>
 <p>ember és tünde :<span class="math display">\[F_{12} =
-\frac{\left(170-190\right)^2}{112,75*(4-1)*\left(\frac{1}{25}+\frac{1}{15}\right)}=\frac{400}{36,08}=11,09&gt;2,84\implies
+\frac{\left(170-190\right)^2}{112,75\ast(4-1)\ast\left(\frac{1}{25}+\frac{1}{15}\right)}=\frac{400}{36,08}=11,09&gt;2,84\implies
 \textit{szignifikáns}\]</span>ember és hobbit :<span
 class="math display">\[F_{13} =
-\frac{\left(170-110\right)^2}{112,75*(4-1)*\left(\frac{1}{25}+\frac{1}{12}\right)}=\frac{3600}{41,72}=86,29&gt;2,84\implies
+\frac{\left(170-110\right)^2}{112,75\ast(4-1)\ast\left(\frac{1}{25}+\frac{1}{12}\right)}=\frac{3600}{41,72}=86,29&gt;2,84\implies
 \textit{szignifikáns}\]</span>ember és törp :<span
 class="math display">\[F_{14} =
-\frac{\left(170-100\right)^2}{112,75*(4-1)*\left(\frac{1}{25}+\frac{1}{8}\right)}=\frac{4900}{55,81}=87,8&gt;2,84\implies
+\frac{\left(170-100\right)^2}{112,75\ast(4-1)\ast\left(\frac{1}{25}+\frac{1}{8}\right)}=\frac{4900}{55,81}=87,8&gt;2,84\implies
 \textit{szignifikáns}\]</span>tünde és hobbit :<span
 class="math display">\[F_{23} =
-\frac{\left(190-110\right)^2}{112,75*(4-1)*\left(\frac{1}{15}+\frac{1}{12}\right)}=\frac{6400}{50,74}=126,14&gt;2,84\implies
+\frac{\left(190-110\right)^2}{112,75\ast(4-1)\ast\left(\frac{1}{15}+\frac{1}{12}\right)}=\frac{6400}{50,74}=126,14&gt;2,84\implies
 \textit{szignifikáns}\]</span>tünde és törp :<span
 class="math display">\[F_{24} =
-\frac{\left(190-100\right)^2}{112,75*(4-1)*\left(\frac{1}{15}+\frac{1}{8}\right)}=\frac{8100}{64,83}=124,94&gt;2,84\implies
+\frac{\left(190-100\right)^2}{112,75\ast(4-1)\ast\left(\frac{1}{15}+\frac{1}{8}\right)}=\frac{8100}{64,83}=124,94&gt;2,84\implies
 \textit{szignifikáns}\]</span>hobbit és törp :<span
 class="math display">\[F_{34} =
-\frac{\left(110-100\right)^2}{112,75*(4-1)*\left(\frac{1}{12}+\frac{1}{8}\right)}=\frac{100}{70,47}=1,42&lt;2,84\implies
+\frac{\left(110-100\right)^2}{112,75\ast(4-1)\ast\left(\frac{1}{12}+\frac{1}{8}\right)}=\frac{100}{70,47}=1,42&lt;2,84\implies
 \textit{nem szignifikáns}\]</span> <br><br></p>
 </div>
 <div id="kapcsolat-ereje" class="section level2">
@@ -782,8 +792,8 @@ class="math inline">\(\textit{SSB}\)</span>-t, akkor azok
 és <span class="math inline">\(\textit{VAR}_B\)</span> értékekből: <span
 class="math display">\[
 \begin{aligned}
-\textit{SSK} &amp;= \textit{VAR}_K*(K-1) \\
-\textit{SSB} &amp;= \textit{VAR}_B*(N-K)
+\textit{SSK} &amp;= \textit{VAR}_K\ast(K-1) \\
+\textit{SSB} &amp;= \textit{VAR}_B\ast(N-K)
 \end{aligned}
 \]</span></p>
 <p>A fenti példában <span

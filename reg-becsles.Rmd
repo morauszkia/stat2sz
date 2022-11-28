@@ -18,12 +18,6 @@ library(latex2exp)
 ```
 <br><br>  
 
-<style>
-  p {
-    text-align: justify;
-    line-height: 1.5;
-  }
-</style>
 
 ## A modell paraméterei
 <br>  
@@ -305,9 +299,9 @@ négyzetösszeget jelenti. Ezt már az első táblázatban kiszámítottuk: $SST
 Azt is tudjuk, hogy $SST = SSR + SSH$, ezért elég az SSR-ből és SSH-ból csak az egyiket kiszámítani.  
 
 Az R&sup2; képlete attól függően, melyik utat választották:  
-$$R^2=\frac{SSR}{SST}=\frac{`r sum(results$dyhat2)`}{`r sum(results$dy2)`}=`r summary(r.model)$r.squared %>% round(3)`$$  
+$$R^2=\frac{SSR}{SST}=\frac{`r sum(results$dyhat2) %>% round(3)`}{`r sum(results$dy2)`}=`r summary(r.model)$r.squared %>% round(3)`$$  
 vagy  
-$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(results$res2)`}{`r sum(results$dy2)`}=`r summary(r.model)$r.squared %>% round(3)`$$  
+$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(results$res2) %>% round(3)`}{`r sum(results$dy2)`}=`r summary(r.model)$r.squared %>% round(3)`$$  
 
 Az R&sup2; azt méri, hogy az y változó teljes varianciájából mekkora részt tudunk a bevont független változók segítségével megmagyarázni. A regresszió a teljes szórásnégyzetet két részre bontja: a megmagyarázott rész a regressziós szórásnégyzet (SSR), a megmagyarázatlan rész pedig a reziduálisok négyzetösszege (SSH). A fenti példára lefordítva: a kilépő teszt eredményeinek különbségeit `r summary(r.model)$r.squared %>% round(3) %>% magrittr::multiply_by(100)`%-ban magyarázzák a hozott különbségek (a belépő teszt eredményei), a fennmaradó `r 100 - summary(r.model)$r.squared %>% round(3) %>% magrittr::multiply_by(100)`%-ban pedig egyéb tényezők (mennyit tudott készülni a tesztre, mennyire követte figyelemmel az előadásokat, mennyi energiát fektetett a feladatok megoldásába, mennyi szerencséje volt a kitöltés során, stb.)
 <br><br>  
