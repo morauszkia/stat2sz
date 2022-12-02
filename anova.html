@@ -13,7 +13,7 @@
 
 <title>Egyszempontos ANOVA alapjai</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.18/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -692,24 +685,24 @@ képletgyűjteményben is szerepel:</p>
 <p><span class="math display">\[
 \begin{align}
 \bar{\bar{x}} &amp;=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}=\frac{25
-st 170 + 15 st 190 + 12 st 110 + 8 st 100}{25 + 15 + 12 +
+\ast 170 + 15 \ast 190 + 12 \ast 110 + 8 \ast 100}{25 + 15 + 12 +
 8}=\frac{9220}{60}=153,67 \\
 \\
 \textit{VAR}_K
 &amp;=\frac{\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}=
 \\
-      &amp;=\frac{25 st \left(170 - 153,67\right)^2 + 15 st \left(190
-- 153,67\right)^2 + 12 st \left(110 - 153,67\right)^2 + 8 st \left(100
-- 153,67\right)^2}
+      &amp;=\frac{25 \ast \left(170 - 153,67\right)^2 + 15 \ast
+\left(190 - 153,67\right)^2 + 12 \ast \left(110 - 153,67\right)^2 + 8
+\ast \left(100 - 153,67\right)^2}
       {4-1}= \\
-      &amp;=\frac{25 st 16,33^2 + 15 st 36,33^2 + 12 st
-\left(-43,67\right)^2 + 8 st
+      &amp;=\frac{25 \ast 16,33^2 + 15 \ast 36,33^2 + 12 \ast
+\left(-43,67\right)^2 + 8 \ast
 \left(-53,67\right)^2}{3}=\frac{72393,33}{3}= 24131,11 \\
 \\
 \textit{VAR}_B &amp;=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast
-s_i^{*2}}}{N-K}=\frac{\left(25-1\right) st10^2 + \left(15-1\right)
-st12^2 + \left(12-1\right) st11^2 + \left(8-1\right) st9^2}{60 - 4}=
-\\
+s_i^{*2}}}{N-K}=\frac{\left(25-1\right) \ast10^2 + \left(15-1\right)
+\ast12^2 + \left(12-1\right) \ast11^2 + \left(8-1\right) \ast9^2}{60 -
+4}= \\
       &amp;=\frac{6314}{56} = 112,75 \\
 \\
 F &amp;= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{24131,11}{112,75}

@@ -216,14 +216,14 @@ Egyszerűen mindent kiszámítunk szép sorban, ahogy a képletgyűjteményben i
 
 $$
 \begin{align}
-\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}=\frac{`r paste(ns, "\ast", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i\ast\bar{x}_i}}{N}=\frac{`r paste(ns, "\\ast", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
 \\
 \textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i\ast\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
-      &=\frac{`r paste0(ns, " \ast \\left(", means, " - ", main.mean %>% round(2), "\\right)^2", collapse = " + ")`}
+      &=\frac{`r paste0(ns, " \\ast \\left(", means, " - ", main.mean %>% round(2), "\\right)^2", collapse = " + ")`}
       {`r k`-1}= \\
-      &=\frac{`r paste0(ns, " \ast ", ob, (means-main.mean) %>% round(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+      &=\frac{`r paste0(ns, " \\ast ", ob, (means-main.mean) %>% round(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
 \\
-\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right) \ast", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)\ast s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right) \\ast", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
       &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
 \\
 F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
