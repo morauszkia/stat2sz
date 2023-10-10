@@ -504,8 +504,7 @@ esetén végzett függetlenségvizsgálaté, a különbség csak annyi, hogy
 illeszkedésvizsgálatnál csak egy index-szel kell dolgoznunk. A fenti
 táblázatra a próba értéke:<br />
 <span class="math display">\[\chi^{2}=
-\frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+ \\
-+\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6\]</span></p>
+\frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6\]</span></p>
 <p>A próba igaz nullhipotézis (illeszkedés) esetén <span
 class="math inline">\(df=k-1\)</span> szabadságfokú χ² eloszlást követ,
 ahol k a változó lehetséges értékeinek a száma, vagyis a fenti esetben
@@ -573,9 +572,9 @@ class="math inline">\(e_i = N \ast p_i\)</span> képlettel.</p>
 <span
 class="math display">\[\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+\\
 + \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}=
-15,02\]</span><br />
-<span class="math display">\[df = k-1 = 5-1=4\]</span> <span
-class="math display">\[\chi^2_{0.95;4}=9,49\]</span></p>
+15,02\]</span></p>
+<p><span class="math display">\[df = k-1 = 5-1=4\]</span><br />
+<span class="math display">\[\chi^2_{0.95;4}=9,49\]</span></p>
 <p><strong>Döntés:</strong> 5%-os szignifikanciaszint mellett elvetjük a
 nullhipotézist, a minta felekezeti eloszlása nem illeszkedik a populáció
 eloszlásához. Ennek oka lehet, hogy egy másik populációból származik,
@@ -665,13 +664,8 @@ eloszlása azonos-e a két mintában?</p>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Felekezeten kívüli</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">260</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">200</td></tr>
 </table>
 
-<p><strong>1. megoldás: a külön képlettel</strong></p>
-<p><span class="math display">\[\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k
-\frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2}
-\right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = 1000 \ast 940 \ast
-\left(\frac{(0.49 - 0.52)^2}{490 + 490}+\frac{(0.14 - 0.11)^2}{140 +
-100}+\frac{(0.04 - 0.07)^2}{40 + 70}+\frac{(0.07 - 0.09)^2}{70 +
-80}+\frac{(0.26 - 0.21)^2}{260 + 200} \right)\]</span></p>
+<!-- **1. megoldás: a külön képlettel** -->
+<!-- $$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = 1000 \ast 940 \ast \left(\frac{(0.49 - 0.52)^2}{490 + 490}+\frac{(0.14 - 0.11)^2}{140 + 100}+\frac{(0.04 - 0.07)^2}{40 + 70}+\frac{(0.07 - 0.09)^2}{70 + 80}+\frac{(0.26 - 0.21)^2}{260 + 200} \right)$$   -->
 </div>
 
 
