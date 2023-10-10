@@ -106,7 +106,7 @@ table %>%
 ```
 
 A próba értéke:  
-$$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+\\ + \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}= 15,02$$  
+$$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+ \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}= 15,02$$  
 
 $$df = k-1 = 5-1=4$$  
 $$\chi^2_{0.95;4}=9,49$$  
@@ -135,7 +135,7 @@ Folytonos változók esetében, akárcsak az illeszkedésvizsgálatra, erre is l
 
 Alacsony mérési szintű változók esetében ezúttal is $\chi^2$ tesztet végezhetünk. Létezik külön képlet a homogenitásvizsgálatra:  
 
-$$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left(f_1^{(i)} + f_2^{(i)} \right)^2}{N_1^{(i)} + N_2^{(i)}}$$  
+$$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left(f_1^{(i)} + f_2^{(i)} \right)^2}{N_1^{(i)} + N_2^{(i)}}$$  
 A képletben $N_1$ és $N_2$ a két minta teljes elemszáma, az $N_1^{(i)}$ típusú tagok pedig az adott mintában az i. kategória elemszámát jelölik, az $f_1^{(i)}$ típusú tagok pedig az adott mintában az adott kategória arányát. Általánosan:  
 
 $$f_j^{(i)}= \frac{N_j^{(i)}}{N_j}$$  
