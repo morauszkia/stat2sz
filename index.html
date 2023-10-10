@@ -11,9 +11,9 @@
 
 
 
-<title>Statisztika 2. szeminárium</title>
+<title>index.knit</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -32,8 +32,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -181,8 +181,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -190,16 +190,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -332,83 +325,93 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Statisztika 2. szeminárium</h1>
 
 </div>
 
 
-<div id="őszi-félév" class="section level2">
-<h2>2022/2023. őszi félév</h2>
-</div>
-<div id="ppke-btk" class="section level2">
-<h2>PPKE-BTK</h2>
-<hr />
-<p><br><br></p>
-</div>
-<div id="tantárgy-célja" class="section level2">
-<h2>Tantárgy célja:</h2>
-<p><br> A tantárgy célja a Statisztika 2. előadáson tárgyalt
-statisztikai módszerek gyakorlása. A félév során a különböző khi-négyzet
-alapú próbák (függetlenség-, illeszkedés-, homogenitásvizsgálat), a
-korreláció, regresszió és az egyszempontú varianciaanalízis módszereit
-tekintjük át. Az órákon e próbák alkalmazásának feltételeivel,
-kiszámításuk módjával és az eredmények értelmezésével foglalkozunk.
-<br><br></p>
-</div>
-<div id="legfontosabb-információk" class="section level2">
-<h2>Legfontosabb információk:</h2>
-<p><br> A félév során az előadáshoz kapcsolódóan végzünk számításokat
-számológéppel, illetve MS Excelben. A cél, hogy az egyes statisztikai
-módszerek matematikai hátterét megismerjék, így például tudják, hogy
-egy-egy SPSS művelet során mi történik, milyen adatokat veszünk alapul,
-és hogyan lehet a kapott eredményeket értelmezni.<br />
-<br><br></p>
-<p><strong>Érintett témakörök:</strong></p>
+<style type="text/css">
+h1 {
+  text-transform: uppercase;
+  text-align: center;
+  margin: 36px 0 42px 0;
+}
+
+h2 {
+  margin-bottom: 18px;
+}
+
+.section {
+  padding: 32px 0;
+}
+</style>
+<div id="tárgyleírás" class="section level1">
+<h1>Tárgyleírás</h1>
+<p>A Statisztika 2. szemináriumon folytatjuk a hipotézisvizsgálati
+módszerekkel való ismerkedést: a különböző khi-négyzet alapú próbák
+(függetlenség-, illeszkedés-, homogenitásvizsgálat), a korreláció, és az
+egyszempontos varianciaanalízis (ANOVA) módszereit tekintjük át. Ezen
+kívül megismerkedünk a lineáris regresszióval, amellyel két vagy több
+változó kapcsolata modellezhető.</p>
+<p>Az órákon e módszerek céljával, alkalmazásuk feltételeivel,
+kiszámításuk módjával és az eredmények értelmezésével foglalkozunk.</p>
+<p>A félév során jellemzően számításokat végzünk számológéppel. A cél,
+hogy az egyes statisztikai módszerek matematikai hátterét megismerjék,
+így például tudják, hogy egy-egy SPSS művelet során mi történik, milyen
+adatokat veszünk alapul, milyen statisztikákat kapunk, és hogyan lehet a
+kapott eredményeket értelmezni.</p>
+<div id="érintett-témakörök" class="section level2">
+<h2>Érintett témakörök</h2>
 <ol style="list-style-type: decimal">
-<li>Kereszttábla-elemzés (és más khí-négyzet próbák):
-függetlenségvizsgálat, asszociációs mérőszámok, illeszkedés- és
-homogenitásvizsgálat</li>
-<li>Korrelációszámítás: lineáris korreláció becslése, parciális
-korreláció, hipotézisvizsgálatok</li>
-<li>Regressziószámítás: egyváltozós lineáris regresszió becslése,
-hipotézisvizsgálatok, sokváltozós lineáris regressziós modellek
-értelmezése</li>
-<li>Egyutas varianciaanalízis (ANOVA): kiszámítása és értelmezése, post
-hoc próbák</li>
+<li>χ<sup>2</sup> próbák
+<ul>
+<li>Függetlenségvizsgálat (kereszttáblaelemzés), asszociációs
+mérőszámok</li>
+<li>Illeszkedés- és homogenitásvizsgálat</li>
+</ul></li>
+<li>Korrelációszámítás
+<ul>
+<li>Lineáris korreláció becslése</li>
+<li>Hipotézisvizsgálatok</li>
+<li>Parciális korreláció,</li>
+</ul></li>
+<li>Regressziószámítás
+<ul>
+<li>Egyváltozós lineáris regresszió becslése, értelmezése</li>
+<li>Hipotézisvizsgálatok</li>
+<li>Sokváltozós lineáris regressziós modellek értelmezése</li>
+</ul></li>
+<li>Egyutas varianciaanalízis (ANOVA)
+<ul>
+<li>Kiszámítása és értelmezése</li>
+<li>Post hoc próbák, η<sup>2</sup></li>
+</ul></li>
 </ol>
-<p><strong>Órai jelenlét:</strong><br />
-Ahogy a korábbi félévben, nem tartom magam szigorúan a maximum három
-hiányzáshoz, de a korábbi félévek tapasztalatai azt mutatják, hogy az
-órai jelenlét növeli a siker valószínűségét. Ahhoz, hogy maximálisan
-profitálni tudjanak az órai jelenlétükből, érdemes a feladatokat velem
-együtt számolni és/vagy a kapott házi feladatokat már félév közben
-oldani, illetve a kérdéseiket összegyűjteni, és az órákon feltenni.</p>
-<p><strong>Házi feladatok:</strong><br />
-Témakörönként egy házi feladatot fognak kapni. Ezek nem kötelezőek, de
-javasolt végigszámolni, hogy lássák, mi az, amit sikerült
-elsajátítaniuk, és mi az, amit nem.</p>
-<p><strong>Kommunikáció módja:</strong><br />
-Megbeszéljük, de előreláthatólag az e-mail / MS Teams / sli.do /
-megosztott Google Drive mappa valamilyen kombinációja. <br><br></p>
 </div>
 <div id="értékelés-módja" class="section level2">
-<h2>Értékelés módja:</h2>
-<p><br> A félév során ezúttal is két zárthelyi lesz. A félév rendjének
-változása következtében <strong>a második ZH az eredeti tervnél korábban
-lesz megtartva</strong>:</p>
+<h2>Értékelés módja</h2>
+<p>A félév során ezúttal is két zárthelyi lesz.</p>
 <ol style="list-style-type: decimal">
-<li>ZH: 2022. október 26. az 1-2. témakörből (kereszttábla +
+<li>ZH: 2023. október 24. az 1-2. témakörből (kereszttábla +
 korreláció)</li>
-<li>ZH: 2022. december 7. a 3-4. témakörből (regresszió + ANOVA)</li>
+<li>ZH: 2023. december 5. a 3-4. témakörből (regresszió + ANOVA)</li>
 </ol>
-<p>A ZH-khoz minden kapott segédeszközt (képletgyűjtemény,
-eloszlástáblák, órai jegyzetek, házi feladatok megoldásai, stb.)
-használhatnak. Ezek közül képletgyűjteményt (A5 méretben) és
-eloszlástáblákat kapnak tőlem.</p>
 <p>A félév sikeres teljesítéséhez <strong>mindkét ZH-nak legalább
 elégségesnek</strong> kell lennie. Akinek nem sikerül valamelyik ZH,
 vagy elégedetlen a jegyével, a félév végén (várhatóan a vizsgaidőszak
 első hetében) javíthat.</p>
+<p>A ZH-khoz minden kapott segédeszközt (képletgyűjtemény,
+eloszlástáblák, órai jegyzetek, házi feladatok megoldásai, stb.)
+használhatnak. Ezek közül képletgyűjteményt (A5 méretben) és
+eloszlástáblákat kapnak tőlem.</p>
+</div>
+<div id="egyéb-információk" class="section level2">
+<h2>Egyéb információk</h2>
+<p>Az órai munka mellett témakörönként egy-egy gyakorló feladatsort
+fognak kapni, amelyek lefedik az összes olyan feladattípust, amelyet a
+ZH-ban meg kell tudniuk oldani. Ezek visszaküldése nem kötelező. A
+feladatsorok megoldását néhány nappal a feladatsort követően kapják
+meg.</p>
+</div>
 </div>
 
 

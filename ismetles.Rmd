@@ -4,7 +4,9 @@ output:
   html_document
 ---
 
-<br><br>
+## Populáció és minta
+
+Szociológusként mindig valamilyen populációra vonatkozóan végezzük vizsgálatainkat, amely azonban közvetlenül nem figyelhető meg, mert pl. túl sok elemzési egységből áll. Ezért a nagyobb populációból veszünk egy kisebb, kezelhető méretű, lehetőleg a populációra reprezentatív mintát. 
 
 Tegyük fel, hogy a bergengóc férfiak és nők várható jövedelme közötti különbséget vizsgáljuk. A kutatási kérdésünk, hogy egyáltalán van-e különbség a bergengóc társadalomban a férfiak és nők várható jövedelme között.  
   
@@ -63,7 +65,7 @@ Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint esetén ve
 
 És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi különbség. A szignifikanciaszintet mindig a hatás, összefüggés, különbség becsült mértékével, erősségével együtt kell értelmezni.  
 *Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős is.*
-<br>  
+  
   
 ## Ellenőrző kérdések
   
