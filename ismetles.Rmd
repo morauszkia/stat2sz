@@ -4,21 +4,40 @@ output:
   html_document
 ---
 
+```{css, echo=FALSE}
+h1 {
+  text-transform: uppercase;
+  text-align: center;
+  margin: 36px 0 42px 0;
+}
+
+h2 {
+  margin-bottom: 18px;
+}
+
+.section {
+  padding: 32px 0;
+}
+```
+
+Az előző félévben már elkezdtünk ismerkedni a statisztikai következtetés módzsertanával, amelynek egyik ága a becsléselmélet, a másik pedig a hipotézisvizsgálat.  
+Ebben a félévben folytatjuk, elsősorban a különböző hipotézisvizsgálati módszerek tanulmányozását. Ez az ismétlés a hipotézisvizsgálat általános fogalmait, alapvető logikáját hivatott összefoglalni, az ezzel kapcsolatos emlékeket feleleveníteni.  
+
 ## Populáció és minta
 
-Szociológusként mindig valamilyen populációra vonatkozóan végezzük vizsgálatainkat, amely azonban közvetlenül nem figyelhető meg, mert pl. túl sok elemzési egységből áll. Ezért a nagyobb populációból veszünk egy kisebb, kezelhető méretű, lehetőleg a populációra reprezentatív mintát. 
+Szociológusként mindig valamilyen populációra vonatkozóan végezzük vizsgálatainkat, amely azonban közvetlenül nem figyelhető meg, mert pl. túl sok elemzési egységből áll. Ezért a nagyobb populációból veszünk egy kisebb, kezelhető méretű, lehetőleg a populációra reprezentatív mintát.  
 
-Tegyük fel, hogy a bergengóc férfiak és nők várható jövedelme közötti különbséget vizsgáljuk. A kutatási kérdésünk, hogy egyáltalán van-e különbség a bergengóc társadalomban a férfiak és nők várható jövedelme között.  
+A mintát közvetlenül meg tudjuk figyelni: ki tudunk számítani különböző megoszlásokat, átlagokat, általánosan: statisztikai mutatókat. A kérdés viszont, hogy a mintában megfigyelt különbségekről, összefüggésekről mennyire feltételezhető, hogy a sokaságban meglévő összefüggéseket jeleznek, vagy mennyi a valószínűsége, hogy pusztán a mintavételből adódó ingadozás révén "jöttek létre".  
+
+Tegyük fel, hogy a bergengóc férfiak és nők várható jövedelme közötti különbséget vizsgáljuk. A kutatási kérdésünk, hogy egyáltalán van-e különbség a bergengóc társadalomban a férfiak és nők várható jövedelme között. Végső soron a teljes bergengóc populációról, tehát az összes keresőről szeretnénk valamit mondani, de ehhez egy mintát fogunk használni, mivel a populáció túl nagy ahhoz, hogy teljes egészében megfigyeljük.  
+
+A különböző módszerek feltételezik, hogy a minta reprezentatív: egyszerű véletlen mintavétel révén jött létre. 
+
+## Statisztikai hipotézisek  
+
+A változók közötti összefüggésekkel kapcsolatban a várakozásunkat hipotézisek formájában fogalmazzuk meg. Tegyük fel, hogy például arra számítunk, hogy van különbség a bergengóc férfiak és nők várható jövedelme között. Ez lesz a hipotézisünk, amelyet vizsgálni szeretnénk.  
   
-Tegyük fel, hogy arra számítunk, hogy van különbség. Ez lesz a hipotézisünk, amelyet vizsgálni szeretnénk.  
-  
-Veszünk egy reprezentatív mintát a bergengóc társadalomból. Ebben 30 férfi van, és átlagos jövedelmük 300 fabatka, a szórás 40 fabatka. A mintában 40 nő van, akik átlagosan 270 fabatkát keresnek és 35 fabatka a szórás.  
-  
-A mintában tehát különbözik a férfiak és nők jövedelmének átlaga (és szórása is), de eléggé különbözik-e ahhoz, hogy ez azt valószínűsítse, hogy a populációban is különbözik a férfiak és nők jövedelmének várható értéke? Előfordulhat-e az, hogy a populációban nem különbözik, de mi épp egy olyan mintát vettünk, amelyben ekkora a különbség. Mennyi annak a valószínűsége, hogy egyenlő várható értékek esetén ekkora vagy ennél nagyobb különbséget lássunk a mintában?  
-  
-Ennek eldöntéséhez hipotézisvizsgálatot kell elvégezni, amely megmutatja, mekkora ennek valószínűsége, ha egyébként a populációban egyformák a várható értékek. Ha ez a valószínűség nagyon kicsi, akkor bátran feltételezzük, hogy a populációban nem egyformák a várható értékek. Ha ez a valószínűség nem elég kicsi, inkább elfogadjuk, hogy ez akár a mintavételből is adódhatott.  
-  
-Az első lépés, hogy megfogalmazzuk a hipotéziseinket:
+Az első lépés, hogy megfogalmazzuk a hipotéziseinket:  
 Elsősorban egy **nullhipotézist**: ez arról szól, hogy *nincs itt semmi látnivaló*, vagyis konkrét helyzetekre lefordítva:  
 
 - a populációban nincs különbség a várható értékek között, ezek egyeznek (többféleképpen is megfogalmazható ugyanaz)
@@ -31,6 +50,8 @@ Két dolog fontos a nullhipotézissel kapcsolatban:
 
 1. Mindig **a populációra vonatkozik**, hiszen a minta csak eszköz, hogy a populációra vonatkozó következtetéseket vonhassunk le
 2. Mindig arról szól, hogy valami (különbség, összefüggés erőssége) nulla.
+
+A fenti példában a nullhipotézis úgy hangozna, hogy a bergengóc nők és férfiak várható jövedelme egyenlő (másképp: a két csoport várható jövedelmének különbsége nulla).
   
 Az **ellenhipotézis** (másképp: **alternatív** hipotézis) pedig valami olyan hipotézis, amely a nullhipotézissel kölcsönösen kizáró viszonyban van, vagyis egyszerre csak egyikük lehet igaz (olyan viszont adott esetben lehet, hogy egyik sem az - egyoldali próbák esetén). Általában ez az, amit feltételezünk, és a hipotézisvizsgálat arra vonatkozik, elég okunk van-e rá, hogy feltételezzük, ez a hipotézis igaz.
 A fenti példában ez lehet:  
@@ -39,36 +60,61 @@ A fenti példában ez lehet:
 - A bergengóc férfiak várható jövedelme nagyobb, mint a nőké
 - A bergengóc férfiak várható jövedelme kisebb, mint a nőké
   
-Ezek közül az első kétoldali próbát eredményez, a második és harmadik egyoldali próbát jelent. Jól figyeljék meg, hogy az első a nullhipotézis komplementere, de a másik kettő nem, csak egymást kölcsönösen kizárók (vagy egyenlő, vagy nagyobb / vagy egyenlő, vagy kisebb), de lehetnek olyan esetek, hogy sem a nullhipotézis, sem az ellenhipotézis nem igaz. Az órákon mi kétoldali próbákat végeztünk, ebben a félévben viszont lesznek (és a múlt félévben az F-próba volt ilyen), amelyek csak egyoldaliak lehetnek, vagy amelyeket egyoldaliként szoktunk végezni (pl. az egyszerűség kedvéért - ld. F-próba határértékeinek kikeresése)
+Ezek közül az első **kétoldali** próbát eredményez, a második és harmadik **egyoldali** próbát jelent. Jól figyeljék meg, hogy az első a nullhipotézis komplementere, de a másik kettő nem, csak egymást kölcsönösen kizárók (vagy egyenlő, vagy nagyobb / vagy egyenlő, vagy kisebb), de lehetnek olyan esetek, hogy sem a nullhipotézis, sem az ellenhipotézis nem igaz.  
+
+Az órákon mi kétoldali próbákat végeztünk, ebben a félévben viszont lesznek (és a múlt félévben az F-próba volt ilyen), amelyek csak egyoldaliak lehetnek, vagy amelyeket egyoldaliként szoktunk végezni (pl. az egyszerűség kedvéért - ld. F-próba határértékeinek kikeresése).  
+
+Egyébkét egyoldali próba lehet indokolt, ha például valaminek a csökkentésére (előítéletesség, összeeszküvés-elméletekre való fogékonyság, vérnyomás, stb.) törekszünk: ebben az esetben előfordulhat, hogy az nem érdekel minket, a vizsgált beavatkozás növelte-e a szóban forgó dolgot (az eljárást ebben az esetben sem fogjuk nagyon szorgalmazni), hanem csak az, hogy feltételezhető-e a csökkenés a sokaság szintjén.
+
+## Hipotézisvizsgálat 
+
+Tegyük fel, hogy a mintában különbözik a férfiak és nők jövedelmének átlaga (és szórása is), de eléggé különbözik-e ahhoz, hogy ez azt valószínűsítse, hogy a populációban is különbözik a férfiak és nők jövedelmének várható értéke? Előfordulhat-e az, hogy a populációban nem különbözik, de mi épp egy olyan mintát vettünk, amelyben ekkora a különbség. Mennyi annak a valószínűsége, hogy egyenlő várható értékek esetén ekkora vagy ennél nagyobb különbséget lássunk a mintában?  
+  
+Ennek eldöntéséhez **hipotézisvizsgálatot** kell elvégezni, amely megmutatja, mekkora annak valószínűsége, hogy a mintában megfigyelt különbséget annak ellenére kaptuk, hogy a sokaságban nincs különbség (tehát a sokaságban **a nullhipotézisben megfogalmazott állapot az igaz**). Ha ez a valószínűség nagyon kicsi (általában 5% a határ), akkor bátran feltételezzük, hogy a populációban nem egyformák a várható értékek. Ha ez a valószínűség nem elég kicsi, inkább elfogadjuk, hogy ez akár a mintavételből is adódhatott.  
+  
+### Statisztikai próba, nulleloszlás
 
 Miután megvannak a hipotézisek, kiválasztjuk és elvégezzük a megfelelő próbát, amely eredményeképpen kapunk egy számot. Ezek a próbák úgy vannak megalkotva, hogy igaz nullhipotézis esetén meghatározott eloszlást követnek. Ez a próba **nulleloszlása**. Mázli, hogy sokszor a próbák a nulleloszlás nevét viselik (t-próba, F-próba, stb.). Sajnos nem mindig, úgyhogy azért a memóriánknak is van módja dolgozni (vagy van mit kikeresni a képletgyűjteményből)
 
+### Próba kiértékelése
+
 A próba eredményével kétféle dolgot szoktunk kezdeni:  
 
-- Statisztika órákon jobb híján azt csináltuk, hogy meghatároztunk egy még elfogadható szignifikanciaszintet (pl. &alpha; = 5%), és ehhez kerestük ki azokat a határértékeket, amelyek közé (elfogadási tartomány) a próba értéke (igaz nullhipotézis esetén) 1 - &alpha; valószínűséggel (a példában 95%) beleesik. Pl. standard normális eloszlás és kétoldali próba esetén ez volt a &plusmn;1,96.
-Ebben az esetben, ha a próba eredménye ezeken a határokon kívül esik (elutasítási tartomány), elvetjük a nullhipotézist, ezek között (elfogadási tartomány) megtartjuk. Ez a gyakorlat nem jó, csak jobb híján követjük a statisztika órákon, ezért jó, hogy vannak statisztikai programjaink, amelyek pontos szignifikanciaszintet adnak. A félév során majd igyekszem jelezni (már múlt félévben is igyekeztem), mi a jobb gyakorlat.
-- Statisztiai programok ennél jobbat is tudnak: a kapott tesztértékhez (és ha kétoldali a próba, akkor ennek tükörképzéhez) kiszámítják az ez(ek)en kívül eső területet a nulleloszlás sűrűségfüggvénye alatt, vagyis annak a valószínűségét, hogy igaz nullhipotézis esetén (amit nem győzök eleget hangsúlyozni, remélem, feltűnt) ilyen, vagy ennél jelentősebb eltérést mutató tesztértéket kapjunk. Pl. ha igaz a nullhipotézis, mennyi a valószínűsége, hogy olyan mintát veszünk, amelyből a próba értéke &plusmn;2,31-nél jobban különbözik 0-tól?
-Ebben az esetben, ha ez a valószínűség (ez a szignifikanciaszint) kellően kicsi (pl. kisebb 5%-nál, de ez csak konvenció, nem kőbe vésett valami), elvetjük a nullhipotézist, hiszen a tényleges mintánk nem túl kompatibilis vele.
+- Statisztika órákon *jobb híján* azt csináltuk, hogy meghatároztunk egy még elfogadható **szignifikanciaszintet** (pl. &alpha; = 5% = 0,05), és ehhez kerestük ki azokat a határértékeket, amelyek közé (**elfogadási tartomány**) a próba értéke (igaz nullhipotézis esetén) 1 - &alpha; valószínűséggel (a példában 95%) beleesik. Pl. standard normális eloszlás és kétoldali próba esetén ez volt a &plusmn;1,96.  
 
-A **szignifikanciaszint** az a feltételes valószínűség, hogy ha a nullhipotézis igaz, az adott teszteredménynek megfelelő vagy annál extrémebb, (a 0-nál) nagyobb eltérést mutató tesztértéket kapjunk.
+Ebben az esetben, ha a próba eredménye ezeken a határokon kívül esik (**elutasítási tartomány**), elvetjük a nullhipotézist, ezek között (**elfogadási tartomány**) megtartjuk. Ez a gyakorlat nem jó, csak jobb híján követjük a statisztika órákon, ezért jó, hogy vannak statisztikai programjaink, amelyek pontos szignifikanciaszintet adnak.  
+
+- Statisztiai programok ennél jobbat is tudnak: a kapott tesztértékhez (és ha kétoldali a próba, akkor ennek tükörképzéhez) kiszámítják az ez(ek)en kívül eső területet a nulleloszlás sűrűségfüggvénye alatt, vagyis annak a **valószínűségét**, hogy **igaz nullhipotézis esetén** (amit nem győzök eleget hangsúlyozni, remélem, feltűnt) **ilyen, vagy ennél jelentősebb eltérést** mutató tesztértéket kapjunk.  
+
+Pl. ha igaz a nullhipotézis, mennyi a valószínűsége, hogy olyan mintát veszünk, amelyből a próba értéke &plusmn;2,31-nél jobban különbözik 0-tól?  
+
+Ebben az esetben, ha ez a valószínűség (ez a **szignifikanciaszint**) kellően kicsi (pl. kisebb 5%-nál, de ez csak konvenció, nem kőbe vésett valami), elvetjük a nullhipotézist, hiszen a tényleges mintánk nem túl kompatibilis vele.
+
+### Szingifikanciaszint
+
+A **szignifikanciaszint** az a feltételes valószínűség, hogy ha a nullhipotézis igaz, az adott teszteredménynek megfelelő vagy annál extrémebb, (általában a 0-hoz képest) nagyobb eltérést mutató tesztértéket kapjunk.  
+
+### Első- és másodfajú hiba  
 
 Akárhogy is, mindig legyenek tudatában, hogy a döntés, amelyet meghozunk, még nem biztos, hogy helyes.
-Az, hogy megtartjuk a nullhipotézist, nem jelenti, hogy nincs összefüggés két dolog között. A nullhipotézist sose bizonyítjuk, csak megtartjuk.
-Az, hogy elvetjük a nullhipotézist, szintén nem jelenti, hogy mérget vehetnénk rá, hogy van összefüggés két dolog között, csak annyit, hogy a mi konkrét mintánk nagyon valószínűtlen lenne, ha igaz lenne a nullhipotézis. Minél kisebb a szig. szint, értelemszerűen annál biztosabbak lehetünk a dolgunkban, de sose teljesen bizonyosak.
+Az, hogy **megtartjuk a nullhipotézist**, nem jelenti, hogy nincs összefüggés két dolog között. A nullhipotézist sose bizonyítjuk, csak megtartjuk.  
+
+Az, hogy **elvetjük a nullhipotézist**, szintén nem jelenti, hogy mérget vehetnénk rá, hogy van összefüggés két dolog között, csak annyit, hogy a mi konkrét mintánk nagyon valószínűtlen lenne, ha igaz lenne a nullhipotézis. Minél kisebb a szig. szint, értelemszerűen annál biztosabbak lehetünk a dolgunkban, de sose teljesen bizonyosak.
 
 Kétféle hibát tudunk elkövetni:  
 
 - **Elsőfajú hiba:** Elvetni egy igaz nullhipotézist (hamis pozitív teszt)
 - **Másodfajú hiba:** Megtartani egy hamis nullhipotézist (hamis negatív teszt)
 
-Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint esetén vetjük el a nullhipotézist, a másodikat pedig azzal, hogy igyekszünk jól venni és kellően nagy mintát, ezután pedig a lehető legjobb próbát elvégezni, amelynek a feltételei teljesülnek. A próba ereje annak a valószínűsége, hogy feltételezve, hogy a nullhipotézis nem igaz, ezt a próba elvégzése után elvetjük.
+Az elsőt azzal csökkentjük, hogy csak alacsony szignifikanciaszint esetén vetjük el a nullhipotézist, a másodikat pedig azzal, hogy igyekszünk jól venni és kellően nagy mintát, ezután pedig a lehető legjobb próbát elvégezni, amelynek a feltételei teljesülnek. A **próba ereje** annak a valószínűsége, hogy feltételezve, hogy a nullhipotézis nem igaz (feltételezve egy adott nagyságú eltérést), ezt a próba elvégzése után ki tudjuk mutatni.
+
+### Statisztikai szignifikancia és érdemi különbségek 
 
 És végül, mindez csak a statisztikai szignifikancia. Az, hogy valami statisztikailag szignifikáns, még nem jelenti azt, hogy érdemi különbség. A szignifikanciaszintet mindig a hatás, összefüggés, különbség becsült mértékével, erősségével együtt kell értelmezni.  
 *Pl. a KSH lehetővé teszi, hogy a népszámlálás 10%-os mintáján dolgozzanak kutatók. 1 millió fős mintán minden apró eltérés is statisztikailag szignifikáns, de ez még nem jelenti, hogy jelentős is.*
   
   
 ## Ellenőrző kérdések
-  
 
 - Mi a nullhipotézis? Általában miről szól?
 - Mi az ellenhipotézis? Milyen viszonyban áll a nullhipotézissel?
