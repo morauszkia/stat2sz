@@ -175,6 +175,6 @@ sum_fractions <- paste(fractions, collapse = "+")
 ```
   
 
-**1. megoldás: a külön képlettel**
+<!-- **1. megoldás: a külön képlettel** -->
 
-$$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = `r n1` \ast `r n2` \ast \left(`r sum_fractions` \right)$$  
+<!-- $$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = `r n1` \ast `r n2` \ast \left(`r sum_fractions` \right)$$   -->
