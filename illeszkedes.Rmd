@@ -13,3 +13,23 @@ library(huxtable)
 library(dplyr)
 ```
 
+A függetlenségvizsgálaton kívül még két másik esetben is használunk olyan próbát, amely nulleloszlása &chi;&sup2;. Ezek az illeszkedés- és a homogenitásvizsgálat.  
+
+## Illeszkedésvizsgálat
+
+Időnként azt kell megvizsgálnunk, hogy egy minta származhat-e egy bizonyos elméleti valószínűségeloszlásból. Másképpen: a mintában látható változóeloszlás *illeszkedik-e* valamilyen elméleti valószínűségeloszláshoz.  
+
+Ha ez utóbbinak a paraméterei is adottak, akkor **tiszta illeszkedésvizsgálatról** van szó. Ilyen lehet, hogy például 100-as várható értékű és 10-es szórású normális eloszlást követ-e a változó, vagy pedig, hogy származhat-e egy olyan binomiális eloszlásból, amely paramétere, az esemény valószínűsége p=0,3.   
+
+Ha a kérdés arra vonatkozik, hogy a minta feltételezhetően valamilyen *típusú* eloszlásból származik-e, amelynek paramétereit is a mintából becsüljük, akkor pedig **becsléses illeszkedésvizsgálatról** van szó. Ez utóbbi jellemzőbb, leggyakoribb formája pedig a *normalitásvizsálat*, vagyis, hogy a minta illeszkedik-e a normális eloszláshoz, de nem mi adjuk meg, hogy milyen paraméterű, hanem a mintából becsüljük a várható értéket és szórást is.  
+
+Mint a fenti példából látható, illeszkedésvizsgálat diszkrét és folytonos változók esetében is végezhető:  
+- Diszkrét esetben &chi;&sup2; próbát végzünk
+- Folytonos esetben, mint amilyenek a fenti példák, más próbákat, pl. Shapiro-Wilk, Kolmogorov-Smirnov, stb. tesztet végezhetünk.  
+
+### Illeszkedésvizsgálat &chi;&sup2; próbával
+
+Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla, hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük kell a szabályos dobókockával való dobás valószínűségeloszlásához.  
+
+
+
