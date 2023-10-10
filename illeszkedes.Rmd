@@ -66,7 +66,7 @@ A próba értékét az alábbi képlettel kapjuk meg:
 $$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}$$  
 
 Ez a képlet (a megfigyelt és elméleti érték különbségének négyzete, osztva az elméleti értékkel és összeadva) ugyanaz, mint a kereszttábla esetén végzett függetlenségvizsgálaté, a különbség csak annyi, hogy illeszkedésvizsgálatnál csak egy index-szel kell dolgoznunk. A fenti táblázatra a próba értéke:  
-$$\chi^{2}= \frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+ \\ +\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6$$
+$$\chi^{2}= \frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+\frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6$$
 
 A próba igaz nullhipotézis (illeszkedés) esetén $df=k-1$ szabadságfokú &chi;&sup2; eloszlást követ, ahol k a változó lehetséges értékeinek a száma, vagyis a fenti esetben $df = 6 - 1 = 5$. Ehhez 5% szignifikanciaszint esetén a 11,1 határérték tartozik, vagyis 5%-os szignifikanciaszint mellett megtartjuk a nullhipotézist, nem állíthatjuk, hogy a dobások megoszlása nem illeszkedik a várt eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az ellenkezőjét - szabályosnak tekintjük. Ezért is a kettős tagadás: nem állítjuk határozottan, hogy illeszkedik, de a megfigyeléseink alapján azt sem állíthatjuk, hogy nem illeszkedik.
   
@@ -107,8 +107,9 @@ table %>%
 
 A próba értéke:  
 $$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+\\ + \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}= 15,02$$  
-$$df = k-1 = 5-1=4$$
-$$\chi^2_{0.95;4}=9,49$$
+
+$$df = k-1 = 5-1=4$$  
+$$\chi^2_{0.95;4}=9,49$$  
 
 **Döntés:** 5%-os szignifikanciaszint mellett elvetjük a nullhipotézist, a minta felekezeti eloszlása nem illeszkedik a populáció eloszlásához. Ennek oka lehet, hogy egy másik populációból származik, vagy valami torzította a mintavételt. Elméletileg az sem kizárt, csak nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb mértékben eltérő minta.
 
@@ -137,7 +138,7 @@ Alacsony mérési szintű változók esetében ezúttal is $\chi^2$ tesztet vég
 $$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left(f_1^{(i)} + f_2^{(i)} \right)^2}{N_1^{(i)} + N_2^{(i)}}$$  
 A képletben $N_1$ és $N_2$ a két minta teljes elemszáma, az $N_1^{(i)}$ típusú tagok pedig az adott mintában az i. kategória elemszámát jelölik, az $f_1^{(i)}$ típusú tagok pedig az adott mintában az adott kategória arányát. Általánosan:  
 
-$$f_j^{(i)}= \frac{N_j^{(i)}}{N_j}$$
+$$f_j^{(i)}= \frac{N_j^{(i)}}{N_j}$$  
 
 De a fenti képlet helyett használhatjuk a sima függetlenségvizsgálatnál is használt &chi;&sup2; próbát is: kiszámítjuk az $e_i$ értékeket, majd az $e_i$ és $m_i$ értékek alapján kiszámítjuk a $\chi^2$ próbát a $2\ast k$ méretű kereszttáblára, ahol $k$ a változó kategóriáinak száma.  
 
