@@ -13,7 +13,7 @@
 
 <title>Egyéb khi-négyzet próbák</title>
 
-<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -29,14 +29,14 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -184,8 +184,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -193,16 +193,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -419,13 +412,11 @@ div.tocify {
 </div>
 
 
-<p><br><br> A függetlenségvizsgálaton kívül még két másik esetben is
-olyan próbát használunk, amely nulleloszlása χ². Ezek az illeszkedés- és
-a homogenitásvizsgálat.</p>
-<p><br></p>
+<p>A függetlenségvizsgálaton kívül még két másik esetben is olyan próbát
+használunk, amely nulleloszlása χ². Ezek az illeszkedés- és a
+homogenitásvizsgálat.</p>
 <div id="illeszkedésvizsgálat" class="section level2">
 <h2>Illeszkedésvizsgálat</h2>
-<p><br></p>
 <p>Időnként azt kell megvizsgálnunk, hogy egy minta származhat-e egy
 bizonyos elméleti valószínűségeloszlásból. Másképpen: a mintában látható
 változóeloszlás illeszkedik-e valamilyen elméleti
@@ -446,7 +437,6 @@ szórást is.</p>
 végezhető, de mi csak a diszkrét esetet nézzük meg. Folytonos esetben,
 mint amilyenek a fenti példák, más próbákat, pl. Shapiro-Wilk,
 Kolmogorov-Smirnov, stb. tesztet végezhetünk.</p>
-<p><br></p>
 <div id="példa-kockadobás" class="section level3">
 <h3>Példa: kockadobás</h3>
 <p>Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla,
@@ -527,7 +517,6 @@ eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az
 ellenkezőjét - szabályosnak tekintjük. Ezért is a kettős tagadás: nem
 állítjuk határozottan, hogy illeszkedik, de a megfigyeléseink alapján
 azt sem állíthatjuk, hogy nem illeszkedik.</p>
-<p><br></p>
 </div>
 <div id="példa-népszámlálás" class="section level3">
 <h3>Példa: népszámlálás</h3>
@@ -593,7 +582,6 @@ eloszlásához. Ennek oka lehet, hogy egy másik populációból származik,
 vagy valami torzította a mintavételt. Elméletileg az sem kizárt, csak
 nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb
 mértékben eltérő minta.</p>
-<p><br></p>
 </div>
 <div id="illeszkedés-folytonos-változók" class="section level3">
 <h3>Illeszkedés: folytonos változók</h3>
@@ -611,12 +599,10 @@ paraméterekkel rendelkező valószínűségi eloszláshoz (beleértve a kiemelt
 jelentőségű normális eloszlást), illetve további tesztek, mint a
 <em>Lilliefors</em>, <em>Shapiro-Wilk</em>, amellyel vizsgálható hogy a
 változó normális eloszlást követ-e.</p>
-<p><br></p>
 </div>
 </div>
 <div id="homogenitásvizsgálat" class="section level2">
 <h2>Homogenitásvizsgálat</h2>
-<p><br></p>
 <p>Homogenitásvizsgálattal azt vizsgáljuk, két minta származhat-e
 ugyanolyan valószínűségeloszlású populációból: a két vizsgált
 populációban a változónak lehet-e ugyanolyan az eloszlása?</p>
@@ -632,14 +618,16 @@ képlet a homogenitásvizsgálatra:</p>
 <p><span class="math display">\[\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k
 \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2}
 \right)^2}{N_1^{(i)} + N_2^{(i)}} = \\ = N_1\ast N_2 \ast \sum_{i=1}^k
-\frac{f_1^{(i)} + f_2^{(i)} \right)^2}{N_1^{(i)} +
-N_2^{(i)}}\]</span></p>
-<p>A képletben <span class="math inline">\(N_1\)</span> és <span
+\frac{\left(f_1^{(i)} + f_2^{(i)} \right)^2}{N_1^{(i)} +
+N_2^{(i)}}\]</span><br />
+A képletben <span class="math inline">\(N_1\)</span> és <span
 class="math inline">\(N_2\)</span> a két minta teljes elemszáma, az
 <span class="math inline">\(N_1^{(i)}\)</span> típusú tagok pedig az
 adott mintában az i. kategória elemszámát jelölik, az <span
 class="math inline">\(f_1^{(i)}\)</span> típusú tagok pedig az adott
-mintában az adott kategória arányát.</p>
+mintában az adott kategória arányát. Általánosan:</p>
+<p><span class="math display">\[f_j^{(i)}=
+\frac{N_j^{(i)}}{N_j}\]</span></p>
 <p>De a fenti képlet helyett használhatjuk a sima
 függetlenségvizsgálatnál is használt χ² próbát is: kiszámítjuk az <span
 class="math inline">\(e_i\)</span> értékeket, majd az <span
