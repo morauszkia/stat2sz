@@ -13,6 +13,23 @@ library(huxtable)
 library(dplyr)
 ```
 
+```{css, echo=FALSE}
+h1 {
+  text-transform: uppercase;
+  text-align: center;
+  margin: 36px 0 42px 0;
+}
+
+h2 {
+  margin-bottom: 18px;
+  padding-top: 36px;
+}
+
+.section {
+  padding: 16px 0;
+}
+```
+
 A függetlenségvizsgálaton kívül még két másik esetben is használunk olyan próbát, amely nulleloszlása &chi;&sup2;. Ezek az illeszkedés- és a homogenitásvizsgálat.  
 
 ## Illeszkedésvizsgálat
@@ -31,5 +48,40 @@ Mint a fenti példából látható, illeszkedésvizsgálat diszkrét és folyton
 
 Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla, hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük kell a szabályos dobókockával való dobás valószínűségeloszlásához.  
 
+Dobunk a dobókockával 60-szor. Tegyük fel, hogy az alábbi dobások jöttek ki:  
 
+```{r}
+table <- hux(
+  which = 1:6,
+  no = c(13, 8, 10, 7, 15, 7)
+)
+table %>%
+  set_markdown_contents(1, 1, "Dobott szám") %>%
+  set_markdown_contents(1, 2, "db (m<sub>i</sub>)") %>%
+  set_all_borders()
+```
 
+Ezek a megfigyelések, jelöljük ezeket $m_i$-vel!  
+
+Most még szükségünk van az elméleti értékekre: hány 1-es, 2-es, stb. lett volna a 60 dobás között, ha *teljes mértékben* az elméleti valószínűségeloszlásnak megfelelően alakulnak a dobások? Ebben az esetben minden érték valószínűsége $P(\xi = x_i) = \frac{1}{6}$. Vagyis minden dobásból 10-nek kellett volna lennie.
+
+Általánosan:  
+
+$$e_i = N\ast p_i$$
+
+Ebben $p_i$ egyszerűsítve jelöli az egyes értékek valószínűségét: pl. $p_1=\frac{1}{6}$ az 1-es valószínűsége.
+
+```{r}
+e <- c(NA, rep(10, 6))
+table <-  cbind(table, 
+               e)
+table %>%
+  set_markdown_contents(1, 1, "Dobott szám") %>%
+  set_markdown_contents(1, 2, "db (m<sub>i</sub>)") %>%
+  set_markdown_contents(1, 3, "e<sub>i</sub>") %>%
+  set_all_borders()
+```
+
+A próba értékét az alábbi képlettel kapjuk meg:  
+
+$$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}$$  
