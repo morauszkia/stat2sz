@@ -424,6 +424,16 @@ h2 {
   padding-top: 36px;
 }
 
+h3 {
+  margin-bottom: 16px;
+  padding-top: 24px;
+}
+
+h4 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .section {
   padding: 16px 0;
 }
@@ -451,12 +461,14 @@ minta illeszkedik-e a normális eloszláshoz, de nem mi adjuk meg, hogy
 milyen paraméterű, hanem a mintából becsüljük a várható értéket és
 szórást is.</p>
 <p>Mint a fenti példából látható, illeszkedésvizsgálat diszkrét és
-folytonos változók esetében is végezhető:<br />
-- Diszkrét esetben χ² próbát végzünk - Folytonos esetben, mint amilyenek
-a fenti példák, más próbákat, pl. Anderson-Darling, egymintás
-Kolmogorov-Smirnov (inkább tiszta illeszkedésvizsgálatnál), Lilliefors
-(becsléses normalitásvizsgálat), Shapiro-Wilk (normalitásvizsgálat),
-stb. tesztet végezhetünk.</p>
+folytonos változók esetében is végezhető:</p>
+<ul>
+<li>Diszkrét esetben χ² próbát végzünk</li>
+<li>Folytonos esetben, mint amilyenek a fenti példák, más próbákat, pl.
+Anderson-Darling, egymintás Kolmogorov-Smirnov (inkább tiszta
+illeszkedésvizsgálatnál), Lilliefors (becsléses normalitásvizsgálat),
+Shapiro-Wilk (normalitásvizsgálat), stb. tesztet végezhetünk.</li>
+</ul>
 <p>A próbák nullhipotézise, hogy a minta egy adott eloszlást követő
 populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az
 ellenhipotézis szerint nem illeszkedik.</p>
@@ -564,7 +576,7 @@ alapul véve).</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:census">
 <col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Felekezet</p>
-</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<del>i</del>)</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<sub>i</sub>)</p>
 </th></tr>
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Katolikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">490</td></tr>
@@ -584,9 +596,9 @@ class="math inline">\(e_i = N \ast p_i\)</span> képlettel.</p>
 <table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:census.complete">
 <col><col><col><col><tr>
 <th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Dobott szám</p>
-</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<del>i</del>)</p>
-</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>p<del>i</del></p>
-</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>e<del>i</del></p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<sub>i</sub>)</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>p<sub>i</sub></p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>e<sub>i</sub></p>
 </th></tr>
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Katolikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">490</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.51</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">510</td></tr>

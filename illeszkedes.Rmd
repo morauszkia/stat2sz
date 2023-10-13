@@ -25,6 +25,16 @@ h2 {
   padding-top: 36px;
 }
 
+h3 {
+  margin-bottom: 16px;
+  padding-top: 24px;
+}
+
+h4 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .section {
   padding: 16px 0;
 }
@@ -41,10 +51,11 @@ Ha ez utóbbinak a paraméterei is adottak, akkor **tiszta illeszkedésvizsgála
 Ha a kérdés arra vonatkozik, hogy a minta feltételezhetően valamilyen *típusú* eloszlásból származik-e, amelynek paramétereit is a mintából becsüljük, akkor pedig **becsléses illeszkedésvizsgálatról** van szó. Ez utóbbi jellemzőbb, leggyakoribb formája pedig a *normalitásvizsálat*, vagyis, hogy a minta illeszkedik-e a normális eloszláshoz, de nem mi adjuk meg, hogy milyen paraméterű, hanem a mintából becsüljük a várható értéket és szórást is.  
 
 Mint a fenti példából látható, illeszkedésvizsgálat diszkrét és folytonos változók esetében is végezhető:  
+
 - Diszkrét esetben &chi;&sup2; próbát végzünk
 - Folytonos esetben, mint amilyenek a fenti példák, más próbákat, pl. Anderson-Darling, egymintás Kolmogorov-Smirnov (inkább tiszta illeszkedésvizsgálatnál), Lilliefors (becsléses normalitásvizsgálat), Shapiro-Wilk (normalitásvizsgálat),  stb. tesztet végezhetünk.  
 
-A próbák nullhipotézise, hogy a minta egy adott eloszlást követő populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az ellenhipotézis szerint nem illeszkedik. 
+A próbák nullhipotézise, hogy a minta egy adott eloszlást követő populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az ellenhipotézis szerint nem illeszkedik.
 
 ### Illeszkedésvizsgálat &chi;&sup2; próbával
 
@@ -109,7 +120,7 @@ table <- hux(
 )
 table %>%
   set_markdown_contents(1, 1, "Felekezet") %>%
-  set_markdown_contents(1, 2, "db (m~i~)") %>%
+  set_markdown_contents(1, 2, "db (m<sub>i</sub>)") %>%
   set_all_borders()
 ```
 
@@ -121,9 +132,9 @@ e <- 1000 * p
 table <-  cbind(table, p, e)
 table %>%
   set_markdown_contents(1, 1, "Dobott szám") %>%
-  set_markdown_contents(1, 2, "db (m~i~)") %>%
-  set_markdown_contents(1, 3, "p~i~") %>%
-  set_markdown_contents(1, 4, "e~i~") %>%
+  set_markdown_contents(1, 2, "db (m<sub>i</sub>)") %>%
+  set_markdown_contents(1, 3, "p<sub>i</sub>") %>%
+  set_markdown_contents(1, 4, "e<sub>i</sub>") %>%
   set_all_borders()
 ```
 
