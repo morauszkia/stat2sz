@@ -42,7 +42,9 @@ Ha a kérdés arra vonatkozik, hogy a minta feltételezhetően valamilyen *típu
 
 Mint a fenti példából látható, illeszkedésvizsgálat diszkrét és folytonos változók esetében is végezhető:  
 - Diszkrét esetben &chi;&sup2; próbát végzünk
-- Folytonos esetben, mint amilyenek a fenti példák, más próbákat, pl. Shapiro-Wilk, Kolmogorov-Smirnov, stb. tesztet végezhetünk.  
+- Folytonos esetben, mint amilyenek a fenti példák, más próbákat, pl. Anderson-Darling, egymintás Kolmogorov-Smirnov (inkább tiszta illeszkedésvizsgálatnál), Lilliefors (becsléses normalitásvizsgálat), Shapiro-Wilk (normalitásvizsgálat),  stb. tesztet végezhetünk.  
+
+A próbák nullhipotézise, hogy a minta egy adott eloszlást követő populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az ellenhipotézis szerint nem illeszkedik. 
 
 ### Illeszkedésvizsgálat &chi;&sup2; próbával
 
@@ -85,3 +87,7 @@ table %>%
 A próba értékét az alábbi képlettel kapjuk meg:  
 
 $$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}$$  
+
+Ez a képlet (a megfigyelt és elméleti érték különbségének négyzete, osztva az elméleti értékkel és összeadva) ugyanaz, mint a kereszttábla esetén végzett függetlenségvizsgálaté, a különbség csak annyi, hogy illeszkedésvizsgálatnál csak egy index-szel kell dolgoznunk. A fenti táblázatra a próba értéke:  
+$$\chi^{2}= \frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+ \\ + \frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6$$
+A próba igaz nullhipotézis (illeszkedés) esetén $df=k-1$ szabadságfokú &chi;&sup2; eloszlást követ, ahol $k$ a változó lehetséges értékeinek a száma, vagyis a fenti esetben $df = 6 - 1 = 5$. Ehhez 5% szignifikanciaszint esetén a 11,1 határérték tartozik. Mivel a tesztérték kisebb ennél a határértéknél, 5%-os szignifikanciaszint mellett megtartjuk a nullhipotézist: nem állíthatjuk, hogy a dobások megoszlása nem illeszkedik a várt eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az ellenkezőjét - szabályosnak tekintjük. Ezért is a kettős tagadás: nem állítjuk határozottan, hogy illeszkedik, de a megfigyeléseink alapján azt sem állíthatjuk, hogy nem illeszkedik.  
