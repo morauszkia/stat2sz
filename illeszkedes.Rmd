@@ -48,6 +48,8 @@ A próbák nullhipotézise, hogy a minta egy adott eloszlást követő populáci
 
 ### Illeszkedésvizsgálat &chi;&sup2; próbával
 
+#### 1. példa  
+
 Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla, hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük kell a szabályos dobókockával való dobás valószínűségeloszlásához.  
 
 Dobunk a dobókockával 60-szor. Tegyük fel, hogy az alábbi dobások jöttek ki:  
@@ -91,3 +93,54 @@ $$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}$$
 Ez a képlet (a megfigyelt és elméleti érték különbségének négyzete, osztva az elméleti értékkel és összeadva) ugyanaz, mint a kereszttábla esetén végzett függetlenségvizsgálaté, a különbség csak annyi, hogy illeszkedésvizsgálatnál csak egy index-szel kell dolgoznunk. A fenti táblázatra a próba értéke:  
 $$\chi^{2}= \frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+ \\ + \frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6$$
 A próba igaz nullhipotézis (illeszkedés) esetén $df=k-1$ szabadságfokú &chi;&sup2; eloszlást követ, ahol $k$ a változó lehetséges értékeinek a száma, vagyis a fenti esetben $df = 6 - 1 = 5$. Ehhez 5% szignifikanciaszint esetén a 11,1 határérték tartozik. Mivel a tesztérték kisebb ennél a határértéknél, 5%-os szignifikanciaszint mellett megtartjuk a nullhipotézist: nem állíthatjuk, hogy a dobások megoszlása nem illeszkedik a várt eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az ellenkezőjét - szabályosnak tekintjük. Ezért is a kettős tagadás: nem állítjuk határozottan, hogy illeszkedik, de a megfigyeléseink alapján azt sem állíthatjuk, hogy nem illeszkedik.  
+
+#### 2. példa   
+
+Az elméleti eloszlás származhat más forrásból is: ilyen lehet egy népszámlálás. Arra vagyunk kíváncsiak, hogy a mintánkban egy változó eloszlása illeszkedik-e a népszámlálásban látott eloszláshoz, amely az egész populáció adatait veszi alapul, tehát vehető elméletinek. Ha ebből a populációból vettük a mintát, akkor a megoszlásnak nagy valószínűséggel illeszkednie kell a teljes populációhoz.  
+
+Vegyük a felekezeti eloszlást (bár ez a valóságban pont nem működne, mert erre a kérdésre nem kötelező a válaszadás, és sokan éltek is a nemválaszolás jogával). A kérdésünk, hogy feltételezhetjük-e, hogy a mintánk eloszlása illeszkedik a sokasági eloszláshoz (a népszámlálást alapul véve). 
+
+Tegyük fel, hogy az alábbi mintát kaptuk:  
+
+```{r census}
+table <- hux(
+  which = c("Katolikus", "Református", "Evangélikus", "Egyéb", "Felekezeten kívüli"),
+  no = c(490, 140, 40, 70, 260)
+)
+table %>%
+  set_markdown_contents(1, 1, "Felekezet") %>%
+  set_markdown_contents(1, 2, "db (m~i~)") %>%
+  set_all_borders()
+```
+
+Az elméleti értékeket az alábbi sokasági eloszlás ($p_i$) alapján tudjuk kiszámítani az $e_i = N \ast p_i$ képlettel.
+
+```{r census.complete}
+p <- c(NA, 0.51, 0.16, 0.03, 0.05, 0.25)
+e <- 1000 * p
+table <-  cbind(table, p, e)
+table %>%
+  set_markdown_contents(1, 1, "Dobott szám") %>%
+  set_markdown_contents(1, 2, "db (m~i~)") %>%
+  set_markdown_contents(1, 3, "p~i~") %>%
+  set_markdown_contents(1, 4, "e~i~") %>%
+  set_all_borders()
+```
+
+A próba értéke:  
+$$\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+ \\ + \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}= 15,02$$
+
+$$df = k-1 = 5-1=4$$
+$$\chi^2_{0.95;4}=9,49$$  
+
+**Döntés:** 5%-os szignifikanciaszint mellett elvetjük a nullhipotézist, a minta felekezeti eloszlása nem illeszkedik a populáció eloszlásához. Ennek oka lehet, hogy egy másik populációból származik, vagy valami torzította a mintavételt. Elméletileg az sem kizárt, csak nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb mértékben eltérő minta.
+
+### Illeszkedés: folytonos változók
+
+Ugyanígy bármilyen diszkrét valószíűségi eloszlást követő változó illeszkedése vizsgálható. Folytonos változók esetén egy lehetőség, hogy a változó értékeit intervallumokra bontjuk, ezáltal ordinális mérési szintű változót kapunk, és az egyes intervallumokhoz rendeljük a megfelelő valószínűségeket. Pl. Normális eloszlás esetén az átlag &plusmn; egy szórásnyi intervallumba esik az értékek harmada, stb. (Előző félévben néztük, hogyan tudunk a normális eloszláson adott valószínűségű intervallumokat lehatárolni.)  
+
+De folytonos változók esetén rendelkezésre állnak más próbák is, mint például az egymintás *Kolmogorov-Smirnov* és az *Anderson-Darling* próba, amellyel vizsgálható a változó illeszkedése bármilyen, adott paraméterekkel rendelkező valószínűségi eloszláshoz (beleértve a kiemelt jelentőségű normális eloszlást), illetve további tesztek, mint a *Lilliefors*, *Shapiro-Wilk*, amellyel vizsgálható hogy a változó normális eloszlást követ-e.  
+
+
+
+

@@ -462,6 +462,8 @@ populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az
 ellenhipotézis szerint nem illeszkedik.</p>
 <div id="illeszkedésvizsgálat-χ²-próbával" class="section level3">
 <h3>Illeszkedésvizsgálat χ² próbával</h3>
+<div id="példa" class="section level4">
+<h4>1. példa</h4>
 <p>Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla,
 hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük
 kell a szabályos dobókockával való dobás valószínűségeloszlásához.</p>
@@ -544,6 +546,93 @@ másik kutatás nem valószínűsíti az ellenkezőjét - szabályosnak
 tekintjük. Ezért is a kettős tagadás: nem állítjuk határozottan, hogy
 illeszkedik, de a megfigyeléseink alapján azt sem állíthatjuk, hogy nem
 illeszkedik.</p>
+</div>
+<div id="példa-1" class="section level4">
+<h4>2. példa</h4>
+<p>Az elméleti eloszlás származhat más forrásból is: ilyen lehet egy
+népszámlálás. Arra vagyunk kíváncsiak, hogy a mintánkban egy változó
+eloszlása illeszkedik-e a népszámlálásban látott eloszláshoz, amely az
+egész populáció adatait veszi alapul, tehát vehető elméletinek. Ha ebből
+a populációból vettük a mintát, akkor a megoszlásnak nagy
+valószínűséggel illeszkednie kell a teljes populációhoz.</p>
+<p>Vegyük a felekezeti eloszlást (bár ez a valóságban pont nem működne,
+mert erre a kérdésre nem kötelező a válaszadás, és sokan éltek is a
+nemválaszolás jogával). A kérdésünk, hogy feltételezhetjük-e, hogy a
+mintánk eloszlása illeszkedik a sokasági eloszláshoz (a népszámlálást
+alapul véve).</p>
+<p>Tegyük fel, hogy az alábbi mintát kaptuk:</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:census">
+<col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Felekezet</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<del>i</del>)</p>
+</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Katolikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">490</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Református</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">140</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Evangélikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Egyéb</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Felekezeten kívüli</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">260</td></tr>
+</table>
+
+<p>Az elméleti értékeket az alábbi sokasági eloszlás (<span
+class="math inline">\(p_i\)</span>) alapján tudjuk kiszámítani az <span
+class="math inline">\(e_i = N \ast p_i\)</span> képlettel.</p>
+<table class="huxtable" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  " id="tab:census.complete">
+<col><col><col><col><tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>Dobott szám</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>db (m<del>i</del>)</p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>p<del>i</del></p>
+</th><th style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"><p>e<del>i</del></p>
+</th></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Katolikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">490</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.51</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">510</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Református</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">140</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.16</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">160</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Evangélikus</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">40</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.03</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">30</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Egyéb</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">70</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.05</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">50</td></tr>
+<tr>
+<td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Felekezeten kívüli</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">260</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.25</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0.4pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">250</td></tr>
+</table>
+
+<p>A próba értéke:<br />
+<span
+class="math display">\[\chi^{2}=\sum_{i=1}^{k}\frac{(m_{i}-e_{i})^2}{e_{i}}=\frac{(490-510)^2}{510}+
+\\ + \frac{(140-160)^2}{160}+...+\frac{(260-250)^2}{250}=
+15,02\]</span></p>
+<p><span class="math display">\[df = k-1 = 5-1=4\]</span> <span
+class="math display">\[\chi^2_{0.95;4}=9,49\]</span></p>
+<p><strong>Döntés:</strong> 5%-os szignifikanciaszint mellett elvetjük a
+nullhipotézist, a minta felekezeti eloszlása nem illeszkedik a populáció
+eloszlásához. Ennek oka lehet, hogy egy másik populációból származik,
+vagy valami torzította a mintavételt. Elméletileg az sem kizárt, csak
+nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb
+mértékben eltérő minta.</p>
+</div>
+</div>
+<div id="illeszkedés-folytonos-változók" class="section level3">
+<h3>Illeszkedés: folytonos változók</h3>
+<p>Ugyanígy bármilyen diszkrét valószíűségi eloszlást követő változó
+illeszkedése vizsgálható. Folytonos változók esetén egy lehetőség, hogy
+a változó értékeit intervallumokra bontjuk, ezáltal ordinális mérési
+szintű változót kapunk, és az egyes intervallumokhoz rendeljük a
+megfelelő valószínűségeket. Pl. Normális eloszlás esetén az átlag ± egy
+szórásnyi intervallumba esik az értékek harmada, stb. (Előző félévben
+néztük, hogyan tudunk a normális eloszláson adott valószínűségű
+intervallumokat lehatárolni.)</p>
+<p>De folytonos változók esetén rendelkezésre állnak más próbák is, mint
+például az egymintás <em>Kolmogorov-Smirnov</em> és az
+<em>Anderson-Darling</em> próba, amellyel vizsgálható a változó
+illeszkedése bármilyen, adott paraméterekkel rendelkező valószínűségi
+eloszláshoz (beleértve a kiemelt jelentőségű normális eloszlást),
+illetve további tesztek, mint a <em>Lilliefors</em>,
+<em>Shapiro-Wilk</em>, amellyel vizsgálható hogy a változó normális
+eloszlást követ-e.</p>
 </div>
 </div>
 
