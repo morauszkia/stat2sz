@@ -11,7 +11,7 @@
 
 
 
-<title>Egyéb khi-négyzet próbák</title>
+<title>Illeszkedésvizsgálat</title>
 
 <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -347,7 +347,10 @@ div.tocify {
       <a href="kereszttabla2.html">Függetlenségvizsgálat 2.</a>
     </li>
     <li>
-      <a href="illeszkedes.html">Egyéb khi-négyzet próbák</a>
+      <a href="illeszkedes.html">Illeszkedésvizsgálat</a>
+    </li>
+    <li>
+      <a href="homogenitas.html">Homogenitásvizsgálat</a>
     </li>
   </ul>
 </li>
@@ -407,7 +410,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Egyéb khi-négyzet próbák</h1>
+<h1 class="title toc-ignore">Illeszkedésvizsgálat</h1>
 
 </div>
 
@@ -438,11 +441,6 @@ h4 {
   padding: 16px 0;
 }
 </style>
-<p>A függetlenségvizsgálaton kívül még két másik esetben is használunk
-olyan próbát, amely nulleloszlása χ². Ezek az illeszkedés- és a
-homogenitásvizsgálat.</p>
-<div id="illeszkedésvizsgálat" class="section level2">
-<h2>Illeszkedésvizsgálat</h2>
 <p>Időnként azt kell megvizsgálnunk, hogy egy minta származhat-e egy
 bizonyos elméleti valószínűségeloszlásból. Másképpen: a mintában látható
 változóeloszlás <em>illeszkedik-e</em> valamilyen elméleti
@@ -472,10 +470,10 @@ Shapiro-Wilk (normalitásvizsgálat), stb. tesztet végezhetünk.</li>
 <p>A próbák nullhipotézise, hogy a minta egy adott eloszlást követő
 populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az
 ellenhipotézis szerint nem illeszkedik.</p>
-<div id="illeszkedésvizsgálat-χ²-próbával" class="section level3">
-<h3>Illeszkedésvizsgálat χ² próbával</h3>
-<div id="példa" class="section level4">
-<h4>1. példa</h4>
+<div id="illeszkedésvizsgálat-χ²-próbával" class="section level2">
+<h2>Illeszkedésvizsgálat χ² próbával</h2>
+<div id="példa" class="section level3">
+<h3>1. példa</h3>
 <p>Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla,
 hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük
 kell a szabályos dobókockával való dobás valószínűségeloszlásához.</p>
@@ -559,8 +557,8 @@ tekintjük. Ezért is a kettős tagadás: nem állítjuk határozottan, hogy
 illeszkedik, de a megfigyeléseink alapján azt sem állíthatjuk, hogy nem
 illeszkedik.</p>
 </div>
-<div id="példa-1" class="section level4">
-<h4>2. példa</h4>
+<div id="példa-1" class="section level3">
+<h3>2. példa</h3>
 <p>Az elméleti eloszlás származhat más forrásból is: ilyen lehet egy
 népszámlálás. Arra vagyunk kíváncsiak, hogy a mintánkban egy változó
 eloszlása illeszkedik-e a népszámlálásban látott eloszláshoz, amely az
@@ -627,8 +625,8 @@ nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb
 mértékben eltérő minta.</p>
 </div>
 </div>
-<div id="illeszkedés-folytonos-változók" class="section level3">
-<h3>Illeszkedés: folytonos változók</h3>
+<div id="illeszkedés-folytonos-változók" class="section level2">
+<h2>Illeszkedés: folytonos változók</h2>
 <p>Ugyanígy bármilyen diszkrét valószíűségi eloszlást követő változó
 illeszkedése vizsgálható. Folytonos változók esetén egy lehetőség, hogy
 a változó értékeit intervallumokra bontjuk, ezáltal ordinális mérési
@@ -645,55 +643,6 @@ eloszláshoz (beleértve a kiemelt jelentőségű normális eloszlást),
 illetve további tesztek, mint a <em>Lilliefors</em>,
 <em>Shapiro-Wilk</em>, amellyel vizsgálható hogy a változó normális
 eloszlást követ-e.</p>
-</div>
-</div>
-<div id="homogenitásvizsgálat" class="section level2">
-<h2>Homogenitásvizsgálat</h2>
-<p>Homogenitásvizsgálattal azt vizsgáljuk, két minta származhat-e
-ugyanolyan valószínűségeloszlású populációból: a két vizsgált
-populációban a változónak lehet-e ugyanolyan az eloszlása?</p>
-<p>A nullhipotézis szerint a két populációban a változó eloszlása
-egyforma, az ellenhipotézis szerint pedig különbözik.</p>
-<p><strong>Folytonos változók</strong> esetében, akárcsak az
-illeszkedésvizsgálatra, erre is léteznek próbák, mint pl. a két- vagy
-többmintás <em>Kolmogorov-Smirnov</em> vagy <em>k-mintás
-Anderson-Darling</em> tesztek.</p>
-<p><strong>Alacsony mérési szintű változók</strong> esetében ezúttal is
-<span class="math inline">\(\chi^2\)</span> tesztet végezhetünk. Létezik
-külön képlet a homogenitásvizsgálatra:</p>
-<p><span class="math display">\[\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k
-\frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2}
-\right)^2}{N_1^{(i)} + N_2^{(i)}} = N_1\ast N_2 \ast \sum_{i=1}^k
-\frac{\left(f_1^{(i)} - f_2^{(i)} \right)^2}{N_1^{(i)} +
-N_2^{(i)}}\]</span></p>
-<p>A képletben <span class="math inline">\(N_1\)</span> és <span
-class="math inline">\(N_2\)</span> a két minta teljes elemszáma, az
-<span class="math inline">\(N_1^{(i)}\)</span> típusú tagok pedig az
-adott mintában az i. kategória elemszámát jelölik, az <span
-class="math inline">\(f_1^{(i)}\)</span> típusú tagok pedig az adott
-mintában az adott kategória arányát. Általánosan:</p>
-<p><span class="math display">\[f_j^{(i)}=
-\frac{N_j^{(i)}}{N_j}\]</span><br />
-De a fenti képlet helyett használhatjuk a sima függetlenségvizsgálatnál
-is használt χ² próbát is: kiszámítjuk az <span
-class="math inline">\(e_{ij}\)</span> értékeket, majd az <span
-class="math inline">\(e_{ij}\)</span> és <span
-class="math inline">\(m_{ij}\)</span> értékek alapján kiszámítjuk a
-<span class="math inline">\(\chi^2\)</span> próbát a <span
-class="math inline">\(2\ast k\)</span> méretű kereszttáblára, ahol <span
-class="math inline">\(k\)</span> a változó kategóriáinak száma.</p>
-<p><span class="math display">\[\chi^{2}=\sum_{i = 1}^{k}\sum_{j =
-1}^{2}{\frac{(m_{ij}-e_{ij})^2}{e_{ij}}}\]</span></p>
-<p>A próba igaz <span class="math inline">\(H_0\)</span> (homogenitás)
-esetén mindkét esetben <span class="math inline">\(df = k-1\)</span>
-szabadságfokú <span class="math inline">\(\chi^2\)</span> eloszlást
-követ.</p>
-<div id="példa-2" class="section level4">
-<h4>Példa</h4>
-<p>Tegyük fel, hogy van két mintánk, amelyekkel egy-egy ország
-felekezeti megoszlását vizsgáljuk. A kérdés, hogy a felekezet változó
-eloszlása azonos-e a két mintában?</p>
-</div>
 </div>
 
 

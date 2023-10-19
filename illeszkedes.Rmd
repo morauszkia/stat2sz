@@ -1,5 +1,5 @@
 ---
-title: "Egyéb khi-négyzet próbák"
+title: "Illeszkedésvizsgálat"
 output: 
   html_document:
     toc: true
@@ -40,10 +40,6 @@ h4 {
 }
 ```
 
-A függetlenségvizsgálaton kívül még két másik esetben is használunk olyan próbát, amely nulleloszlása &chi;&sup2;. Ezek az illeszkedés- és a homogenitásvizsgálat.  
-
-## Illeszkedésvizsgálat
-
 Időnként azt kell megvizsgálnunk, hogy egy minta származhat-e egy bizonyos elméleti valószínűségeloszlásból. Másképpen: a mintában látható változóeloszlás *illeszkedik-e* valamilyen elméleti valószínűségeloszláshoz.  
 
 Ha ez utóbbinak a paraméterei is adottak, akkor **tiszta illeszkedésvizsgálatról** van szó. Ilyen lehet, hogy például 100-as várható értékű és 10-es szórású normális eloszlást követ-e a változó, vagy pedig, hogy származhat-e egy olyan binomiális eloszlásból, amely paramétere, az esemény valószínűsége p=0,3.   
@@ -57,9 +53,9 @@ Mint a fenti példából látható, illeszkedésvizsgálat diszkrét és folyton
 
 A próbák nullhipotézise, hogy a minta egy adott eloszlást követő populációból származik, vagyis illeszkedik a megadott eloszláshoz. Az ellenhipotézis szerint nem illeszkedik.
 
-### Illeszkedésvizsgálat &chi;&sup2; próbával
+## Illeszkedésvizsgálat &chi;&sup2; próbával
 
-#### 1. példa  
+### 1. példa  
 
 Vegyünk egy dobókockát. A kérdésünk, hogy feltételezhetjük-e róla, hogy szabályos. Ha szabályos, akkor a dobott számoknak illeszkedniük kell a szabályos dobókockával való dobás valószínűségeloszlásához.  
 
@@ -105,7 +101,7 @@ Ez a képlet (a megfigyelt és elméleti érték különbségének négyzete, os
 $$\chi^{2}= \frac{(13-10)^2}{10}+\frac{(8-10)^2}{10}+\frac{(10-10)^2}{10}+ \\ + \frac{(7-10)^2}{10}+\frac{(15-10)^2}{10}+\frac{(7-10)^2}{10}=5,6$$
 A próba igaz nullhipotézis (illeszkedés) esetén $df=k-1$ szabadságfokú &chi;&sup2; eloszlást követ, ahol $k$ a változó lehetséges értékeinek a száma, vagyis a fenti esetben $df = 6 - 1 = 5$. Ehhez 5% szignifikanciaszint esetén a 11,1 határérték tartozik. Mivel a tesztérték kisebb ennél a határértéknél, 5%-os szignifikanciaszint mellett megtartjuk a nullhipotézist: nem állíthatjuk, hogy a dobások megoszlása nem illeszkedik a várt eloszláshoz, és a kockát - amíg egy másik kutatás nem valószínűsíti az ellenkezőjét - szabályosnak tekintjük. Ezért is a kettős tagadás: nem állítjuk határozottan, hogy illeszkedik, de a megfigyeléseink alapján azt sem állíthatjuk, hogy nem illeszkedik.  
 
-#### 2. példa   
+### 2. példa   
 
 Az elméleti eloszlás származhat más forrásból is: ilyen lehet egy népszámlálás. Arra vagyunk kíváncsiak, hogy a mintánkban egy változó eloszlása illeszkedik-e a népszámlálásban látott eloszláshoz, amely az egész populáció adatait veszi alapul, tehát vehető elméletinek. Ha ebből a populációból vettük a mintát, akkor a megoszlásnak nagy valószínűséggel illeszkednie kell a teljes populációhoz.  
 
@@ -146,34 +142,9 @@ $$\chi^2_{0.95;4}=9,49$$
 
 **Döntés:** 5%-os szignifikanciaszint mellett elvetjük a nullhipotézist, a minta felekezeti eloszlása nem illeszkedik a populáció eloszlásához. Ennek oka lehet, hogy egy másik populációból származik, vagy valami torzította a mintavételt. Elméletileg az sem kizárt, csak nagyon valószínűtlen, hogy a mi mintánk épp egy a populációtól nagyobb mértékben eltérő minta.
 
-### Illeszkedés: folytonos változók
+## Illeszkedés: folytonos változók
 
 Ugyanígy bármilyen diszkrét valószíűségi eloszlást követő változó illeszkedése vizsgálható. Folytonos változók esetén egy lehetőség, hogy a változó értékeit intervallumokra bontjuk, ezáltal ordinális mérési szintű változót kapunk, és az egyes intervallumokhoz rendeljük a megfelelő valószínűségeket. Pl. Normális eloszlás esetén az átlag &plusmn; egy szórásnyi intervallumba esik az értékek harmada, stb. (Előző félévben néztük, hogyan tudunk a normális eloszláson adott valószínűségű intervallumokat lehatárolni.)  
 
 De folytonos változók esetén rendelkezésre állnak más próbák is, mint például az egymintás *Kolmogorov-Smirnov* és az *Anderson-Darling* próba, amellyel vizsgálható a változó illeszkedése bármilyen, adott paraméterekkel rendelkező valószínűségi eloszláshoz (beleértve a kiemelt jelentőségű normális eloszlást), illetve további tesztek, mint a *Lilliefors*, *Shapiro-Wilk*, amellyel vizsgálható hogy a változó normális eloszlást követ-e.  
-
-## Homogenitásvizsgálat
-
-Homogenitásvizsgálattal azt vizsgáljuk, két minta származhat-e ugyanolyan valószínűségeloszlású populációból: a két vizsgált populációban a változónak lehet-e ugyanolyan az eloszlása?  
-
-A nullhipotézis szerint a két populációban a változó eloszlása egyforma, az ellenhipotézis szerint pedig különbözik.  
-
-**Folytonos változók** esetében, akárcsak az illeszkedésvizsgálatra, erre is léteznek próbák, mint pl. a két- vagy többmintás *Kolmogorov-Smirnov* vagy *k-mintás Anderson-Darling* tesztek.  
-
-**Alacsony mérési szintű változók** esetében ezúttal is $\chi^2$ tesztet végezhetünk. Létezik külön képlet a homogenitásvizsgálatra:  
-
-$$\chi^2=N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left( \frac{N_1^{(i)}}{N_1}-\frac{N_2^{(i)}}{N_2} \right)^2}{N_1^{(i)} + N_2^{(i)}} = N_1\ast N_2 \ast \sum_{i=1}^k \frac{\left(f_1^{(i)} - f_2^{(i)} \right)^2}{N_1^{(i)} + N_2^{(i)}}$$
-
-A képletben $N_1$ és $N_2$ a két minta teljes elemszáma, az $N_1^{(i)}$ típusú tagok pedig az adott mintában az i. kategória elemszámát jelölik, az $f_1^{(i)}$ típusú tagok pedig az adott mintában az adott kategória arányát. Általánosan:  
-
-$$f_j^{(i)}= \frac{N_j^{(i)}}{N_j}$$  
-De a fenti képlet helyett használhatjuk a sima függetlenségvizsgálatnál is használt &chi;&sup2; próbát is: kiszámítjuk az $e_{ij}$ értékeket, majd az $e_{ij}$ és $m_{ij}$ értékek alapján kiszámítjuk a $\chi^2$ próbát a $2\ast k$ méretű kereszttáblára, ahol $k$ a változó kategóriáinak száma.
-
-$$\chi^{2}=\sum_{i = 1}^{k}\sum_{j = 1}^{2}{\frac{(m_{ij}-e_{ij})^2}{e_{ij}}}$$
-
-A próba igaz $H_0$ (homogenitás) esetén mindkét esetben $df = k-1$ szabadságfokú $\chi^2$ eloszlást követ.
-
-#### Példa  
-
-Tegyük fel, hogy van két mintánk, amelyekkel egy-egy ország felekezeti megoszlását vizsgáljuk. A kérdés, hogy a felekezet változó eloszlása azonos-e a két mintában?
 
