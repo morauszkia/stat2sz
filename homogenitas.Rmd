@@ -72,6 +72,7 @@ table <- hux(
   no1 = sample1,
   no2 = sample2
 )
+
 table %>%
   set_markdown_contents(1, 1, "Felekezet") %>%
   set_markdown_contents(1, 2, "1. minta") %>%
@@ -80,21 +81,6 @@ table %>%
 ```
 
 Először kiegészítjük a táblázatot a mintaelemszámokkal (ezek lényegében megfelelnek az oszlopösszegeknek), illetve az egyes kategóriák mintán belüli arányával ($f_j^{(i)}$), amelyek a sima kereszttáblák oszlopszázalékainak felelnek meg.
-
-```{r}
-n1 <- sum(sample1)
-n2 <- sum(sample2)
-
-f1 <- sample1 / n1
-f2 <- sample2 / n2
-
-fractions <- NULL
-for (i in 1:5) {
-  fractions[i] <- sprintf("\\frac{(%.2f - %.2f)^2}{%d + %d}", f1[i], f2[i], sample1[i], sample2[i])
-}
-
-sum_fractions <- paste(fractions, collapse = "+")
-```
 
 ## Homogenitásvizsgálat folytonos változókkal
 
