@@ -403,7 +403,7 @@ Ezúttal aszerint kell mindenkit besorolni, hogy férfi vagy nő.
 2. lépés: Azokat, akiknek nem tetszett, nőknek tippeljük (12 hiba), azokat, akiknek tetszett pedig férfiaknak (27 hiba), ezzel összesen 39 hibás besorolás lesz.
 
 3. Kiszámítjuk a lambdát:
-$$\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{40}=\frac{6}{40}=0,15=15\%$$
+$$\lambda=\frac{Hiba_0-Hiba_1}{Hiba_0}=\frac{45-39}{45}=\frac{6}{45}=0,133=13,3\%$$
 Ezek a mutatók is 0 és 1 (=100%) közötti értékeket vehetnek fel. 0 a leggyengébb, 1 pedig a legerősebb összefüggés. Előnyük, hogy olyankor is használhatók, ha nem teljesülnek a &chi;&sup2; próba feltételei, és ezért a &phi; és a Cramer-féle V értékek nem megbízhatók.  
 
 Másik előnyük, hogy kézzel fogható jelentésük van, ellentétben a &phi;-vel és Cramer-féle V-vel: azt fejezik ki, hány százalékkal csökkenti a hibás besorolásokat a másik változó értékének ismerete.  
