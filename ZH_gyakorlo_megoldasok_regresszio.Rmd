@@ -1,0 +1,1103 @@
+---
+title: "Gyakorló feladatok megoldásai - Regresszió"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+options(scipen = 999)
+library(dplyr)
+library(magrittr)
+library(huxtable)
+library(janitor)
+library(ggplot2)
+library(tibble)
+library(latex2exp)
+
+round2 = function(x, n) {
+  posneg = sign(x)
+  z = abs(x)*10^n
+  z = z + 0.5 + sqrt(.Machine$double.eps)
+  z = trunc(z)
+  z = z/10^n
+  z*posneg
+}
+```
+
+## Regresszió {.tabset}
+
+### 1. feladat {.tabset .tabset-pills}
+Az alábbi táblázatban 10 bergengóc válaszadó jövedelmét látják és azt, mennyit költenek havonta élelmiszerre.  
+
+- Állítsanak fel lineáris regressziós becslést az élelmiszerre elköltött összegre a jövedelem segítségével!
+- Értelmezzék a lineáris regresszió paramétereit!
+- Az élelmiszerre való költés különbségeinek hány százalékát magyarázzák a jövedelmi különbségek?
+- Állítható-e, hogy a jövedelem hatása az élelmiszerre költött összegre a populációban is eltér 0-tól? (Mindkét próbát végezzék el!)
+
+```{r reg1}
+o <- c(9, 8, 5, 4, 1, 6, 10, 7, 2, 3)
+x <- c(150, 200, 250, 250, 300, 300, 350, 350, 400, 450)[o]
+y <- c(80, 140, 170, 120, 130, 200, 220, 160, 210, 220)[o]
+data <- data.frame(x = x, y = y)
+
+data %>%
+  as_hux() %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, everywhere, c("jövedelem", "költés")) %>%
+  t()
+```
+Először kiszámítjuk a két változó átlagát, az átlagtól való eltéréseket, ezek szorzatát és négyzetét, végül ez utóbbiak összegét. 
+
+**ÖNELLENŐRZÉSI LEHETŐSÉG:** Az átlagok **mindig** a két-két szélső érték közé esnek, ezért az átlagtól való eltérések között mindig lesznek pozitívak és negatívak is. Az eltérések összege 0.
+
+**FIGYELEM:** A szorzásnál és négyzetre emelésnél figyeljenek az előjelekre: két negatív szám szorzata, illetve a negatív számok négyzete is pozitív szám lesz. Negatív értéket csak akkor kaphatnak, ha egy pozitív és egy negatív számot szoroznak.
+
+```{r table}
+data <- data %>%
+  mutate(difx = x - mean(x),
+         dify = y - mean(y),
+         dxy = difx * dify,
+         dx2 = difx ** 2,
+         dy2 = dify ** 2)
+last <- c(paste("$$\\overline{x}=", mean(data$x), "$$"),
+          paste("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "",
+          paste("$$\\sum:", sum(data$dxy), "$$"),
+          paste("$$\\sum:", sum(data$dx2), "$$"),
+          paste("$$\\sum:", sum(data$dy2), "$$"))
+data %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$x_i-\\overline{x}$$", "$$y_i-\\overline{y}$$",
+                                "$$(x_i-\\overline{x})(y_i-\\overline{y})$$", "$$(x_i-\\overline{x})^2$$",
+                                "$$(y_i-\\overline{y})^2$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders() %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, c(1:2, 5:7), "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5)
+
+b1 <- sum(data$dxy) %>% divide_by(sum(data$dx2)) %>% round2(3)
+b0 <- mean(data$y) - b1*mean(data$x)
+```
+
+Ezután kiszámíthatók a becslés paraméterei. A megoldásokban 3 tizedesre kerekítek, ez elég ahhoz, hogy ne legyenek túl nagyok a kerekítésből adódó eltérések. Ha Önök inkább csak 2 tizedesre kerekítenének most vagy a ZH-ban, az is teljesen rendben van. A későbbiekben kerekített értékekkel számolok tovább.
+
+$$
+\begin{align}
+b_1 &= \frac{\sum_{i=1}^{n}(x_i-\overline{x})\times(y_i-\overline{y})}{\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}=\frac{`r sum(data$dxy)`}{`r sum(data$dx2)``}=`r b1` \\
+b_0 &= \overline{y} - b_1\times \overline{x} = `r mean(data$y)` - `r b1`\times`r mean(data$x)` = `r b0`
+\end{align}
+$$
+**NE FELEJTSÉK EL** értelmezni a kapott paramétereket!
+
+Ha valaki egy fabatkával többet keres, az várhatóan $b_1 = `r b1`$ fabatkával költ többet élelmiszerre, mint a kevesebbet kereső.
+Aki 0 fabatkát keres, az várhatóan $b_0 = `r b0`$ fabatkát költ élelmiszerre. Ez persze extrapoláció, hiszen a mintában a legkevesebbet kereső is `r min(data$x)` fabatkát keresett. Ez a probléma megoldható lenne centrálással (az x változót lecseréljük, és a sima jövedelem helyett az átlagos jövedelemtől aló eltérés lesz az x változó), de ettől most eltekintünk.
+
+A következő lépés a modell illeszkedési mutatójának kiszámítása. Végül, a hipotézisvizsgálatok következnek. Ezek kiszámítására két út áll rendelkezésre. Egyik út, hogy a hibatagokból számítjuk, a másik út, hogy a becsléseknek az átlagtól való eltéréseiből.  
+
+**EGYET VÁLASSZANAK!**
+
+**TIPP:** Ha kiválasztották, melyik úton számolnak tovább, érdemes számológéppel úgy dolgozni, hogy mikor kiszámították a becslést valamelyik válaszadóra, rögtön továbbszámolnak, és kiszámítják vagy a hibatagot, vagy az átlagtól való eltérését, és rögtön négyzetre is emelik. Így elkerülik, hogy újra be kelljen írni ezeket a számokat, ami időnyereség, és nem fenyeget, hogy félreütnek valamit.
+
+A becsléseket úgy kapjuk, hogy behelyettesítünk az $\hat{y}_i=b_0 + b_1\times x_i = `r b0` + `r b1`\times x_i$ egyenletbe:
+```{r estimates1, results= 'asis'}
+data$yhat <- b0 + b1*data$x
+for (i in 1:nrow(data)) {
+  cat(paste0("$$\\hat{y}_{", i, "}=", b0, "+", b1, "\\times", data$x[i], "=", data$yhat[i], "$$"))
+}
+```
+
+**ÖNELLENŐRZÉSI LEHETŐSÉG:** A becsléseknek hihetőeknek kell lenniük. A célunk az y változó értékeinek becslése. Ha nagyon "félremennek" a becslések, az gyanús. A becslések átlaga mindig egyenlő az y változó átlagával! (Ezt kiszámítani nem érdemes, de ha már ránézésre is látszik, hogy ez nem teljesül, akkor ellenőrizzék a számításaikat!)
+
+#### Első módszer (SSH)
+```{r ssh1}
+data <- data %>%
+  mutate(
+    ei = y - yhat,
+    ei2 = (ei ** 2) %>% round2(3),
+    dyhat = yhat - mean(y),
+    dyhat2 = (dyhat ** 2) %>% round2(3)
+  )
+
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSH: ", sum(data$ei2)))
+data %>%
+  select(x, y, yhat, ei, ei2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$e_i$$", "$$e_i^{2}$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```
+
+Ezek után kiszámítható az $R^2$:  
+
+$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(data$ei2)`}{`r sum(data$dy2)`}=`r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3)`$$
+
+**NE FELEJTSÉK** értelmezni az $R^2$ mutatót!  
+
+A jövedelmi különbségek az élelmiszerekre való költést `r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3) %>% multiply_by(100)`%-ban magyarázzák.  
+  
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssh1}
+ssh <- sum(data$ei2)
+ssr <- sum(data$dy2)-ssh
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- (b1/seb1) %>% round2(3)
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t1}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+SSR &= SST - SSH = `r sum(data$dy2)` - `r ssh` = `r ssr` \\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f1}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+**ÖNELLENŐRZÉSI LEHETŐSÉG:** A két módszer, ha csak egy független változó van, ugyanazt az eredményt kell, hogy hozza: vagy mindkét esetben megtartják, vagy mindkét esetben elvetik a nullhipotézist!
+
+A feladat megoldása itt véget is ér.
+
+#### Második módszer (SSR)  
+
+```{r ssr1}
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSR: ", sum(data$dyhat2)))
+data %>%
+  select(x, y, yhat, dyhat, dyhat2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$\\hat{y}_i-\\overline{y}$$", "$$(\\hat{y}_i-\\overline{y}))^{2}$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```  
+
+
+Az $R^2$ kiszámítása:  
+
+$$R^2=\frac{SSR}{SST}=\frac{`r sum(data$dyhat2)`}{`r sum(data$dy2)`}=`r (sum(data$dyhat2)/sum(data$dy2)) %>% round2(3)`$$
+A kerekítésből adódóan kismértékben eltérhet a két $R^2$ érték, de látható, hogy kb. ugyanazt az eredményt kaptuk, mint az SSH-ból számított $R^2$ esetén. 
+
+**NE FELEJTSÉK** értelmezni az $R^2$ mutatót!  
+
+A jövedelmi különbségek az élelmiszerekre való költést `r (sum(data$dyhat2)/sum(data$dy2)) %>% round2(3) %>% multiply_by(100)`%-ban magyarázzák.  
+
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssr1}
+ssr <- sum(data$dyhat2)
+ssh <- sum(data$dy2)-ssr
+
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- b1/seb1
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SSH &= SST - SSR = `r sum(data$dy2)` - `r ssr` = `r ssh` \\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t2}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f2}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+**ÖNELLENŐRZÉSI LEHETŐSÉG:** A két módszer, ha csak egy független változó van, ugyanazt az eredményt kell, hogy hozza: vagy mindkét esetben megtartják, vagy mindkét esetben elvetik a nullhipotézist!
+
+A feladat megoldása itt véget is ér.
+
+
+### 2. feladat {.tabset .tabset-pills}
+Az alábbi táblázatban 7 megkérdezett válaszát látják arra a kérdésre, mennyire tetszett nekik egy sorozat első és második része (százalékban). Állítsanak fel lineáris regressziós becslést az első kötet értékelése alapján a második kötet értékelésére, és értelmezzék a modell paramétereit! Számítsák ki és értelmezzék a modell illeszkedési mutatóját! Viszgálják meg, szignifikáns-e az első könyv értékelését mérő változó hatása, illetve végezzék el a modell egészére vonatkozó szignifikanciavizsgálatot is (van-e olyan a független változók között, amelynek szignifikáns hatása van a függő változóra)! 
+
+
+```{r reg2}
+o <- c(4, 2, 6, 5, 3, 7, 1)
+x <- c(35, 42, 50, 60, 62, 66, 77)[o]
+y <- c(39, 58, 41, 73, 51, 61, 76)[o]
+data <- data.frame(x = x, y = y)
+
+data %>%
+  as_hux() %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, everywhere, c("első rész", "második rész")) %>%
+  t()
+```
+
+Először kiszámítjuk a két változó átlagát, az átlagtól való eltéréseket, ezek szorzatát és négyzetét, végül ez utóbbiak összegét. 
+
+```{r table2}
+data <- data %>%
+  mutate(difx = x - mean(x),
+         dify = y - mean(y),
+         dxy = difx * dify,
+         dx2 = difx ** 2,
+         dy2 = dify ** 2)
+last <- c(paste("$$\\overline{x}=", mean(data$x), "$$"),
+          paste("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "",
+          paste("$$\\sum:", sum(data$dxy), "$$"),
+          paste("$$\\sum:", sum(data$dx2), "$$"),
+          paste("$$\\sum:", sum(data$dy2), "$$"))
+data %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$x_i-\\overline{x}$$", "$$y_i-\\overline{y}$$",
+                                "$$(x_i-\\overline{x})(y_i-\\overline{y})$$", "$$(x_i-\\overline{x})^2$$",
+                                "$$(y_i-\\overline{y})^2$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders() %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, c(1:2, 5:7), "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5)
+
+b1 <- sum(data$dxy) %>% divide_by(sum(data$dx2)) %>% round2(3)
+b0 <- mean(data$y) - b1*mean(data$x)
+```
+
+Ezután kiszámíthatók a becslés paramétereit. 
+
+$$
+\begin{align}
+b_1 &= \frac{\sum_{i=1}^{n}(x_i-\overline{x})\times(y_i-\overline{y})}{\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}=\frac{`r sum(data$dxy)`}{`r sum(data$dx2)``}=`r b1` \\
+b_0 &= \overline{y} - b_1\times \overline{x} = `r mean(data$y)` - `r b1`\times`r mean(data$x)` = `r b0`
+\end{align}
+$$
+Ha valaki egy százalékkal többre értékelte az első részt, az várhatóan $b_1 = `r b1`$ százalékkal értékeli többre a másodikat, mint aki kevesebbre értékelte.
+Aki 0 százalékra értékelte volna az első részt, az várhatóan $b_0 = `r b0`$ százalékot adott volna a másodikra. Ez szintén extrapoláció, hiszen a mintában a legrosszabb értékelés az első könyvre `r min(data$x)` volt. 
+
+A következő lépés a modell illeszkedési mutatójának kiszámítása. Végül, a hipotézisvizsgálatok következnek. 
+
+Becslések:
+```{r estimates2, results= 'asis'}
+data$yhat <- b0 + b1*data$x
+for (i in 1:nrow(data)) {
+  cat(paste0("$$\\hat{y}_{", i, "}=", b0, "+", b1, "\\times", data$x[i], "=", data$yhat[i], "$$"))
+}
+```
+
+#### Első módszer (SSH)
+```{r ssh2}
+data <- data %>%
+  mutate(
+    ei = y - yhat,
+    ei2 = (ei ** 2) %>% round2(3),
+    dyhat = yhat - mean(y),
+    dyhat2 = (dyhat ** 2) %>% round2(3)
+  )
+
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSH: ", sum(data$ei2)))
+data %>%
+  select(x, y, yhat, ei, ei2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$e_i$$", "$$e_i^2$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```
+
+
+$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(data$ei2)`}{`r sum(data$dy2)`}=`r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3)`$$
+
+A második könyv értékelésében megfigyelhető különbségeket az első könyv értékelése `r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3) %>% multiply_by(100)`%-ban magyarázza.  
+  
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssh2}
+ssh <- sum(data$ei2)
+ssr <- sum(data$dy2)-ssh
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- b1/seb1
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t3}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+SSR &= SST - SSH = `r sum(data$dy2)` - `r ssh` = `r ssr` \\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f3}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+A feladat megoldása itt véget is ér.
+
+#### Második módszer (SSR)  
+
+```{r ssr2}
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSR: ", sum(data$dyhat2)))
+data %>%
+  select(x, y, yhat, dyhat, dyhat2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$\\hat{y}_i-\\overline{y}$$", "$$(\\hat{y}_i-\\overline{y}))^2$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```  
+
+
+$$R^2=\frac{SSR}{SST}=\frac{`r sum(data$dyhat2)`}{`r sum(data$dy2)`}=`r (sum(data$dyhat2)/sum(data$dy2)) %>% round2(3)`$$
+
+
+Tesztek:
+```{r sig.ssr2}
+ssr <- sum(data$dyhat2)
+ssh <- sum(data$dy2)-ssr
+
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- (b1/seb1) %>% round2(3)
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SSH &= SST - SSR = `r sum(data$dy2)` - `r ssr` = `r ssh` \\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t4}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f4}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+A feladat megoldása itt véget is ér.
+
+### 3. feladat {.tabset .tabset-pills}
+Az alábbi táblázatban 10 személygépkocsi korát (évben) és árát (dollárban) láthatják. Állítsanak fel regressziós becslést az autók árára a kor felhasználásával! Becsüljék és értelmezzék a modell paramétereit! Milyen a modell magyarázó ereje? Értelmezzék a kapott R2 értéket! Szignifikánsnak tekinthető-e a kor hatása az autó értékére? Végezzék el a b1 paraméterre és a modell egészére vonatkozó próbát is! Mennyire becsülnék a modell alapján egy 6, egy 8,5 és egy 4 éves autó értékét?
+
+```{r reg3}
+x <- c(5, 7, 5, 7, 8, 8, 9, 11, 10, 10)
+y <- c(5800, 5600, 4500, 4200, 4500, 3800, 2900, 2100, 2700, 1900)
+data <- data.frame(x = x, y = y)
+
+data %>%
+  as_hux() %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, everywhere, c("kor (év)", "ár (USD)")) %>%
+  set_number_format(1:nrow(data)+1, everywhere, "%d") %>%
+  t()
+```
+Először kiszámítjuk a két változó átlagát, az átlagtól való eltéréseket, ezek szorzatát és négyzetét, végül ez utóbbiak összegét. 
+
+```{r table3}
+data <- data %>%
+  mutate(difx = x - mean(x),
+         dify = y - mean(y),
+         dxy = difx * dify,
+         dx2 = difx ** 2,
+         dy2 = dify ** 2)
+last <- c(paste("$$\\overline{x}=", mean(data$x), "$$"),
+          paste("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "",
+          paste("$$\\sum:", sum(data$dxy), "$$"),
+          paste("$$\\sum:", sum(data$dx2), "$$"),
+          paste("$$\\sum:", sum(data$dy2), "$$"))
+data %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$x_i-\\overline{x}$$", "$$y_i-\\overline{y}$$",
+                                "$$(x_i-\\overline{x})(y_i-\\overline{y})$$", "$$(x_i-\\overline{x})^2$$",
+                                "$$(y_i-\\overline{y})^2$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders() %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, c(1:2, 5:7), "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5)
+
+b1 <- sum(data$dxy) %>% divide_by(sum(data$dx2)) %>% round2(3)
+b0 <- mean(data$y) - b1*mean(data$x)
+```
+
+Ezután kiszámíthatók a becslés paramétereit.
+$$
+\begin{align}
+b_1 &= \frac{\sum_{i=1}^{n}(x_i-\overline{x})\times(y_i-\overline{y})}{\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}=\frac{`r sum(data$dxy)`}{`r sum(data$dx2)``}=`r b1` \\
+b_0 &= \overline{y} - b_1\times \overline{x} = `r mean(data$y)` - `r b1`\times`r mean(data$x)` = `r b0`
+\end{align}
+$$
+
+Az egy évvel öregebb gépkocsi ára várhatóan $b_1= `r b1`$ dollárral kevesebb. A 0 éves gépkocsi várható ára pedig $b_0 = `r b0`$ dollár.
+
+A becsléseket úgy kapjuk, hogy behelyettesítünk az $\hat{y}_i=b_0 + b_1\times x_i = `r b0` + `r b1`\times x_i$ egyenletbe:
+```{r estimates3, results= 'asis'}
+data$yhat <- b0 + b1*data$x
+for (i in 1:nrow(data)) {
+  cat(paste0("$$\\hat{y}_{", i, "}=", b0, "+", b1, "\\times", data$x[i], "=", data$yhat[i], "$$"))
+}
+```
+
+Ezzel az egyenlettel tudjuk becsülni a fent megadott korú autók árát is:
+```{r predict3, results='asis'}
+pred.x <- c(6, 8.5, 4)
+for (value in pred.x) {
+  cat(paste0("$$\\hat{y}=", b0, "+", b1, "\\times", value, "=", (b0+b1*value) %>% round2(3), "$$"))
+}
+```
+
+Ezután valamelyik úton kiszámítjuk az $R^2$ mutatót.  
+
+#### Első módszer (SSH)
+```{r ssh3}
+data <- data %>%
+  mutate(
+    ei = y - yhat,
+    ei2 = (ei ** 2) %>% round2(3),
+    dyhat = yhat - mean(y),
+    dyhat2 = (dyhat ** 2) %>% round2(3)
+  )
+
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSH: ", sum(data$ei2)))
+data %>%
+  select(x, y, yhat, ei, ei2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$e_i$$", "$$e_i^{2}$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```
+
+Ezek után kiszámítható az $R^2$:  
+
+$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(data$ei2)`}{`r sum(data$dy2)`}=`r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3)`$$
+
+Az autó kora az eladási ár különbségeit (varianciáját) `r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3) %>% multiply_by(100)`%-ban magyarázza.  
+  
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssh3}
+ssh <- sum(data$ei2)
+ssr <- sum(data$dy2)-ssh
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- (b1/seb1) %>% round2(3)
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t5}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+SSR &= SST - SSH = `r sum(data$dy2)` - `r ssh` = `r ssr` \\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f5}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+A feladat megoldása itt véget is ér.
+
+#### Második módszer (SSR)  
+
+```{r ssr3}
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSR: ", sum(data$dyhat2)))
+data %>%
+  select(x, y, yhat, dyhat, dyhat2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$\\hat{y}_i-\\overline{y}$$", "$$(\\hat{y}_i-\\overline{y}))^{2}$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```  
+
+
+Az $R^2$ kiszámítása:  
+
+$$R^2=\frac{SSR}{SST}=\frac{`r sum(data$dyhat2)`}{`r sum(data$dy2)`}=`r (sum(data$dyhat2)/sum(data$dy2)) %>% round2(3)`$$
+
+A kerekítésből adódóan kismértékben eltérhet a két $R^2$ érték, de látható, hogy kb. ugyanazt az eredményt kaptuk, mint az SSH-ból számított $R^2$ esetén. Az értelmezés ugyanaz (ld. ott).
+
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssr3}
+ssr <- sum(data$dyhat2)
+ssh <- sum(data$dy2)-ssr
+
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- b1/seb1
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SSH &= SST - SSR = `r sum(data$dy2)` - `r ssr` = `r ssh` \\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t6}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f6}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+A feladat megoldása itt véget is ér.
+
+### 4. feladat {.tabset .tabset-pills}
+Az alábbi táblázatban férfiak reprezenatív mintájának testmagasságát, illetve édesapjuk testmagasságát láthatják. Állítsanak fel lineáris regressziós becslést a fiúk testmagasságára az apa magasságát felhasználva! Milyen a modell illeszkedése? A kapott paramétereket és értékeket értelmezzék is! Szignifikáns-e a független változó hatása? Végezzék el a b1 paraméterre vonatkozó próbát és a modell egészére vonatkozót is! Mennyire becsülnék a modell alapján egy 168, egy 172 és egy 190 cm magas apa fiának felnőttkori testmagasságát?
+
+```{r reg4}
+x <- c(165, 167, 171, 170, 175, 160, 192, 169, 175, 176)
+y <- c(160, 171, 180, 168, 181, 176, 198, 175, 181, 180)
+data <- data.frame(x = x, y = y)
+
+data %>%
+  as_hux() %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, everywhere, c("jövedelem", "költés")) %>%
+  t()
+```
+
+Először kiszámítjuk a két változó átlagát, az átlagtól való eltéréseket, ezek szorzatát és négyzetét, végül ez utóbbiak összegét. 
+
+```{r table4}
+data <- data %>%
+  mutate(difx = x - mean(x),
+         dify = y - mean(y),
+         dxy = difx * dify,
+         dx2 = difx ** 2,
+         dy2 = dify ** 2)
+last <- c(paste("$$\\overline{x}=", mean(data$x), "$$"),
+          paste("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "",
+          paste("$$\\sum:", sum(data$dxy), "$$"),
+          paste("$$\\sum:", sum(data$dx2), "$$"),
+          paste("$$\\sum:", sum(data$dy2), "$$"))
+data %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$x_i-\\overline{x}$$", "$$y_i-\\overline{y}$$",
+                                "$$(x_i-\\overline{x})(y_i-\\overline{y})$$", "$$(x_i-\\overline{x})^2$$",
+                                "$$(y_i-\\overline{y})^2$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders() %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, c(1:2, 5:7), "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5)
+
+b1 <- sum(data$dxy) %>% divide_by(sum(data$dx2)) %>% round2(3)
+b0 <- mean(data$y) - b1*mean(data$x)
+```
+
+Ezután kiszámíthatók a becslés paraméterei. 
+
+$$
+\begin{align}
+b_1 &= \frac{\sum_{i=1}^{n}(x_i-\overline{x})\times(y_i-\overline{y})}{\sum_{i=1}^{n}{\left(x_i-\overline{x}\right)^2}}=\frac{`r sum(data$dxy)`}{`r sum(data$dx2)``}=`r b1` \\
+b_0 &= \overline{y} - b_1\times \overline{x} = `r mean(data$y)` - `r b1`\times`r mean(data$x)` = `r b0`
+\end{align}
+$$
+
+Ha valaki apja egy centivel magasabb, mint valaki más apja, ő várhatóan $b_1 = `r b1`$ cm-rel magasabb lesz az alacsonyabb apa fiánál.
+Aki apja 0 cm magas, az várhatóan $b_0 = `r b0`$ cm magas lesz. Tudom, hogy  abszurd, de ebben a modellben ezt jelenti a $b_0$. Megoldás a centrálás lenne (ld. ott).
+
+A becsléseket úgy kapjuk, hogy behelyettesítünk az $\hat{y}_i=b_0 + b_1\times x_i = `r b0` + `r b1`\times x_i$ egyenletbe:
+```{r estimates4, results= 'asis'}
+data$yhat <- b0 + b1*data$x
+for (i in 1:nrow(data)) {
+  cat(paste0("$$\\hat{y}_{", i, "}=", b0, "+", b1, "\\times", data$x[i], "=", data$yhat[i], "$$"))
+}
+```
+
+Ezzel az egyenlettel tudjuk becsülni a fent megadott magasságú apák gyermekeinek magasságát is:
+```{r predict4, results='asis'}
+pred.x <- c(168, 172, 190)
+for (value in pred.x) {
+  cat(paste0("$$\\hat{y}=", b0, "+", b1, "\\times", value, "=", (b0+b1*value) %>% round2(3), "$$"))
+}
+```
+
+Ezek után kiszámítjuk az $R^2$ értéket.  
+
+#### Első módszer (SSH)
+```{r ssh4}
+data <- data %>%
+  mutate(
+    ei = y - yhat,
+    ei2 = (ei ** 2) %>% round2(3),
+    dyhat = yhat - mean(y),
+    dyhat2 = (dyhat ** 2) %>% round2(3)
+  )
+
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSH: ", sum(data$ei2)))
+data %>%
+  select(x, y, yhat, ei, ei2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$e_i$$", "$$e_i^{2}$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```
+
+Ezek után kiszámítható az $R^2$:  
+
+$$R^2=1-\frac{SSH}{SST}=1-\frac{`r sum(data$ei2)`}{`r sum(data$dy2)`}=`r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3)`$$
+
+Az apa magassága az emberek magasságának különbségeit `r (1-sum(data$ei2)/sum(data$dy2)) %>% round2(3) %>% multiply_by(100)`%-ban magyarázza.  
+  
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssh4}
+ssh <- sum(data$ei2)
+ssr <- sum(data$dy2)-ssh
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- (b1/seb1) %>% round2(3)
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t7}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+SSR &= SST - SSH = `r sum(data$dy2)` - `r ssh` = `r ssr` \\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f7}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+A feladat megoldása itt véget is ér.
+
+#### Második módszer (SSR)  
+
+```{r ssr4}
+last <- c(paste0("$$\\overline{x}=", mean(data$x), "$$"),
+          paste0("$$\\overline{y}=", mean(data$y), "$$"),
+          "",
+          "$$\\sum: 0$$",
+          paste0("SSR: ", sum(data$dyhat2)))
+data %>%
+  select(x, y, yhat, dyhat, dyhat2) %>%
+  as_hux() %>%
+  set_contents(1, everywhere, c("$$x_i$$", "$$y_i$$", "$$\\hat{y}_i$$", "$$\\hat{y}_i-\\overline{y}$$", "$$(\\hat{y}_i-\\overline{y}))^{2}$$")) %>%
+  set_escape_contents(FALSE) %>%
+  set_all_borders(everywhere, everywhere) %>%
+  set_bold(1, everywhere) %>%
+  add_rows(last) %>%
+  set_number_format(everywhere, 1:2, "%d") %>%
+  set_number_format(everywhere, 3:5, "%.3f") %>%
+  set_number_format(nrow(data)+2, 4, "%d") %>%
+  set_number_format(1, everywhere, "%d") %>%
+  set_bold(nrow(data)+2, everywhere) %>%
+  set_background_color(nrow(data)+2, everywhere, "goldenrod1") %>%
+  set_bottom_border(c(1, nrow(data)+1), everywhere, value = 1.5) %>%
+  set_valign(c(1, nrow(data)+2), everywhere, "middle") %>%
+  set_col_width(everywhere, c(.15, .15, .15, .15, .15))
+```  
+
+
+Az $R^2$ kiszámítása:  
+
+$$R^2=\frac{SSR}{SST}=\frac{`r sum(data$dyhat2)`}{`r sum(data$dy2)`}=`r (sum(data$dyhat2)/sum(data$dy2)) %>% round2(3)`$$
+
+A kerekítésből adódóan kismértékben eltérhet a két $R^2$ érték, de látható, hogy kb. ugyanazt az eredményt kaptuk, mint az SSH-ból számított $R^2$ esetén. 
+
+
+Végül, a szignifikanciavizsgálatok következnek:
+```{r sig.ssr4}
+ssr <- sum(data$dyhat2)
+ssh <- sum(data$dy2)-ssr
+
+see <- (sqrt(ssh/(nrow(data)-2))) %>% round2(3)
+seb1 <- (see/sqrt(sum(data$dx2))) %>% round2(3)
+t <- b1/seb1
+df <- nrow(data)-2
+f <- (ssr/(ssh/df)) %>% round2(2)
+```
+
+$$
+\begin{align}
+H_0 &: \beta_1 = 0  \\
+H_1 &: \beta_1 \ne 0 \\
+\\
+SSH &= SST - SSR = `r sum(data$dy2)` - `r ssr` = `r ssh` \\
+SE(e) &= \sqrt{\frac{{SSH}}{n-r-1}} = \sqrt{\frac{{`r ssh`}}{`r df`}}=`r see` \\
+SE(b_1) &= \frac{SE(e)}{\sqrt{\sum_{i = 1}^{n}{\left(x_i-\overline{x}\right)^2}}} = \frac{`r see`}{\sqrt{`r sum(data$dx2)`}} = `r seb1`\\
+t &= \frac{b_1}{SE(b_1)} = \frac{`r b1`}{`r seb1`} = `r t`\\
+df &= n-r-1 = `r df` \\
+t_{0,975;`r df`} &=`r qt(0.975, df) %>% round2(2)`
+\end{align}
+$$
+
+```{r decision.t8}
+if (abs(t) > qt(0.975, df)) {
+  cat("Mivel a tesztérték kívül esik az elfogadási tartományon, a nullhipotézist elvetjük, a független változó hatását mérő paraméter szignifikáns, a populációban is eltér 0-tól.")
+} else {
+  cat("Mivel a tesztérték a határértékek közé esik, megtartjuk a nullhipotézist, nem állíthatjuk, hogy a független változó hatását mérő paraméter a populációban is eltérne 0-tól.")
+}
+```
+
+$$
+\begin{align}
+H_0 &: \forall\beta_i=0 \\
+H_1 &: \exists\beta_i\ne0 \\
+\\
+F &= \frac{\frac{SSR}{r}}{\frac{SSH}{n-r-1}} = \frac{\frac{`r ssr`}{1}}{\frac{`r ssh`}{`r df`}} = `r f` \\
+df_1 &= r = 1 \\
+df_2 &= n-r-1 = `r df` \\
+F_{1;`r df`} &=`r qf(0.95, 1, df) %>% round2(2)`
+\end{align}
+$$
+
+
+```{r decision.f8}
+if (f > qf(0.95, 1, df)) {
+  cat("Mivel a teszt értéke nagyobb a határértéknél, ezért elvetjük a nullhipotézist, a független változó hatása a populációban sem 0.")
+} else {
+  cat("Mivel a tesztérték kisebb a határértéknél, megtartjuk a nullhipotézist, nem állítható, hogy a független változó hatása a populációban eltér 0-tól")
+}
+```
+
+A feladat megoldása itt véget is ér.

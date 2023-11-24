@@ -1,0 +1,438 @@
+---
+title: "Gyakorló feladatok megoldásai - ANOVA"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+options(scipen = 999, digits = 2)
+library(dplyr)
+library(magrittr)
+library(huxtable)
+library(janitor)
+library(ggplot2)
+library(tibble)
+library(latex2exp)
+
+round2 = function(x, n) {
+  posneg = sign(x)
+  z = abs(x)*10^n
+  z = z + 0.5 + sqrt(.Machine$double.eps)
+  z = trunc(z)
+  z = z/10^n
+  z*posneg
+}
+```
+
+## ANOVA {.tabset}
+
+### 1. feladat
+Három határmenti városban (A, B és C) vizsgáljuk, hogy a válaszadók hányszor jártak az elmúlt évben a szomszéd országban. Vizsgálják meg, állítható-e, hogy a három városban a látogatások gyakoriságának várható értéke eltér! Ha szignifikáns az eltérés, a különbségek mekkora része magyarázható azzal, melyik városban lakik az illető, és hány százalékot magyaráznak más, az elemzésbe be nem vont tényezők? Mely városok között szignifikánsak az eltérések?
+
+```{r anova1}
+means <- c(30, 40, 50)
+sds <- c(17, 15, 18)
+ns <- c(35, 40, 25)
+
+data <- data.frame(átlag = means, szórás = sds, elemszám = ns) %>%
+  set_rownames(paste(LETTERS[1:3], "város"))
+
+indep <- "a város, amelyben a válaszadó lakik"
+dep <- "a látogatások számának"
+
+data %>%
+  t() %>%
+  as_huxtable(add_colnames = TRUE, add_rownames = TRUE) %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_align(1, everywhere, "left") %>%
+  set_align(2:4, 2:4, "right")
+```
+
+```{r anova1.solution}
+group.sum <- means %>% multiply_by(ns)
+total.n <- sum(ns)
+k <- length(means)
+main.mean <- means %>% multiply_by(ns) %>% sum() %>% divide_by(total.n) %>% round2(2)
+ssk <- ns %>% multiply_by((means - main.mean)** 2) %>% sum() %>% round2(2)
+ssb <- (ns-1) %>% multiply_by(sds**2) %>% sum() %>% round2(2)
+vark <- ssk %>% divide_by(k-1) %>% round2(2)
+varb <- ssb %>% divide_by(total.n - k) %>% round2(2)
+df2s <- c(1:30, 40, 60, 120)
+F.test <- vark %>% divide_by(varb) %>% round2(2)
+
+df1 <- k - 1
+df2 <- df2s %>% as_tibble %>%
+  filter(df2s <= (total.n-k)) %>%
+  max()
+
+brackets <- (means-main.mean) < 0
+ob <- NA
+cb <- NA
+ob[brackets] <- "\\left("
+ob[!brackets] <- ""
+cb[brackets] <- "\\right)"
+cb[!brackets] <- ""
+```
+
+$$
+\begin{align}
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{`r paste(ns, "*", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\\
+\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
+      &=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round2(2), "\\right)^2", collapse = " + ")`}
+      {`r k`-1}= \\
+      &=\frac{`r paste0(ns, " * ", ob, (means-main.mean) %>% round2(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+\\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+      &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
+\\
+F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
+\end{align}
+$$
+```{r anova1.decision, results = 'asis'}
+cat(paste0("A próba nulleloszlása egy F-eloszlás $df_1 = K-1 = ",df1,"$ és $df_2 = N-K = ", total.n - nrow(data), "$ szabadságfokokkal. <br>")) 
+if (df2 != (total.n - nrow(data))) {
+  cat(paste0("Mivel ", total.n-nrow(data), " nem szerepel az F-eloszlás táblázatában a $df_2$ értékek között, ezért ehelyett a ", df2, ". sort nézzük.<br>"))
+}
+cat(paste0("A táblázatban az $F_{", df1,";", df2,"}$ értéket keressük, ami ",qf(0.95, df1, df2) %>% round2(2), ".<br>"))
+if (F.test > qf(0.95, df1, df2)) {
+  cat("Mivel a kapott tesztérték nagyobb a határértéknél, a nullhipotézist 5%-os szignifikanciaszint mellett elvetjük. Az egyes csoportokban a várható érték nem egyenlő.<br><br>Ezután meg kell vizsgálnunk, melyek azok a páronkénti különbségek, amelyek szignifikánsak. Erre az ún. post-hoc tesztek szolgálnak.<br>")
+  
+  for (i in 1:(nrow(data)-1)) {
+    for (j in (i+1):nrow(data)) {
+      test <- means[i] %>% subtract(means[j]) %>% raise_to_power(2) %>% 
+              divide_by(varb*(k-1)*(1/ns[i]+1/ns[j]))
+      cat(paste0(rownames(data)[i], " és ", rownames(data)[j]), ":")
+      eq <- paste0("$$F_{", i, j, "} = \\frac{\\left(", means[i], "-", means[j], "\\right)^2}{",
+                   varb %>% round2(2),"*(", k, "-1)*\\left(\\frac{1}{", ns[i], "}+\\frac{1}{",
+                   ns[j],"}\\right)}=\\frac{", 
+                   (means[i]-means[j])**2 ,"}{", varb %>% multiply_by(k-1) %>% multiply_by(1/ns[i]+1/ns[j]) %>% 
+                   round2(2), "}=", test %>% round2(2))
+      if (test > qf(0.95, df1, df2)) {
+        cat(paste0(eq, ">", qf(0.95, df1, df2) %>% round2(2), 
+                  "\\implies \\textit{szignifikáns}$$"))
+        } else {
+        cat(paste0(eq, "<", qf(0.95, df1, df2) %>% round2(2), 
+                  "\\implies \\textit{nem szignifikáns}$$"))
+        }
+    }
+  }
+  cat("Kapcsolat ereje:")
+  cat(paste0("$$\\eta^2=\\frac{",ssk, "}{", ssk+ssb, "}=",(ssk/(ssk+ssb)) %>% round2(3), "$$"))
+  cat(paste0("Vagyis a ", indep, " ", (100*ssk/(ssk+ssb)) %>% round2(1), "%-ot magyaráz ", dep, " varianciájából."))
+  
+} else {
+  cat("Mivel a kapott tesztérték kisebb a határértéknél, a nullhipotézist megtartjuk. Nem állítható, hogy a várható értékek az egyes csoportokban különböznének.")
+}
+
+```
+
+### 2. feladat
+Bergengóc kutatók a napi munkába ingázás hosszát vizsgálják, és annak összefüggését a lakóhely típusával. Az alábbi táblázatban a mintából becsült értékeket láthatják. Állítható-e, hogy a munkába való eljutás várható ideje a különböző típusú településeken élők esetében nem egyenlő? Ha igen, az eltéréseket hány százalékban magyarázza a lakóhely típusa? Mely csoportok között szignifikáns az eltérés?
+
+```{r anova2}
+means <- c(40, 25, 30, 50)
+sds <- c(15, 13, 12, 14)
+ns <- c(25, 30, 42, 27)
+
+data <- data.frame(átlag = means, szórás = sds, elemszám = ns) %>%
+  set_rownames(c("főváros", "megyeszékhely", "egyéb város", "község"))
+
+indep <- "a településtípus"
+dep <- "az ingázás hosszának"
+
+data %>%
+  t() %>%
+  as_huxtable(add_colnames = TRUE, add_rownames = TRUE) %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_align(1, everywhere, "left") %>%
+  set_align(2:4, 2:5, "right")
+```
+
+```{r anova2.solution}
+group.sum <- means %>% multiply_by(ns)
+total.n <- sum(ns)
+k <- length(means)
+main.mean <- means %>% multiply_by(ns) %>% sum() %>% divide_by(total.n) %>% round2(2)
+ssk <- ns %>% multiply_by((means - main.mean)** 2) %>% sum() %>% round2(2)
+ssb <- (ns-1) %>% multiply_by(sds**2) %>% sum() %>% round2(2)
+vark <- ssk %>% divide_by(k-1) %>% round2(2)
+varb <- ssb %>% divide_by(total.n - k) %>% round2(2)
+df2s <- c(1:30, 40, 60, 120)
+F.test <- vark %>% divide_by(varb) %>% round2(2)
+
+df1 <- k - 1
+df2 <- df2s %>% as_tibble %>%
+  filter(df2s <= (total.n-k)) %>%
+  max()
+
+brackets <- (means-main.mean) < 0
+ob <- NA
+cb <- NA
+ob[brackets] <- "\\left("
+ob[!brackets] <- ""
+cb[brackets] <- "\\right)"
+cb[!brackets] <- ""
+```
+
+$$
+\begin{align}
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{`r paste(ns, "*", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\\
+\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
+      &=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round2(2), "\\right)^2", collapse = " + ")`}
+      {`r k`-1}= \\
+      &=\frac{`r paste0(ns, " * ", ob, (means-main.mean) %>% round2(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+\\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+      &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
+\\
+F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
+\end{align}
+$$
+
+```{r anova2.decision, results = 'asis'}
+cat(paste0("A próba nulleloszlása egy F-eloszlás $df_1 = K-1 = ",df1,"$ és $df_2 = N-K = ", total.n - nrow(data), "$ szabadságfokokkal. <br>")) 
+if (df2 != (total.n - nrow(data))) {
+  cat(paste0("Mivel ", total.n-nrow(data), " nem szerepel az F-eloszlás táblázatában a $df_2$ értékek között, ezért ehelyett a ", df2, ". sort nézzük.<br>"))
+}
+cat(paste0("A táblázatban az $F_{", df1,";", df2,"}$ értéket keressük, ami ",qf(0.95, df1, df2) %>% round2(2), ".<br>"))
+if (F.test > qf(0.95, df1, df2)) {
+  cat("Mivel a kapott tesztérték nagyobb a határértéknél, a nullhipotézist 5%-os szignifikanciaszint mellett elvetjük. Az egyes csoportokban a várható érték nem egyenlő.<br><br>Ezután meg kell vizsgálnunk, melyek azok a páronkénti különbségek, amelyek szignifikánsak. Erre az ún. post-hoc tesztek szolgálnak.<br>")
+  
+  for (i in 1:(nrow(data)-1)) {
+    for (j in (i+1):nrow(data)) {
+      test <- means[i] %>% subtract(means[j]) %>% raise_to_power(2) %>% 
+              divide_by(varb*(k-1)*(1/ns[i]+1/ns[j]))
+      cat(paste0(rownames(data)[i], " és ", rownames(data)[j]), ":")
+      eq <- paste0("$$F_{", i, j, "} = \\frac{\\left(", means[i], "-", means[j], "\\right)^2}{",
+                   varb %>% round2(2),"*(", k, "-1)*\\left(\\frac{1}{", ns[i], "}+\\frac{1}{",
+                   ns[j],"}\\right)}=\\frac{", 
+                   (means[i]-means[j])**2 ,"}{", varb %>% multiply_by(k-1) %>% multiply_by(1/ns[i]+1/ns[j]) %>% 
+                   round2(2), "}=", test %>% round2(2))
+      if (test > qf(0.95, df1, df2)) {
+        cat(paste0(eq, ">", qf(0.95, df1, df2) %>% round2(2), 
+                  "\\implies \\textit{szignifikáns}$$"))
+        } else {
+        cat(paste0(eq, "<", qf(0.95, df1, df2) %>% round2(2), 
+                  "\\implies \\textit{nem szignifikáns}$$"))
+        }
+    }
+  }
+  cat("Kapcsolat ereje:")
+  cat(paste0("$$\\eta^2=\\frac{",ssk %>% round2(2), "}{", (ssk+ssb) %>% round2(2), "}=",
+             (ssk/(ssk+ssb)) %>% round2(3), "$$"))
+  cat(paste0("Vagyis a ", indep, " ", (100*ssk/(ssk+ssb)) %>% round2(1), "%-ot magyaráz ", dep, " varianciájából."))
+  
+} else {
+  cat("Mivel a kapott tesztérték kisebb a határértéknél, a nullhipotézist megtartjuk. Nem állítható, hogy a várható értékek az egyes csoportokban különböznének.")
+}
+
+```
+
+### 3. feladat
+Reprezentatív kutatást végzünk Középfölde lakossága körében. Vizsgálják meg, az alábbi minta alapján állíthatjuk-e, hogy a különböző fajú munkavállalók várható jövedelme nem azonos! Ha vannak szignifikáns különbségek, vizsgálják meg, mely fajok között, és hogy a jövedelmi különbségeket milyen mértékben magyarázza a munkavállaló faji hovatartozása!
+
+```{r anova3}
+means <- c(210, 164, 190, 120)
+sds <- c(70, 80, 77, 69)
+ns <- c(40, 50, 60, 50)
+
+data <- data.frame(átlag = means, szórás = sds, elemszám = ns) %>%
+  set_rownames(c("tünde", "hobbit", "ember", "törp"))
+
+indep <- "a faj"
+dep <- "a várható jövedelem"
+
+data %>%
+  t() %>%
+  as_huxtable(add_colnames = TRUE, add_rownames = TRUE) %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_align(1, everywhere, "left") %>%
+  set_align(2:4, 2:4, "right")
+```
+
+```{r anova3.solution}
+group.sum <- means %>% multiply_by(ns)
+total.n <- sum(ns)
+k <- length(means)
+main.mean <- means %>% multiply_by(ns) %>% sum() %>% divide_by(total.n) %>% round2(2)
+ssk <- ns %>% multiply_by((means - main.mean)** 2) %>% sum() %>% round2(2)
+ssb <- (ns-1) %>% multiply_by(sds**2) %>% sum() %>% round2(2)
+vark <- ssk %>% divide_by(k-1) %>% round2(2)
+varb <- ssb %>% divide_by(total.n - k) %>% round2(2)
+df2s <- c(1:30, 40, 60, 120)
+F.test <- vark %>% divide_by(varb) %>% round2(2)
+
+df1 <- k - 1
+df2 <- df2s %>% as_tibble %>%
+  filter(df2s <= (total.n-k)) %>%
+  max()
+
+brackets <- (means-main.mean) < 0
+ob <- NA
+cb <- NA
+ob[brackets] <- "\\left("
+ob[!brackets] <- ""
+cb[brackets] <- "\\right)"
+cb[!brackets] <- ""
+```
+
+$$
+\begin{align}
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{`r paste(ns, "*", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\\
+\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
+      &=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round2(2), "\\right)^2", collapse = " + ")`}
+      {`r k`-1}= \\
+      &=\frac{`r paste0(ns, " * ", ob, (means-main.mean) %>% round2(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+\\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+      &=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
+\\
+F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
+\end{align}
+$$
+```{r anova3.decision, results = 'asis'}
+cat(paste0("A próba nulleloszlása egy F-eloszlás $df_1 = K-1 = ",df1,"$ és $df_2 = N-K = ", total.n - nrow(data), "$ szabadságfokokkal. <br>")) 
+if (df2 != (total.n - nrow(data))) {
+  cat(paste0("Mivel ", total.n-nrow(data), " nem szerepel az F-eloszlás táblázatában a $df_2$ értékek között, ezért ehelyett a ", df2, ". sort nézzük.<br>"))
+}
+cat(paste0("A táblázatban az $F_{", df1,";", df2,"}$ értéket keressük, ami ",qf(0.95, df1, df2) %>% round2(2), ".<br>"))
+if (F.test > qf(0.95, df1, df2)) {
+  cat("Mivel a kapott tesztérték nagyobb a határértéknél, a nullhipotézist 5%-os szignifikanciaszint mellett elvetjük. Az egyes csoportokban a várható érték nem egyenlő.<br><br>Ezután meg kell vizsgálnunk, melyek azok a páronkénti különbségek, amelyek szignifikánsak. Erre az ún. post-hoc tesztek szolgálnak.<br>")
+  
+  for (i in 1:(nrow(data)-1)) {
+    for (j in (i+1):nrow(data)) {
+      test <- means[i] %>% subtract(means[j]) %>% raise_to_power(2) %>% 
+              divide_by(varb*(k-1)*(1/ns[i]+1/ns[j]))
+      cat(paste0(rownames(data)[i], " és ", rownames(data)[j]), ":")
+      eq <- paste0("$$F_{", i, j, "} = \\frac{\\left(", means[i], "-", means[j], "\\right)^2}{",
+                   varb %>% round2(2),"*(", k, "-1)*\\left(\\frac{1}{", ns[i], "}+\\frac{1}{",
+                   ns[j],"}\\right)}=\\frac{", 
+                   (means[i]-means[j])**2 ,"}{", varb %>% multiply_by(k-1) %>% multiply_by(1/ns[i]+1/ns[j]) %>% 
+                   round2(2), "}=", test %>% round2(2))
+      if (test > qf(0.95, df1, df2)) {
+        cat(paste0(eq, ">", qf(0.95, df1, df2) %>% round2(2), 
+                  "\\implies \\textit{szignifikáns}$$"))
+        } else {
+        cat(paste0(eq, "<", qf(0.95, df1, df2) %>% round2(2), 
+                  "\\implies \\textit{nem szignifikáns}$$"))
+        }
+    }
+  }
+  cat("Kapcsolat ereje:")
+  cat(paste0("$$\\eta^2=\\frac{",ssk, "}{", ssk+ssb, "}=",(ssk/(ssk+ssb)) %>% round2(3), "$$"))
+  cat(paste0("Vagyis a ", indep, " ", (100*ssk/(ssk+ssb)) %>% round2(1), "%-ot magyaráz ", dep, " varianciájából."))
+  
+} else {
+  cat("Mivel a kapott tesztérték kisebb a határértéknél, a nullhipotézist megtartjuk. Nem állítható, hogy a várható értékek az egyes csoportokban különböznének.")
+}
+
+```
+
+### 4. feladat
+Három párt szimpatizánsainak mintáján vizsgáljuk a parlament iránti bizalmat. Állítható-e, hogy az egyes pártok szimpatizánsai különböző mértékben bíznak a parlamentben? Ha igen, mely pártok szimpatizánsai térnek el szignifikánsan egymástól? Milyen mértékben magyarázza a parlament iránti bizalom eltéréseit a pártszimpátia?
+
+```{r anova4}
+means <- c(5, 8, 4)
+sds <- c(3, 3.2, 2.9)
+ns <- c(40, 50, 30)
+
+data <- data.frame(átlag = means, szórás = sds, elemszám = ns) %>%
+  set_rownames(paste(LETTERS[1:3], "párt"))
+
+indep <- "a pártszimpátia"
+dep <- "a parlament iránti bizalom"
+
+data %>%
+  t() %>%
+  as_huxtable(add_colnames = TRUE, add_rownames = TRUE) %>%
+  set_all_borders() %>%
+  set_markdown_contents(1, 1, "") %>%
+  set_align(1, everywhere, "left") %>%
+  set_align(2:4, 2:4, "right")
+```
+
+```{r anova4.solution}
+group.sum <- means %>% multiply_by(ns)
+total.n <- sum(ns)
+k <- length(means)
+main.mean <- means %>% multiply_by(ns) %>% sum() %>% divide_by(total.n) %>% round2(2)
+ssk <- ns %>% multiply_by((means - main.mean)** 2) %>% sum() %>% round2(2)
+ssb <- (ns-1) %>% multiply_by(sds**2) %>% sum() %>% round2(2)
+vark <- ssk %>% divide_by(k-1) %>% round2(2)
+varb <- ssb %>% divide_by(total.n - k) %>% round2(2)
+df2s <- c(1:30, 40, 60, 120)
+F.test <- vark %>% divide_by(varb) %>% round2(2)
+
+df1 <- k - 1
+df2 <- df2s %>% as_tibble %>%
+  filter(df2s <= (total.n-k)) %>%
+  max()
+
+brackets <- (means-main.mean) < 0
+ob <- NA
+cb <- NA
+ob[brackets] <- "\\left("
+ob[!brackets] <- ""
+cb[brackets] <- "\\right)"
+cb[!brackets] <- ""
+```
+
+$$
+  \begin{align}
+\bar{\bar{x}} &=\frac{\sum_{i=1}^{K}{N_i*\bar{x}_i}}{N}=\frac{`r paste(ns, "*", means, collapse=" + ")`}{`r paste(ns, collapse = " + ")`}=\frac{`r sum(group.sum)`}{`r total.n`}=`r main.mean` \\
+\\
+\textit{VAR}_K &=\frac{\sum_{i=1}^{K}N_i*\left(\bar{x}_i-\bar{\bar{x}}\right)^2}{K-1}= \\
+&=\frac{`r paste0(ns, " * \\left(", means, " - ", main.mean %>% round2(2), "\\right)^2", collapse = " + ")`}
+{`r k`-1}= \\
+&=\frac{`r paste0(ns, " * ", ob, (means-main.mean) %>% round2(2), cb, "^2", collapse = " + ")`}{`r df1`}=\frac{`r ssk`}{`r df1`}= `r vark` \\
+\\
+\textit{VAR}_B &=\frac{\sum_{i=1}^{k}{\left(N_i-1\right)*s_i^{*2}}}{N-K}=\frac{`r paste0("\\left(", ns, "-1\\right)*", sds, "^2", collapse = " + ")`}{`r paste0(total.n, " - ", k)`}= \\
+&=\frac{`r ssb`}{`r total.n-k`} = `r varb` \\
+\\
+F &= \frac{\textit{VAR}_K}{\textit{VAR}_B} = \frac{`r vark`}{`r varb`} = `r F.test`
+\end{align}
+$$
+
+```{r anova4.decision, results = 'asis'}
+cat(paste0("A próba nulleloszlása egy F-eloszlás $df_1 = K-1 = ",df1,"$ és $df_2 = N-K = ", total.n - nrow(data), "$ szabadságfokokkal. <br>")) 
+if (df2 != (total.n - nrow(data))) {
+  cat(paste0("Mivel ", total.n-nrow(data), " nem szerepel az F-eloszlás táblázatában a $df_2$ értékek között, ezért ehelyett a ", df2, ". sort nézzük.<br>"))
+}
+cat(paste0("A táblázatban az $F_{", df1,";", df2,"}$ értéket keressük, ami ",qf(0.95, df1, df2) %>% round2(2), ".<br>"))
+if (F.test > qf(0.95, df1, df2)) {
+  cat("Mivel a kapott tesztérték nagyobb a határértéknél, a nullhipotézist 5%-os szignifikanciaszint mellett elvetjük. Az egyes csoportokban a várható érték nem egyenlő.<br><br>Ezután meg kell vizsgálnunk, melyek azok a páronkénti különbségek, amelyek szignifikánsak. Erre az ún. post-hoc tesztek szolgálnak.<br>")
+  
+  for (i in 1:(nrow(data)-1)) {
+    for (j in (i+1):nrow(data)) {
+      test <- means[i] %>% subtract(means[j]) %>% raise_to_power(2) %>% 
+        divide_by(varb*(k-1)*(1/ns[i]+1/ns[j]))
+      cat(paste0(rownames(data)[i], " és ", rownames(data)[j]), ":")
+      eq <- paste0("$$F_{", i, j, "} = \\frac{\\left(", means[i], "-", means[j], "\\right)^2}{",
+                   varb %>% round2(2),"*(", k, "-1)*\\left(\\frac{1}{", ns[i], "}+\\frac{1}{",
+                   ns[j],"}\\right)}=\\frac{", 
+                   (means[i]-means[j])**2 ,"}{", varb %>% multiply_by(k-1) %>% multiply_by(1/ns[i]+1/ns[j]) %>% 
+                     round2(2), "}=", test %>% round2(2))
+      if (test > qf(0.95, df1, df2)) {
+        cat(paste0(eq, ">", qf(0.95, df1, df2) %>% round2(2), 
+                   "\\implies \\textit{szignifikáns}$$"))
+      } else {
+        cat(paste0(eq, "<", qf(0.95, df1, df2) %>% round2(2), 
+                   "\\implies \\textit{nem szignifikáns}$$"))
+      }
+    }
+  }
+  cat("Kapcsolat ereje:")
+  cat(paste0("$$\\eta^2=\\frac{",ssk, "}{", ssk+ssb, "}=",(ssk/(ssk+ssb)) %>% round2(3), "$$"))
+  cat(paste0("Vagyis a ", indep, " ", (100*ssk/(ssk+ssb)) %>% round2(1), "%-ot magyaráz ", dep, " varianciájából."))
+  
+} else {
+  cat("Mivel a kapott tesztérték kisebb a határértéknél, a nullhipotézist megtartjuk. Nem állítható, hogy a várható értékek az egyes csoportokban különböznének.")
+}
+
+```
